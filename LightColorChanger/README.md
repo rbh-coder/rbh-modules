@@ -21,11 +21,14 @@ Beschreibung des Moduls.
   Zeit größer 0 sind diese Zeit lang jeweils zwei Lampen gleichzeitig beim Umschalten von einer auf die nächste Farbe aktiv.
 * Auf der Konfigurationsseite wird die maximale Zeit für das Variablenprofil der Variable "Farbwechselzeit" definiert.
 * Auf der Konfigurationsseite kann eine Variablen-ID für einen Expertenmodus definiert werden. Existiert diese Variable, werden Variablen, die im Normalbetrieb nicht
-  verstellt werden sollen, ausgeblendet. Das sind die "Farbwechselzeit", "Farbüberblendzeit" (sofern überhaupt aktiviert) und der Schalter "Putzmodus".
-* Generel werden in Abhängigkeit der Variable "Betriebsart" verchiedene im jeweiligen Betriebmodus unnötige Zeilen ausgeblendet.
-* In der Betriebart "Automatik" muss zusätzlich die Variable "Automatikfreigabe" gesetzt sein, damit der Farbwechsel läuft. Die Idee dahinter ist, das die 
+  verstellt werden sollen, ausgeblendet. Das sind:
+  	* "Farbwechselzeit" 
+	* "Farbüberblendzeit" (sofern überhaupt aktiviert)
+	* "Putzmodus".
+* Generell werden in Abhängigkeit der Variable "Betriebsart" verchiedene im jeweiligen Betriebmodus unnötige Zeilen ausgeblendet.
+* In der Betriebsart "Automatik" muss zusätzlich die Variable "Automatikfreigabe" gesetzt sein, damit der Farbwechsel läuft. Die Idee dahinter ist, das die 
   Betriebsart normalerweise immer auf "Automatik" steht und hier die externe Steuerung über das Signal "Automatikfreigabe" passiert.
-* Die Variable "Putzmodus" schaltet in jeder Betriebsart alle Lampenausgänge ein, um eben maximale Helligkeit zu bieten. Bei Setzen des Schalters "Automatikfreigabe"     wird diese Variable auf jeden Fall zurückgesetzt. Der Grunds ist, wenn der "Putzmodus" von externen gesetzt wurde (z.B. KNX Taster) und vergessen wird   	         zurückzusetzen, soll dies spätestens bei Start des Automatikbetriebs passieren. Zusätzlich ist der Putzmodus maximal eine auf der Konfigurationsseite einstellbare     Zeit aktiv.
+* Die Variable "Putzmodus" schaltet in jeder Betriebsart alle Lampenausgänge ein, um eben maximale Helligkeit zu bieten. Bei Setzen des Schalters "Automatikfreigabe"     wird diese Variable auf jeden Fall zurückgesetzt. Der Grund ist, wenn der "Putzmodus" von externen gesetzt wurde (z.B. KNX Taster) und vergessen wird   	         zurückzusetzen, soll dies spätestens bei Start des Automatikbetriebs passieren. Zusätzlich ist der Putzmodus maximal eine auf der Konfigurationsseite einstellbare     Zeit aktiv.
 
 ### 2. Voraussetzungen
 
