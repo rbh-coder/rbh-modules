@@ -1,0 +1,12 @@
+{
+    "id": "{357C6B86-BE7B-68FA-6DE7-34B4B06352A4}",
+    "name": "Light Color Changer",
+    "type": 3,
+    "vendor": "",
+    "aliases": [],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "LCC",
+    "url": ""
+}

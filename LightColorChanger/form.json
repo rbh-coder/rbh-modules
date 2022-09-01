@@ -1,0 +1,68 @@
+{
+	"elements": [
+		{
+			"name": "MaxColorChangeTime",
+			"type": "NumberSpinner",
+			"caption": "Maximum Color Change Time",
+			"suffix": "minutes"
+		},
+		{
+			"name": "CleaningModeTime",
+			"type": "NumberSpinner",
+			"caption": "Cleaning Mode Active Time",
+			"suffix": "minutes"
+		},
+		{
+			"name": "UseFading",
+			"type": "CheckBox",
+			"caption": "Use Fading"
+		},
+		{
+			"name": "SwitchAmberLightID",
+			"type": "SelectVariable",
+			"caption": "Actor Amber Light"
+		},
+		{
+			"name": "SwitchRedLightID",
+			"type": "SelectVariable",
+			"caption": "Actor Red Light"
+		},
+		{
+			"name": "SwitchGreenLightID",
+			"type": "SelectVariable",
+			"caption": "Actor Green Light"
+		},
+		{
+			"name": "SwitchBlueLightID",
+			"type": "SelectVariable",
+			"caption": "Actor Blue Light"
+		},
+		{
+			"name": "StatusAmberLightID",
+			"type": "SelectVariable",
+			"caption": "Status Amber Light"
+		},
+		{
+			"name": "StatusRedLightID",
+			"type": "SelectVariable",
+			"caption": "Status Red Light"
+		},
+		{
+			"name": "StatusGreenLightID",
+			"type": "SelectVariable",
+			"caption": "Status Green Light"
+		},
+		{
+			"name": "StatusBlueLightID",
+			"type": "SelectVariable",
+			"caption": "Status Blue Light"
+		},
+		{
+			"name": "ExpertModeID",
+			"type": "SelectVariable",
+			"caption": "Expert Mode"
+		}
+	],
+	"actions": [],
+	"status": []
+}

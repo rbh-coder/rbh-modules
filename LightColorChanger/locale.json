@@ -1,0 +1,31 @@
+{
+    "translations": {
+        "de": {
+            "Operation Mode": "Betriebsart",
+	    "Use Fading": "Überblenden verwenden",
+            "Color Change Time": "Farbwechselzeit",
+	    "Maximum Color Change Time": "Maximale Farbwechselzeit",
+	    "Color Fade Time": "Farbüberblendzeit",
+	    "Manual Color Selection": "Manuelle Farbwahl",
+	    "Cleaning Modus": "Putzmodus",
+	    "Automatic Release": "Automatikfreigabe",
+	    "Active Colors": "Aktive Farben",
+	    "Amber": "Gelb",
+	    "Red": "Rot",
+	    "Green": "Grün",
+	    "Blue": "Blau",
+	    "Expert Mode": "Expertenmodus",
+	    "Actor Amber Light": "Aktor Gelbe Lampe",
+	    "Actor Red Light": "Aktor Rote Lampe",
+	    "Actor Green Light": "Aktor Grüne Lampe",
+	    "Actor Blue Light": "Aktor Blaue Lampe" ,
+	    "Status Amber Light": "Status Gelbe Lampe",
+	    "Status Red Light": "Status Rote Lampe",
+	    "Status Green Light": "Status Grüne Lampe",
+	    "Status Blue Light": "Status Blaue Lampe",
+	    "Cleaning Mode Active Time": "Putzmodus Aktiv Zeit",
+	     "minutes": "Minuten"
+
+        }
+    }
+}
