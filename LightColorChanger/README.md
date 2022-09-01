@@ -40,14 +40,14 @@ Beschreibung des Moduls.
 
 ### 4. Einrichten der Instanzen in IP-Symcon
 
- Unter 'Instanz hinzufügen' kann das 'LightControl'-Modul mithilfe des Schnellfilters gefunden werden.  
+ Unter 'Instanz hinzufügen' kann das 'Light Color Changer'-Modul mithilfe des Schnellfilters gefunden werden.  
 	- Weitere Informationen zum Hinzufügen von Instanzen in der [Dokumentation der Instanzen](https://www.symcon.de/service/dokumentation/konzepte/instanzen/#Instanz_hinzufügen)
 
 __Konfigurationsseite__:
 
 Name     | Beschreibung
 -------- | ------------------
- Maximale Farbwechselzeit        | Maximale Zeit in Minuten des automatisch erstellten Profils LCC_ColorchangeTime 
+ Maximale Farbwechselzeit        | Maximale Zeit in Minuten des automatisch erstellten Profils LCC_ColorChangeTime 
  Überblenden verwenden        | Aktiviert bzw deaktiviert eine Überblendfunktionen beim Umschalten von einer Lampe auf die nächste.
 
 ### 5. Statusvariablen und Profile
