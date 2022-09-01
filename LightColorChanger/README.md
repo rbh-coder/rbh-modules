@@ -47,8 +47,8 @@ __Konfigurationsseite__:
 
 Name     | Beschreibung
 -------- | ------------------
- Maximale Farbwechselzeit        | Maximale Zeit in Minuten die automatisch erstellten Profils LCC_ColorchangeTime 
- Überblenden verwenden        | Aktiviert bzw Deaktiviert eine Überblendfunktionen beim Umschalten von einer Lampe auf die nächste.
+ Maximale Farbwechselzeit        | Maximale Zeit in Minuten des automatisch erstellten Profils LCC_ColorchangeTime 
+ Überblenden verwenden        | Aktiviert bzw deaktiviert eine Überblendfunktionen beim Umschalten von einer Lampe auf die nächste.
 
 ### 5. Statusvariablen und Profile
 
