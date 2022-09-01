@@ -20,8 +20,7 @@ Beschreibung des Moduls.
 * Auf der Konfigurationsseite kann eine Überblendfunktion aktiviert werden. Damit wird die zusätzliche Variablen "Farbüberblendzeit" angelegt. Ist diese
   Zeit größer 0 sind diese Zeit lang jeweils zwei Lampen gleichzeitig beim Umschalten von einer auf die nächste Farbe aktiv.
 * Auf der Konfigurationsseite wird die maximale Zeit für das Variablenprofil der Variable "Farbwechselzeit" definiert.
-* Auf der Konfigurationsseite kann eine Variablen-ID für einen Expertenmodus definiert werden. Existiert diese Variable, werden Variablen, die im Normalbetrieb nicht
-  verstellt werden sollen, ausgeblendet. Das sind:
+* Auf der Konfigurationsseite kann eine Variablen-ID für einen Expertenmodus definiert werden. Existiert diese boolsche Variable, werden Variablen, die im 	         Normalbetrieb nicht verstellt werden sollen, ausgeblendet wenn der Wert der Variable "false" ist. Das sind:
   	* "Farbwechselzeit" 
 	* "Farbüberblendzeit" (sofern überhaupt aktiviert)
 	* "Putzmodus".
