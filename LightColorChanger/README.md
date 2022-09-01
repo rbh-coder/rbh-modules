@@ -25,10 +25,10 @@ Beschreibung des Moduls.
   	* "Farbwechselzeit" 
 	* "Farbüberblendzeit" (sofern überhaupt aktiviert)
 	* "Putzmodus".
-* Generell werden in Abhängigkeit der Variable "Betriebsart" verchiedene im jeweiligen Betriebmodus unnötige Zeilen ausgeblendet.
+* Generell werden in Abhängigkeit der Variable "Betriebsart" verschiedene im jeweiligen Betriebsmodus unnötige Zeilen ausgeblendet.
 * In der Betriebsart "Automatik" muss zusätzlich die Variable "Automatikfreigabe" gesetzt sein, damit der Farbwechsel läuft. Die Idee dahinter ist, dass die 
   Betriebsart normalerweise immer auf "Automatik" steht und hier die externe Steuerung über das Signal "Automatikfreigabe" passiert.
-* Die Variable "Putzmodus" schaltet in jeder Betriebsart alle Lampenausgänge ein, um eben maximale Helligkeit zu bieten. Bei Setzen des Schalters "Automatikfreigabe"     wird diese Variable auf jeden Fall zurückgesetzt. Der Grund ist, wenn der "Putzmodus" von externen gesetzt wurde (z.B. KNX Taster) und vergessen wird   	         zurückzusetzen, soll dies spätestens bei Start des Automatikbetriebs passieren. Zusätzlich ist der Putzmodus maximal eine auf der Konfigurationsseite einstellbare     Zeit aktiv.
+* Die Variable "Putzmodus" schaltet in jeder Betriebsart alle Lampenausgänge ein, um eben maximale Helligkeit zu bieten. Bei Setzen des Schalters "Automatikfreigabe"     wird diese Variable auf jeden Fall zurückgesetzt. Der Grund ist, wenn der "Putzmodus" von extern gesetzt wurde (z.B. KNX Taster) und vergessen wird   	         zurückzusetzen, soll dies spätestens bei Start des Automatikbetriebs passieren. Zusätzlich ist der Putzmodus maximal eine auf der Konfigurationsseite einstellbare     Zeit aktiv.
 
 ### 2. Voraussetzungen
 
