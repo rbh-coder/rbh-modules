@@ -13,8 +13,8 @@ Beschreibung des Moduls.
 
 ### 1. Funktionsumfang
 
-* Das Modul steuert einen Farbwechselgerät mit vier verschiedenen Lampen, wie es in Wellneseinrichtungen zu finden ist.
-* Die Aktoren und Statussignale müssen auf der Konfigurationsseite asugewählt werden.
+* Das Modul steuert einen Farbwechselgerät mit vier verschiedenen Lampen, wie es in Wellnesseinrichtungen zu finden ist.
+* Die Aktoren und Statussignale müssen auf der Konfigurationsseite ausgewählt werden.
 * Die Aktoren müssen übewr "RequestAction" schaltbare Variabale sein. 
 * Die Statussignale können beliebige boolsche Variable sein.
 * Auf der Konfigurationsseite kann eine Überblendfunktion aktiviert werden. Damit wird die zusätzliche Variablen "Farbüberblendzeit" angelegt. Ist diese
@@ -26,7 +26,7 @@ Beschreibung des Moduls.
 	* "Farbüberblendzeit" (sofern überhaupt aktiviert)
 	* "Putzmodus".
 * Generell werden in Abhängigkeit der Variable "Betriebsart" verchiedene im jeweiligen Betriebmodus unnötige Zeilen ausgeblendet.
-* In der Betriebsart "Automatik" muss zusätzlich die Variable "Automatikfreigabe" gesetzt sein, damit der Farbwechsel läuft. Die Idee dahinter ist, das die 
+* In der Betriebsart "Automatik" muss zusätzlich die Variable "Automatikfreigabe" gesetzt sein, damit der Farbwechsel läuft. Die Idee dahinter ist, dass die 
   Betriebsart normalerweise immer auf "Automatik" steht und hier die externe Steuerung über das Signal "Automatikfreigabe" passiert.
 * Die Variable "Putzmodus" schaltet in jeder Betriebsart alle Lampenausgänge ein, um eben maximale Helligkeit zu bieten. Bei Setzen des Schalters "Automatikfreigabe"     wird diese Variable auf jeden Fall zurückgesetzt. Der Grund ist, wenn der "Putzmodus" von externen gesetzt wurde (z.B. KNX Taster) und vergessen wird   	         zurückzusetzen, soll dies spätestens bei Start des Automatikbetriebs passieren. Zusätzlich ist der Putzmodus maximal eine auf der Konfigurationsseite einstellbare     Zeit aktiv.
 
