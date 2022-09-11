@@ -20,7 +20,7 @@ class ShellyPlug extends IPSModule
         //Profiles
     
         $profileName = "SPL_Status";
-        IPS_DeleteVariableProfile($profileName);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, -1, 1, 0);
@@ -89,9 +89,13 @@ class ShellyPlug extends IPSModule
     {
         $status = GetValueBoolean($id);
         $ipAddress = $this->ReadPropertyString('IpAddress');
+        if (!Sys_Ping ($ipAddress,1000))
+        {
+            IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
+            return;
+        }
         $command = $status ? "on" : "off";
         $url="http://".$ipAddress."/relay/0?turn=".$command;
-        
         $actStatus = $this->Status (file_get_contents($url));
         $this->SetValue('Status', $actStatus);
 
@@ -117,6 +121,11 @@ class ShellyPlug extends IPSModule
     public function GetSwitchStatus()
     {
         $ipAddress = $this->ReadPropertyString('IpAddress');
+        if (!Sys_Ping ($ipAddress,1000))
+        {
+            IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
+            return;
+        }
         $url="http://".$ipAddress."/relay/0";
       
         $actStatus = $this->Status (file_get_contents($url));
