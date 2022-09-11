@@ -104,9 +104,9 @@ class ShellyPlug extends IPSModule
                      $statusValue = "On";
                     break;
             }
-            IPS_LogMessage("ShellyPlug", "Set plug ".$ipAddress. "to ".$statusValue);
+            IPS_LogMessage("ShellyPlug", "Set plug ".$ipAddress. " to ".$statusValue);
             $statusValue =  $actStatus ? "ON" : "OFF";
-            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. "is ".$statusValue);
+            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. " is ".$statusValue);
         }
     }
 
@@ -129,7 +129,7 @@ class ShellyPlug extends IPSModule
                      $statusValue = "On";
                     break;
             }
-            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. "is ".$statusValue);
+            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. " is ".$statusValue);
         }
     }
 
@@ -143,14 +143,15 @@ class ShellyPlug extends IPSModule
         {
             if (!is_null($dataObject->ison)) {
                 if ($dataObject->ison == 'true') {
-                    $actStatus = 1;
+                    $status = 1;
                 }
                 else 
                 {
-                    $actStatus = 0;
+                    $status = 0;
                 }
             }
         }
+        return  $status;
     }
    
 
