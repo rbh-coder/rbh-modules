@@ -13,7 +13,7 @@ Beschreibung des Moduls.
 
 ### 1. Funktionsumfang
 
-* Das Modul setzt Shelly Wifi PLug via REST API (https://shelly-api-docs.shelly.cloud/gen1/#shelly-plug-plugs-relay-0)
+* Das Modul steuert Shelly Wifi PLugs via REST API (https://shelly-api-docs.shelly.cloud/gen1/#shelly-plug-plugs-relay-0)
 
 ### 2. Voraussetzungen
 
