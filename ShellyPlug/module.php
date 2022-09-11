@@ -115,7 +115,7 @@ class ShellyPlug extends IPSModule
         }
     }
 
-    public function Status (object $jsonCode)
+    public function Status (string $jsonCode)
     {
         $status = -1;
         if ( $jsonCode == false) return $status;
