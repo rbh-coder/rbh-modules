@@ -83,7 +83,7 @@ class ShellyPlug extends IPSModule
     }
 
 
-    public function SetSwitch($id)
+    public function SetSwitch(int $id)
     {
         $status = GetValueBoolean($id);
         $ipAddress = $this->ReadPropertyString('IpAddress');
