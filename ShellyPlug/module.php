@@ -77,8 +77,8 @@ class ShellyPlug extends IPSModule
             return;
         }
 
-        if ($senderID == $this->ReadPropertyInteger('SwitchVariable')) {
-            $this->SetSwitch($senderID);
+        if ($SenderID == $this->ReadPropertyInteger('SwitchVariable')) {
+            $this->SetSwitch($SenderID);
         }
     }
 
