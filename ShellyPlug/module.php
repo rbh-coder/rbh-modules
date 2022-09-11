@@ -96,6 +96,7 @@ class ShellyPlug extends IPSModule
         if (!Sys_Ping ($ipAddress,1000))
         {
             IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
+            $this->SetValue('Status',-1);
             return;
         }
        
@@ -130,6 +131,7 @@ class ShellyPlug extends IPSModule
         if (!Sys_Ping ($ipAddress,1000))
         {
             IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
+            $this->SetValue('Status',-1);
             return;
         }
        
