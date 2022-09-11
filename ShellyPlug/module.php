@@ -83,43 +83,6 @@ class ShellyPlug extends IPSModule
         if ($SenderID == $this->ReadPropertyInteger('SwitchVariable')) {
             //Hier eine Timer Task starten, um Code nicht direkt auszuführen
             $this->SetTimerInterval('SPL_TimerSwitch',1);
-            //$this->SetSwitch($SenderID);
-        }
-    }
-
-
-    public function SetSwitch(int $id)
-    {
-        $status = GetValueBoolean($id);
-        $ipAddress = $this->ReadPropertyString('IpAddress');
-        /*
-        if (!Sys_Ping ($ipAddress,1000))
-        {
-            IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
-            return;
-        }
-        */
-        $command = $status ? "on" : "off";
-        $url="http://".$ipAddress."/relay/0?turn=".$command;
-        $actStatus = $this->Status (file_get_contents($url));
-        $this->SetValue('Status', $actStatus);
-
-        if ($this->ReadPropertyBoolean('Debug')) {
-           
-            $statusValue =  $status ? "ON" : "OFF";
-            IPS_LogMessage("ShellyPlug", "Set plug ".$ipAddress. " to ".$statusValue);
-            
-            $statusValue = "UNDEFINED";
-            switch ($actStatus)
-            {
-                case 0:
-                     $statusValue = "OFF";
-                    break;
-                case 1:
-                     $statusValue = "ON";
-                    break;
-            }
-            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. " is ".$statusValue);
         }
     }
     
