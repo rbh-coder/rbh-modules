@@ -1,0 +1,29 @@
+{
+	"elements": [
+		{
+			"name": "IpAddress",
+			"type": "ValidationTextBox",
+			"caption": "IP Address"
+			
+		},
+		{
+			"name": "SwitchVariable",
+			"type": "SelectVariable",
+			"caption": "Switching Variable"
+		},
+		{
+			"name": "PollingTime",
+			"type": "NumberSpinner",
+			"caption": "Polling Time",
+			"suffix": "seconds"
+		},
+		{
+			"name": "DebugMode",
+			"type": "CheckBox",
+			"caption": "Debug Mode"
+		}
+
+	],
+	"actions": [],
+	"status": []
+}

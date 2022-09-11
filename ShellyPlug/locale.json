@@ -1,0 +1,12 @@
+{
+    "translations": {
+        "de": {
+            "IP Address": "IP Adresse",
+            "Switching Variable": "Schaltvariable",
+            "Status": "Status",
+            "Debug Mode": "Debugmodus",
+            "Polling Time": "Abfragezeit",
+            "seconds": "Sekunden"
+        }
+    }
+}

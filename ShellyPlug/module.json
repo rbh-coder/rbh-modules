@@ -1,0 +1,12 @@
+{
+    "id": "{70D9756E-A4AA-C5EB-6F58-E08E0A947AD3}",
+    "name": "Shelly Plug",
+    "type": 3,
+    "vendor": "",
+    "aliases": [],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "SPL",
+    "url": ""
+}
