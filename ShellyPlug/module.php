@@ -89,11 +89,13 @@ class ShellyPlug extends IPSModule
     {
         $status = GetValueBoolean($id);
         $ipAddress = $this->ReadPropertyString('IpAddress');
+        /*
         if (!Sys_Ping ($ipAddress,1000))
         {
             IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
             return;
         }
+        */
         $command = $status ? "on" : "off";
         $url="http://".$ipAddress."/relay/0?turn=".$command;
         $actStatus = $this->Status (file_get_contents($url));
@@ -121,11 +123,13 @@ class ShellyPlug extends IPSModule
     public function GetSwitchStatus()
     {
         $ipAddress = $this->ReadPropertyString('IpAddress');
+        /*
         if (!Sys_Ping ($ipAddress,1000))
         {
             IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
             return;
         }
+        */
         $url="http://".$ipAddress."/relay/0";
       
         $actStatus = $this->Status (file_get_contents($url));
