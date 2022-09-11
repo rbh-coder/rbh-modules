@@ -36,6 +36,7 @@ class ShellyPlug extends IPSModule
         $this->RegisterVariableInteger('Status', $this->Translate('Status'), 'SPL_Status', -1);
         $this->RegisterPropertyInteger('PollingTime', 60);
         $this->RegisterTimer('SPL_Timer', 0, 'SPL_UpdateTimer($_IPS[\'TARGET\']);');
+        $this->RegisterTimer('SPL_TimerSwitch', 0, 'SPL_TimerSwitch($_IPS[\'TARGET\']);');
     }
 
     //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable mit
@@ -80,7 +81,9 @@ class ShellyPlug extends IPSModule
         }
 
         if ($SenderID == $this->ReadPropertyInteger('SwitchVariable')) {
-            $this->SetSwitch($SenderID);
+            //Hier eine Timer Task starten, um Code nicht direkt auszuführen
+            $this->SetTimerInterval('SPL_TimerSwitch',1);
+            //$this->SetSwitch($SenderID);
         }
     }
 
@@ -119,17 +122,54 @@ class ShellyPlug extends IPSModule
             IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. " is ".$statusValue);
         }
     }
-
-    public function GetSwitchStatus()
+    
+    public function TimerSwitch()
     {
+        $this->SetTimerInterval('SPL_TimerSwitch', 0);
+        
+        $status = GetValueBoolean($this->ReadPropertyInteger('SwitchVariable'));
         $ipAddress = $this->ReadPropertyString('IpAddress');
-        /*
+       
         if (!Sys_Ping ($ipAddress,1000))
         {
             IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
             return;
         }
-        */
+       
+        $command = $status ? "on" : "off";
+        $url="http://".$ipAddress."/relay/0?turn=".$command;
+        $actStatus = $this->Status (file_get_contents($url));
+        $this->SetValue('Status', $actStatus);
+
+        if ($this->ReadPropertyBoolean('Debug')) {
+           
+            $statusValue =  $status ? "ON" : "OFF";
+            IPS_LogMessage("ShellyPlug", "Set plug ".$ipAddress. " to ".$statusValue);
+            
+            $statusValue = "UNDEFINED";
+            switch ($actStatus)
+            {
+                case 0:
+                     $statusValue = "OFF";
+                    break;
+                case 1:
+                     $statusValue = "ON";
+                    break;
+            }
+            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. " is ".$statusValue);
+        }
+    }
+
+    public function GetSwitchStatus()
+    {
+        $ipAddress = $this->ReadPropertyString('IpAddress');
+       
+        if (!Sys_Ping ($ipAddress,1000))
+        {
+            IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
+            return;
+        }
+       
         $url="http://".$ipAddress."/relay/0";
       
         $actStatus = $this->Status (file_get_contents($url));
