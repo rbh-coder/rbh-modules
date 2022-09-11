@@ -95,9 +95,9 @@ class ShellyPlug extends IPSModule
 
         if ($this->ReadPropertyBoolean('Debug')) {
             $statusValue =  $status ? "ON" : "OFF";
-            IPS_LogMessage("ShellyPlug", "Set plug ".$idAddress. "to ".$statusValue);
+            IPS_LogMessage("ShellyPlug", "Set plug ".$ipAddress. "to ".$statusValue);
             $statusValue =  $actStatus ? "ON" : "OFF";
-            IPS_LogMessage("ShellyPlug", "Received status of plug ".$idAddress. "is ".$statusValue);
+            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. "is ".$statusValue);
         }
     }
 
@@ -111,7 +111,7 @@ class ShellyPlug extends IPSModule
 
         if ($this->ReadPropertyBoolean('Debug')) {
             $statusValue =  $actStatus ? "ON" : "OFF";
-            IPS_LogMessage("ShellyPlug", "Received status of plug ".$idAddress. "is ".$statusValue);
+            IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. "is ".$statusValue);
         }
     }
 
