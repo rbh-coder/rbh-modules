@@ -57,7 +57,9 @@ class ShellyPlug extends IPSModule
         //IPS_LogMessage("ApplyChanges", 'id:'.$id.' name:'.$statusName);
         if ($id>0) {
             $this->RegisterMessage($id, VM_UPDATE);
+            return true;
         }
+        return false;
     }
 
 
@@ -166,6 +168,7 @@ class ShellyPlug extends IPSModule
     {
         //Never delete this line!
         parent::ApplyChanges();
+        
         if ($this->RegisterStatusUpdate('SwitchVariable')) {
             if ($this->ReadPropertyInteger('PollingTime') == 0) {
                 $this->SetTimerInterval('SPL_Timer', 0);
