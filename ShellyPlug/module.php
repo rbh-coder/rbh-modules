@@ -127,10 +127,10 @@ class ShellyPlug extends IPSModule
             switch ($actStatus)
             {
                 case 0:
-                     $statusValue = "OFF
+                     $statusValue = "OFF";
                     break;
                 case 1:
-                     $statusValue = "ON;
+                     $statusValue = "ON";
                     break;
             }
             IPS_LogMessage("ShellyPlug", "Received status of plug ".$ipAddress. " is ".$statusValue);
