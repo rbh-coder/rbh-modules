@@ -226,7 +226,7 @@ class LightColorChanger extends IPSModule
                 //$this->SetCleaningMode($this->GetValue('OpMode')); //wird ohen hin bei Änderung in MessageSink verarbeitet
                 break;
             case "AutomaticRelease":
-                $this->SetValue($Ident, $Value);
+                 $this->SetValue($Ident, $Value);
                 //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
                 break;
         }
@@ -365,7 +365,7 @@ class LightColorChanger extends IPSModule
         else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
         {
              //IPS_LogMessage("MessageSink", 'id:'.$SenderID.' message:'.$Message);
-             $this->StartAutomaticColor(); Nicht direkt aufrufen, sonst schimpft Kernel wegen langer Laufzeit. Start über Timer als eigener Thread
+             $this->StartAutomaticColor();
              //$this->SetTimerInterval('LCC_AutomaticRelease', 1);
         }
         //Die Statusänderung der Lampen auswerten und ggf. die "ActColor" richtig setzen 
