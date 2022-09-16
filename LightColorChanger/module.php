@@ -21,7 +21,8 @@ class LightColorChanger extends IPSModule
         $this->RegisterAttributeString('StatusList', "StatusRedLightID,StatusAmberLightID,StatusGreenLightID,StatusBlueLightID");
         $this->RegisterAttributeString('ColorList', "1,3,2,6,4,12,8,9");
         $this->RegisterAttributeString('MainColorList', "1,2,4,8");
-        $this->RegisterAttributeString('ExpertList',"ColorChangeTime,CleaningMode");
+        $this->RegisterAttributeString('ExpertListHide',"ColorChangeTime,CleaningMode");
+        $this->RegisterAttributeString('ExpertListLock',"OpMode");
      
         $allowedColorNumbers = array_map('intval', explode(',', $this->ReadAttributeString('ColorList')));
 
@@ -627,10 +628,15 @@ class LightColorChanger extends IPSModule
         $status = !GetValueBoolean($id);
         if ($id==0)  $status = false;
         //IPS_LogMessage("HandleExpertSwitch", 'id:'.$id.' value:'.$status);
-        $itemString = $this->ReadAttributeString('ExpertList');
+        $itemString = $this->ReadAttributeString('ExpertListHide');
         foreach (explode(',', $itemString) as $item) 
         {
             $this->HideItem($item,$status);
+        }
+        $itemString = $this->ReadAttributeString('ExpertListLock');
+        foreach (explode(',', $itemString) as $item) 
+        {
+            $this->LockItem($item,$status);
         }
         $this->HideItem('ColorFadeTime',$status || !$this->ReadPropertyBoolean('UseFading'));
     }
@@ -639,6 +645,12 @@ class LightColorChanger extends IPSModule
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetHidden($id, $status);
+    }
+    
+    public function LockItem(string $item,bool $status)
+    {
+        $id = $this->GetIDForIdent($item);
+        IPS_SetDisabled($id, $status);
     }
         
 }
