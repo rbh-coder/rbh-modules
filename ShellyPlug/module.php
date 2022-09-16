@@ -93,7 +93,7 @@ class ShellyPlug extends IPSModule
         $status = GetValueBoolean($this->ReadPropertyInteger('SwitchVariable'));
         $ipAddress = $this->ReadPropertyString('IpAddress');
        
-        if (!Sys_Ping ($ipAddress,1000))
+        if (!Sys_Ping ($ipAddress,3000))
         {
             IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
             $this->SetValue('Status',-1);
@@ -128,7 +128,7 @@ class ShellyPlug extends IPSModule
     {
         $ipAddress = $this->ReadPropertyString('IpAddress');
        
-        if (!Sys_Ping ($ipAddress,1000))
+        if (!Sys_Ping ($ipAddress,3000))
         {
             IPS_LogMessage("ShellyPlug", "Cannot reach ".$ipAddress);
             $this->SetValue('Status',-1);
