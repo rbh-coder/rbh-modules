@@ -365,8 +365,8 @@ class LightColorChanger extends IPSModule
         else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
         {
              //IPS_LogMessage("MessageSink", 'id:'.$SenderID.' message:'.$Message);
-             //$this->StartAutomaticColor(); Nicht direkt aufrufen, sonst schimpft Kernel wegen langer Laufzeit. Start über Timer als eigener Thread
-             $this->SetTimerInterval('LCC_AutomaticRelease', 1);
+             $this->StartAutomaticColor(); Nicht direkt aufrufen, sonst schimpft Kernel wegen langer Laufzeit. Start über Timer als eigener Thread
+             //$this->SetTimerInterval('LCC_AutomaticRelease', 1);
         }
         //Die Statusänderung der Lampen auswerten und ggf. die "ActColor" richtig setzen 
         else
