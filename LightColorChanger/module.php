@@ -115,6 +115,7 @@ class LightColorChanger extends IPSModule
         
         $this->RegisterTimer('LCC_Timer', 0, 'LCC_UpdateTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('LCC_CleaningTimer', 0, 'LCC_StopCleaningMode($_IPS[\'TARGET\']);');
+        $this->RegisterTimer('LCC_AutomaticRelease', 0, 'LCC_AutomaticRelease($_IPS[\'TARGET\']);');
       
         $this->RegisterAttributeInteger('ActColor', 0);
 
@@ -225,7 +226,7 @@ class LightColorChanger extends IPSModule
                 break;
             case "AutomaticRelease":
                 $this->SetValue($Ident, $Value);
-                //$this->StartAutomaticColor(); //wird ohen hin bei Änderung in MessageSink verarbeitet
+                //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
                 break;
         }
     }
@@ -292,7 +293,7 @@ class LightColorChanger extends IPSModule
         $color = $actualColors;
         $actCleaningStatus =  $this->ReadAttributeInteger('CleaningStatus');
         
-        IPS_LogMessage("ColorManager", '$opMode:'.$opmode.' $actCleaningStatus:'.$actCleaningStatus);
+        //IPS_LogMessage("ColorManager", '$opMode:'.$opmode.' $actCleaningStatus:'.$actCleaningStatus);
         
         //Ggf. laufenden Timer stoppen
         $this->SetTimerInterval('LCC_Timer', 0);
@@ -363,7 +364,8 @@ class LightColorChanger extends IPSModule
         else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
         {
              //IPS_LogMessage("MessageSink", 'id:'.$SenderID.' message:'.$Message);
-             $this->StartAutomaticColor();
+             //$this->StartAutomaticColor(); Nicht direkt aufrufen, sonst schimpft Kernel wegen langer Laufzeit. Start über Timer als eigener Thread
+             $this->SetTimerInterval('LCC_AutomaticRelease', 1);
         }
         //Die Statusänderung der Lampen auswerten und ggf. die "ActColor" richtig setzen 
         else
@@ -376,7 +378,13 @@ class LightColorChanger extends IPSModule
     {
         $this->ChangeColor();
     }
-
+    
+    
+    public function AutomaticRelease ()
+    {
+        $this->SetTimerInterval('LCC_AutomaticRelease', 0);
+        $this->StartAutomaticColor();
+    }
 
     public function Destroy()
     {
