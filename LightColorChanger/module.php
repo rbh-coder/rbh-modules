@@ -17,8 +17,8 @@ class LightColorChanger extends IPSModule
         $green=0x00FF00;
         $blue=0x0000FF;
 
-        $this->RegisterAttributeString('SwitchList', "SwitchRedLightID,SwitchAmberLightID,SwitchGreenLightID,SwitchBlueLightID");
-        $this->RegisterAttributeString('StatusList', "StatusRedLightID,StatusAmberLightID,StatusGreenLightID,StatusBlueLightID");
+        $this->RegisterAttributeString('SwitchList', "SwitchAmberLightID,SwitchRedLightID,SwitchGreenLightID,SwitchBlueLightID");
+        $this->RegisterAttributeString('StatusList', "StatusAmberLightID,StatusRedLightID,StatusGreenLightID,StatusBlueLightID");
         $this->RegisterAttributeString('ColorList', "1,3,2,6,4,12,8,9");
         $this->RegisterAttributeString('MainColorList', "1,2,4,8");
         $this->RegisterAttributeString('ExpertListHide',"ColorChangeTime,CleaningMode");
@@ -155,8 +155,8 @@ class LightColorChanger extends IPSModule
         //$blue=0x0000FF;
 
         $keyTable = array(1,2,4,8);
-        $colorTable = array(0xFF0000,0xFFFF00,0x00FF00,0x0000FF);
-        $colorNameTable = array('Rot','Gelb','Grün','Blau');
+        $colorTable = array(0xFFFF00,0xFF0000,0x00FF00,0x0000FF);
+        $colorNameTable = array('Gelb','Rot','Grün','Blau');
 
         $numberColors=0;
         $colorString = "";
