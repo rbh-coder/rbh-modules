@@ -64,6 +64,7 @@ class PulseActor extends IPSModule
         $profileName = "PAC_Status";
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName,1);
             IPS_SetVariableProfileValues($profileName, 0, 7, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
             IPS_SetVariableProfileAssociation($profileName, 0, "Ausgeschaltet", "", $transparent);
