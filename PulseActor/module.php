@@ -100,6 +100,8 @@ class PulseActor extends IPSModule
         $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
         $this->RegisterPropertyInteger('MaxPulseTime', 60);
         $this->RegisterPropertyInteger('MaxPauseTime', 60);
+        $this->RegisterPropertyInteger('PulseTimeUnit',0);
+        $this->RegisterPropertyInteger('PauseTimeUnit',0);
 
         $this->RegisterPropertyBoolean('Debug', false);
       
