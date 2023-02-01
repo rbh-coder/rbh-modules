@@ -13,15 +13,15 @@
 			"options": [
 				{
 					"caption": "Seconds",
-					"value": "sec"
+					"value": 0
 				},
 				{
 					"caption": "Minutes",
-					"value": "min"
+					"value": 1
 				},
 				{
 					"caption": "Hours",
-					"value": "std"
+					"value": 2
 				}
 			]
 		},
