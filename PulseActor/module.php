@@ -107,7 +107,13 @@ class PulseActor extends IPSModule
         $this->RegisterMessage($this->GetIDForIdent('AutomaticRelease'),VM_UPDATE);
     }
 
-  
+     public function RegisterVariableIds(string $itemsString)
+    {
+        foreach (explode(',', $itemsString) as $item) {
+            if ($item != "") $this->RegisterPropertyInteger($item, 0);
+        }
+    }
+
     private function UpdateTimeProfile(string $profileName, float $maxValue, string $suffix)
     {
         IPS_SetVariableProfileText($profileName,"",$suffix);
