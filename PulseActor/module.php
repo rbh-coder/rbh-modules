@@ -111,7 +111,7 @@ class PulseActor extends IPSModule
     private function UpdateTimeProfile(string $profileName, float $maxValue, string $suffix)
     {
         IPS_SetVariableProfileText($profileName,"",$suffix);
-        IPS_SetVariableProfileValues ($profileName, 0, $maxValue,1)   
+        IPS_SetVariableProfileValues ($profileName, 0, $maxValue,1);  
     }
 
     private function GetSuffix ( int $suffixId)
