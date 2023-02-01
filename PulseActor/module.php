@@ -19,7 +19,7 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('SwitchList', "SwitchActorID");
         $this->RegisterAttributeString('StatusList', "StatusActorID");
         $this->RegisterAttributeString('ExpertListHide',"");
-        $this->RegisterAttributeString('ExpertListLock',"OpMode","PulseTime","PauseTime");
+        $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
 
         //Profiles
         $profileName = "PAC_Switch";
