@@ -23,7 +23,7 @@ class PulseActor extends IPSModule
 
         //Profiles
         $profileName = "PAC_Switch";
-        IPS_DeleteVariableProfile($profileName);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Power");
@@ -32,7 +32,7 @@ class PulseActor extends IPSModule
         }
 
         $profileName = "PAC_OpMode";
-        IPS_DeleteVariableProfile($profileName);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
@@ -41,9 +41,10 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", $yellow);
             IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", $green);
         }
+       
 
         $profileName = "PAC_PulseTime";
-        IPS_DeleteVariableProfile($profileName);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileText($profileName, "", " sec");
@@ -52,7 +53,7 @@ class PulseActor extends IPSModule
         }
 
         $profileName = "PAC_PauseTime";
-        IPS_DeleteVariableProfile($profileName);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
             IPS_SetVariableProfileText($profileName, "", " sec");
@@ -61,7 +62,7 @@ class PulseActor extends IPSModule
         }
 
         $profileName = "PAC_Status";
-        IPS_DeleteVariableProfile($profileName);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_SetVariableProfileValues($profileName, 0, 7, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
