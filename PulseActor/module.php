@@ -102,8 +102,10 @@ class PulseActor extends IPSModule
         $this->RegisterPropertyInteger('MaxPauseTime', 60);
         $this->RegisterPropertyInteger('PulseTimeUnit',0);
         $this->RegisterPropertyInteger('PauseTimeUnit',0);
-
         $this->RegisterPropertyBoolean('Debug', false);
+
+        $this->RegisterAttributeInteger('PulseTimeFactor',0);
+        $this->RegisterAttributeInteger('PauseTimeFactor',0);
       
         //Variablefür Änderungen registrieren
         //Achtung hier ID für Namen holen
@@ -138,6 +140,19 @@ class PulseActor extends IPSModule
         return " ???";
     }
 
+    private function GetTimerFactor ( int $suffixId)
+    {
+        switch ($suffixId)
+        {
+            case 0:
+                return 1;
+            case 1:
+                return 60;
+            case 2:
+                return 3600;
+        }
+        return 1;
+    }
 
 
     //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable
@@ -258,6 +273,9 @@ class PulseActor extends IPSModule
         //TimeProfile aufdatieren
         $this->UpdateTimeProfile("PAC_PulseTime", $this->ReadPropertyInteger('MaxPulseTime'),$this->GetSuffix($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->UpdateTimeProfile("PAC_PauseTime", $this->ReadPropertyInteger('MaxPauseTime'),$this->GetSuffix($this->ReadPropertyInteger('PauseTimeUnit')));
+
+        $this->WriteAttributeInteger('PulseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PulseTimeUnit')));
+        $this->WriteAttributeInteger('PauseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PauseTimeUnit')));
       
     }
 
