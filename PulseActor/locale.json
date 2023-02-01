@@ -1,0 +1,20 @@
+{
+    "translations": {
+			"de": {
+				"Operation Mode": "Betriebsart",
+				"Maximum Pulse Time": "Maximale Pulsdauer",
+				"Maximum Pause Time": "Maximale Pausenzeit",
+				"Pulse Time Unit": "Einheit Pulsdauer",
+				"Pause Time Unit": "Einheit Pausenzeit",
+				"Pulse Time": "Pulsdauer",
+				"Pause Time": "Pausenzeit",
+				"Automatic Release": "Automatikfreigabe",
+				"Expert Mode": "Expertenmodus",
+				"Debug Mode": "Debug Modus",
+				"Actor ID": "Aktor ID",
+				"Seconds": "Sekunden",
+				"Minutes": "Minuten",
+				"Hours": "Stunden"
+			}
+    }
+}

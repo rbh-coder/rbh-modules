@@ -62,8 +62,8 @@ Die Funktionalität, die das Modul im WebFront bietet.
 
 ### 7. PHP-Befehlsreferenz
 
-`boolean LC_BeispielFunktion(integer $InstanzID);`
+`boolean SPL_BeispielFunktion(integer $InstanzID);`
 Erklärung der Funktion.
 
 Beispiel:
-`LC_BeispielFunktion(12345);`
+`SPL_BeispielFunktion(12345);`

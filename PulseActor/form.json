@@ -1,0 +1,76 @@
+{
+	"elements": [
+		{
+			"name": "MaxPulseTime",
+			"type": "NumberSpinner",
+			"caption": "Maximum Pulse Time",
+			"suffix": ""
+		},
+		{
+			"type": "Select",
+			"name": "PulseTimeUnit",
+			"caption": "Pulse Time Unit",
+			"options": [
+				{
+					"caption": "Seconds",
+					"value": "sec"
+				},
+				{
+					"caption": "Minutes",
+					"value": "min"
+				},
+				{
+					"caption": "Hours",
+					"value": "std"
+				}
+			]
+		},
+		{
+			"name": "MaxPauseTime",
+			"type": "NumberSpinner",
+			"caption": "Maximum Pause Time",
+			"suffix": ""
+		},
+		{
+			"type": "Select",
+			"name": "PauseTimeUnit",
+			"caption": "Pause Time Unit",
+			"options": [
+				{
+					"caption": "Seconds",
+					"value": 0
+				},
+				{
+					"caption": "Minutes",
+					"value": 1
+				},
+				{
+					"caption": "Hours",
+					"value": 2
+				}
+			]
+		},
+		{
+			"name": "SwitchActorID",
+			"type": "SelectVariable",
+			"caption": "Switch Actor ID"
+		},
+		{
+			"name": "StatusActorID",
+			"type": "SelectVariable",
+			"caption": "Status Actor ID"
+		},
+		{
+			"name": "ExpertModeID",
+			"type": "SelectVariable",
+			"caption": "Expert Mode"
+		},
+		{
+			"name": "Debug",
+			"type": "CheckBox",
+			"caption": "Debug Mode"
+		}
+	],
+	"actions": [],
+	"status": []
+}
