@@ -54,7 +54,7 @@ class PulseActor extends IPSModule
         $profileName = "PAC_PauseTime";
         IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
-            IPS_CreateVariableProfile($profileName,0,2,0);
+            IPS_CreateVariableProfile($profileName,1);
             IPS_SetVariableProfileText($profileName, "", " sec");
             IPS_SetVariableProfileValues($profileName, 0, 60, 1);
             IPS_SetVariableProfileIcon($profileName, "Clock");
