@@ -14,7 +14,9 @@
 				"Actor ID": "Aktor ID",
 				"Seconds": "Sekunden",
 				"Minutes": "Minuten",
-				"Hours": "Stunden"
+				"Hours": "Stunden",
+				"Active": "Aktiv",
+				"Check Actor Status":  "Aktor Status überwachen"
 			}
     }
 }

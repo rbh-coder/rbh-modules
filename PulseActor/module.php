@@ -101,6 +101,8 @@ class PulseActor extends IPSModule
         $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_Switch', 60);
         $this->EnableAction('AutomaticRelease');
 
+        $this->RegisterVariableBoolean('Aktiv', $this->Translate('Active'), 'PAC_Switch', 62);
+
         $this->RegisterTimer('PAC_PulseTimer', 0, 'PAC_UpdatePulseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_PauseTimer', 0, 'PAC_UpdatePauseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_SignalCheckTimer', 0, 'PAC_VerifySignal($_IPS[\'TARGET\']);');
@@ -114,6 +116,7 @@ class PulseActor extends IPSModule
         $this->RegisterPropertyInteger('PulseTimeUnit',0);
         $this->RegisterPropertyInteger('PauseTimeUnit',0);
         $this->RegisterPropertyBoolean('Debug', false);
+        $this->RegisterPropertyBoolean('CheckActor', false);
 
         $this->RegisterAttributeInteger('PulseTimeFactor',0);
         $this->RegisterAttributeInteger('PauseTimeFactor',0);
@@ -279,6 +282,7 @@ class PulseActor extends IPSModule
             $idx++;
         }
         if (!$found) return;
+        $this->SetValue('Aktiv', $this->GetValue('StatusActorID');
         VerifySignal();
     }
 
@@ -373,6 +377,7 @@ class PulseActor extends IPSModule
 
     private function VerifySignal()
     {
+        if (!$this->ReadPropertyBoolean('CheckActor')) return;
         $idSet = $this->ReadPropertyInteger("SwitchActorID");
         if ($idSet == 0) return;
         $idAct = $this->ReadPropertyInteger("StatusActorID");
