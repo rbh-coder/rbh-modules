@@ -428,6 +428,13 @@ class PulseActor extends IPSModule
 		        $action = self::ManuellAktiv;
 		        break;
             case self::Automatik:
+                switch ($action)
+                {
+                    case self::Ausgeschaltet:
+                    case  self::ManuellAktiv:
+                         $action = self::WarteAufFreigabe;
+                    break:
+                }
 		        break;
 	        default:
 		        break;
