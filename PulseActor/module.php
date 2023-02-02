@@ -395,7 +395,7 @@ class PulseActor extends IPSModule
         $logStatus = $statusSet ? "EIN" : "AUS";
         $logMessage = "Setze ".GetName(GetParent($idSet))." erneut auf: ".$logStatus;
         IPS_LogMessage("PulseActor-SetSignal",$logMessage);
-        RequestAction(($idSet,$statusSet);
+        RequestAction($idSet,$statusSet);
         $this->StartSignalChecker();
     }
 
