@@ -283,7 +283,7 @@ class PulseActor extends IPSModule
         }
         if (!$found) return;
         $this->SetValue('Aktiv', $this->GetValue('StatusActorID');
-        VerifySignal();
+        $this->VerifySignal();
     }
 
     public function Destroy()
