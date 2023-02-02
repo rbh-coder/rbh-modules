@@ -338,9 +338,9 @@ class PulseActor extends IPSModule
     //Methode setzt Variable, soferne dieser in der Modul-Form aktiviert ist
     public function SetDevice(string $switchName, bool $status)
     {
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.SetDevice","$switchName: ".$switchName);
+        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.SetDevice","switchName: ".$switchName);
         $id= $this->ReadPropertyInteger($switchName);
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.SetDevice","$id: ".$id);
+        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.SetDevice","id: ".$id);
         if ($id>0) {
             RequestAction($id, $status);
             StartSignalChecker();
