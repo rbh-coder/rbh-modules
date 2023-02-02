@@ -380,9 +380,9 @@ class PulseActor extends IPSModule
     {
         if (!$this->ReadPropertyBoolean('CheckActor')) return;
         $idSet = $this->ReadPropertyInteger("SwitchActorID");
-        if ($idSet == 0) return;
+        if ($idSet < 2) return;
         $idAct = $this->ReadPropertyInteger("StatusActorID");
-        if ($idAct == 0) return;
+        if ($idAct < 2) return;
 
         $statusSet = GetValueBoolean($idSet);
         if ($this->CheckSignal($idSet,$statusSet, $idAct))
