@@ -41,6 +41,15 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
         }
 
+        $profileName = "PAC_SwitchStatus";
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Electricity");
+            IPS_SetVariableProfileAssociation($profileName, false, "Inaktiv", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Aktiv", "", $green);
+        }
+
         $profileName = "PAC_OpMode";
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
@@ -101,7 +110,7 @@ class PulseActor extends IPSModule
         $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_Switch', 60);
         $this->EnableAction('AutomaticRelease');
 
-        $this->RegisterVariableBoolean('Aktiv', $this->Translate('Active'), 'PAC_Switch', 62);
+        $this->RegisterVariableBoolean('Aktiv', $this->Translate('Active'), 'PAC_SwitchStatus', 62);
 
         $this->RegisterTimer('PAC_PulseTimer', 0, 'PAC_UpdatePulseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_PauseTimer', 0, 'PAC_UpdatePauseTimer($_IPS[\'TARGET\']);');
@@ -395,7 +404,7 @@ class PulseActor extends IPSModule
         }
         $logStatus = $statusSet ? "EIN" : "AUS";
         $logMessage = "Setze ".IPS_GetName(IPS_GetParent($idSet))." erneut auf: ".$logStatus;
-        IPS_LogMessage("PulseActor-SetSignal",$logMessage);
+        IPS_LogMessage("PulseActor.VerifySignal",$logMessage);
         RequestAction($idSet,$statusSet);
         $this->StartSignalChecker();
     }
