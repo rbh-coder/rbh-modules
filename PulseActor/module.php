@@ -20,7 +20,7 @@ class PulseActor extends IPSModule
         //Never delete this line!
         parent::Create();
 
-          //Some color definitions
+        //Some color definitions
         $transparent = 0xffffff00;
         $red=0xFF0000;
         $yellow = 0xFFFF00;
@@ -51,7 +51,6 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", $yellow);
             IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", $green);
         }
-
 
         $profileName = "PAC_PulseTime";
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
@@ -86,7 +85,6 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 6, "Ausschalten", "", $transparent);
             IPS_SetVariableProfileAssociation($profileName, 7, "Manuell Ein", "", $red);
         }
-
 
         //Variables
         $this->RegisterVariableInteger('OpMode', $this->Translate('Operation Mode'), 'PAC_OpMode', 0);
@@ -126,7 +124,7 @@ class PulseActor extends IPSModule
         $this->RegisterMessage($this->GetIDForIdent('AutomaticRelease'),VM_UPDATE);
     }
 
-     public function RegisterVariableIds(string $itemsString)
+    public function RegisterVariableIds(string $itemsString)
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
@@ -167,7 +165,6 @@ class PulseActor extends IPSModule
         return 1;
     }
 
-
     //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable
     //void EnableAction (string $Ident)
     //regstriert wird
@@ -187,7 +184,7 @@ class PulseActor extends IPSModule
                 $this->RestartTimers();
                 break;
             case "AutomaticRelease":
-                 $this->SetValue($Ident, $Value);
+                $this->SetValue($Ident, $Value);
                 break;
         }
     }
@@ -196,7 +193,6 @@ class PulseActor extends IPSModule
     {
         return explode(',', $itemsString);
     }
-
 
     public function HandleOpMode(int $opmode)
     {
@@ -210,13 +206,12 @@ class PulseActor extends IPSModule
                 $this->PulseAction ();
                 break;
             case 2: //Automatikbetrieb
-                 $this->HideItem("AutomaticRelease",false);
-                 $this->PulseAction ();
+                $this->HideItem("AutomaticRelease",false);
+                $this->PulseAction ();
                 break;
             default:
         }
     }
-
 
     //Wird aufgrufen wenn Variable mit
     //void RegisterMessage (integer $SenderID, integer $NachrichtID)
@@ -245,7 +240,7 @@ class PulseActor extends IPSModule
             if ($this->ReadPropertyBoolean('Debug')) {
                 IPS_LogMessage("MessageSink", 'id:'.$SenderID.' message:'.$Message);
             }
-             $this->AutomaticRelease();
+            $this->AutomaticRelease();
         }
         //Die Statusänderung des Actors auswerten
         else
@@ -256,7 +251,7 @@ class PulseActor extends IPSModule
 
     public function UpdatePulseTimer()
     {
-         $this->PulseAction ();
+        $this->PulseAction ();
     }
 
     public function UpdatePauseTimer()
@@ -264,10 +259,9 @@ class PulseActor extends IPSModule
         $this->PulseAction ();
     }
 
-
     private function AutomaticRelease ()
     {
-         $this->PulseAction ();
+        $this->PulseAction ();
     }
 
     private function StatusUpdate ($senderID)
@@ -277,12 +271,12 @@ class PulseActor extends IPSModule
         $found = false;
         foreach ($itemArray as $item)
         {
-           if ($senderID == $this->ReadPropertyInteger($item))
-           {
-               $found = true;
-               break;
-           }
-           $idx++;
+            if ($senderID == $this->ReadPropertyInteger($item))
+            {
+                $found = true;
+                break;
+            }
+            $idx++;
         }
         if (!$found) return;
         VerifySignal();
@@ -327,7 +321,6 @@ class PulseActor extends IPSModule
         }
     }
 
-
     public function RestartTimers()
     {
         switch($this->GetValue('OpMode'))
@@ -337,7 +330,6 @@ class PulseActor extends IPSModule
                 break;
         }
     }
-
 
     //Methode setzt Variable, soferne dieser in der Modul-Form aktiviert ist
     public function SetDevice(string $switchName, bool $status)
@@ -444,7 +436,7 @@ class PulseActor extends IPSModule
         $action = $this->SetAction($action);
         if ($action != $actAction)
         {
-  	        SetValue('Status',$action);
+            SetValue('Status',$action);
         }
         IPS_LogMessage("PulsActor.PulseAction",'Status: '.$action);
     }
@@ -452,12 +444,12 @@ class PulseActor extends IPSModule
     function SwitchOff ()
     {
         $this->StopTimer();
-        SetDevice("SwitchActorID",false)
+        SetDevice("SwitchActorID",false);
     }
 
     function SwitchOn ()
     {
-        SetDevice("SwitchActorID",true)
+        SetDevice("SwitchActorID",true);
     }
 
     private function SetAction ($action)
@@ -503,7 +495,7 @@ class PulseActor extends IPSModule
                 }
                 else
                 {
-                     $actAction = $this->SetAction (WarteAufFreigabe);
+                    $actAction = $this->SetAction (WarteAufFreigabe);
                 }
 			    break;
 		    case Ausschalten:
@@ -511,8 +503,8 @@ class PulseActor extends IPSModule
 			    $actAction =  Ausgeschaltet;
 			    break;
 		    case ManuellAktiv:
-                 $this->StopTimer();
-			     $this->SetSwitches (true);
+                $this->StopTimer();
+                $this->SetSwitches (true);
 			    break;
 		    default:
 			    break;
@@ -528,18 +520,18 @@ class PulseActor extends IPSModule
 
     private function StartPauseTime ()
     {
-         $pauseTime =  GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
-         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
+        $pauseTime =  GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
+        $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
     }
     private function StartPulseTime ()
     {
-         $pulseTime =  GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
-         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
+        $pulseTime =  GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
+        $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
     }
     private function Stoptimer ()
     {
-         $this->SetTimerInterval('PAC_PauseTimer', 0);
-         $this->SetTimerInterval('PAC_PulseTimer', 0);
+        $this->SetTimerInterval('PAC_PauseTimer', 0);
+        $this->SetTimerInterval('PAC_PulseTimer', 0);
     }
 
 }
