@@ -394,7 +394,7 @@ class PulseActor extends IPSModule
             return;
         }
         $logStatus = $statusSet ? "EIN" : "AUS";
-        $logMessage = "Setze ".GetName(GetParent($idSet))." erneut auf: ".$logStatus;
+        $logMessage = "Setze ".IPS_GetName(IPS_GetParent($idSet))." erneut auf: ".$logStatus;
         IPS_LogMessage("PulseActor-SetSignal",$logMessage);
         RequestAction($idSet,$statusSet);
         $this->StartSignalChecker();
@@ -416,8 +416,13 @@ class PulseActor extends IPSModule
         {
             return true;
         }
+        $parentId = IPS_GetParent($idAct);
 
-        EIB_RequestStatus (GetParent($idAct));
+        if (!EIB_RequestStatus ($parentId))
+        {
+            KNX_RequestStatus($parentId );
+        }
+  
         $statusAct = GetValueBoolean($idAct);
         return ($statusSet ==  $statusAct);
     }
