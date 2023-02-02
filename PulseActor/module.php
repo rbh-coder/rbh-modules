@@ -343,7 +343,7 @@ class PulseActor extends IPSModule
         if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.SetDevice","id: ".$id);
         if ($id>0) {
             RequestAction($id, $status);
-            StartSignalChecker();
+            $this->StartSignalChecker();
         }
     }
 
