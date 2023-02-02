@@ -202,15 +202,15 @@ class PulseActor extends IPSModule
     {
         switch($opmode) {
             case 0: //Aus
-                this->HideItem("AutomaticRelease",true);
+                $this->HideItem("AutomaticRelease",true);
                 $this->PulseAction ();
                 break;
             case 1: //Handbetrieb
-                this->HideItem("AutomaticRelease",true);
-                 $this->PulseAction ();
+                $this->HideItem("AutomaticRelease",true);
+                $this->PulseAction ();
                 break;
             case 2: //Automatikbetrieb
-                 this->HideItem("AutomaticRelease",false);
+                 $this->HideItem("AutomaticRelease",false);
                  $this->PulseAction ();
                 break;
             default:
