@@ -441,13 +441,13 @@ class PulseActor extends IPSModule
         IPS_LogMessage("PulsActor.PulseAction",'Status: '.$action);
     }
 
-    function SwitchOff ()
+    private function SwitchOff ()
     {
         $this->StopTimer();
         $this->SetDevice("SwitchActorID",false);
     }
 
-    function SwitchOn ()
+    private function SwitchOn ()
     {
         $this->SetDevice("SwitchActorID",true);
     }
@@ -470,7 +470,7 @@ class PulseActor extends IPSModule
 		    case  self::SetzeAktiv:
                 $this->StopTimer();
                 $this->StartPulseTime();
-			    $this->SetSwitches (true);
+			    $this->SwitchOn;
 			    $actAction =  self::Aktiv;
 			    break;
 		    case  self::Aktiv:
@@ -504,7 +504,7 @@ class PulseActor extends IPSModule
 			    break;
 		    case  self::ManuellAktiv:
                 $this->StopTimer();
-                $this->SetSwitches (true);
+                $this->SwitchOn();
 			    break;
 		    default:
 			    break;
