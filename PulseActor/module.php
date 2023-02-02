@@ -156,11 +156,11 @@ class PulseActor extends IPSModule
         switch ($suffixId)
         {
             case 0:
-                return 1;
+                return 1000;
             case 1:
-                return 60;
+                return 60000;
             case 2:
-                return 3600;
+                return 3600000;
         }
         return 1;
     }
