@@ -376,7 +376,7 @@ class PulseActor extends IPSModule
         IPS_SetDisabled($id, $status);
     }
 
-    private function VerifySignal()
+    public function VerifySignal()
     {
         if (!$this->ReadPropertyBoolean('CheckActor')) return;
         $idSet = $this->ReadPropertyInteger("SwitchActorID");
