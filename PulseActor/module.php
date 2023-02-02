@@ -406,7 +406,7 @@ class PulseActor extends IPSModule
     }
     private function StartSignalChecker()
     {
-        $this->SetTimerInterval('PAC_SignalCheckTimer', 3);
+        $this->SetTimerInterval('PAC_SignalCheckTimer', 3000);
     }
 
     private function CheckSignal(int $idSet,bool $statusSet,int $idAct)
