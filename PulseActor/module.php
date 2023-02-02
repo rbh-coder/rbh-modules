@@ -3,6 +3,18 @@
 declare(strict_types=1);
 class PulseActor extends IPSModule
 {
+    const Aus = 0;
+    const Manuell = 1;
+    const Automatik = 2;
+    const Ausgeschaltet = 0;
+    const WarteAufFreigabe = 1;
+    const SetzeAktiv = 2;
+    const Aktiv = 3;
+    const SetzePause = 4;
+    const Pause = 5;
+    const Ausschalten = 6;
+    const ManuellAktiv = 7;
+
     public function Create()
     {
         //Never delete this line!
@@ -10,10 +22,8 @@ class PulseActor extends IPSModule
 
           //Some color definitions
         $transparent = 0xffffff00;
-        $white = 0xffffff;
         $red=0xFF0000;
         $yellow = 0xFFFF00;
-        $green_blue=0x0CBAA6;
         $green=0x00FF00;
         $blue=0x0000FF;
         $this->RegisterAttributeString('SwitchList', "SwitchActorID");
@@ -41,7 +51,7 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", $yellow);
             IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", $green);
         }
-       
+
 
         $profileName = "PAC_PulseTime";
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
@@ -92,10 +102,13 @@ class PulseActor extends IPSModule
 
         $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_Switch', 60);
         $this->EnableAction('AutomaticRelease');
-        
-        $this->RegisterTimer('PAC_Timer', 0, 'PAC_UpdateTimer($_IPS[\'TARGET\']);');
+
+        $this->RegisterTimer('PAC_PulseTimer', 0, 'PAC_UpdatePulseTimer($_IPS[\'TARGET\']);');
+        $this->RegisterTimer('PAC_PauseTimer', 0, 'PAC_UpdatePauseTimer($_IPS[\'TARGET\']);');
+        $this->RegisterTimer('PAC_SignalCheckTimer', 0, 'PAC_VerifySignal($_IPS[\'TARGET\']);');
+
         $this->RegisterPropertyInteger('ExpertModeID', 0);
-     
+
         $this->RegisterVariableIds($this->ReadAttributeString('SwitchList'));
         $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
         $this->RegisterPropertyInteger('MaxPulseTime', 60);
@@ -106,7 +119,7 @@ class PulseActor extends IPSModule
 
         $this->RegisterAttributeInteger('PulseTimeFactor',0);
         $this->RegisterAttributeInteger('PauseTimeFactor',0);
-      
+
         //Variablefür Änderungen registrieren
         //Achtung hier ID für Namen holen
         //Variable für Automatikfreigabe für Änderungen registrieren
@@ -123,7 +136,7 @@ class PulseActor extends IPSModule
     private function UpdateTimeProfile(string $profileName, float $maxValue, string $suffix)
     {
         IPS_SetVariableProfileText($profileName,"",$suffix);
-        IPS_SetVariableProfileValues ($profileName, 0, $maxValue,1);  
+        IPS_SetVariableProfileValues ($profileName, 0, $maxValue,1);
     }
 
     private function GetSuffix ( int $suffixId)
@@ -183,19 +196,22 @@ class PulseActor extends IPSModule
     {
         return explode(',', $itemsString);
     }
-   
-  
+
+
     public function HandleOpMode(int $opmode)
     {
         switch($opmode) {
             case 0: //Aus
-               
+                this->HideItem("AutomaticRelease",true);
+                $this->PulseAction ();
                 break;
             case 1: //Handbetrieb
-              
+                this->HideItem("AutomaticRelease",true);
+                 $this->PulseAction ();
                 break;
             case 2: //Automatikbetrieb
-               
+                 this->HideItem("AutomaticRelease",false);
+                 $this->PulseAction ();
                 break;
             default:
         }
@@ -211,15 +227,15 @@ class PulseActor extends IPSModule
         //0: Aktueller Wert
         //1: Ob es eine Differenz zum alten Wert gibt.
         //2: Alter Wert
-        
+
         //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
         if ($Data[1]==0) return;
-            
+
         //$this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true), 0);
         if ($this->ReadPropertyBoolean('Debug')) {
             IPS_LogMessage("MessageSink", 'id:'.$SenderID.' message:'.$Message.' data:'.print_r($Data, true));
         }
-        
+
         if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
         {
             $this->HandleExpertSwitch($SenderID);
@@ -235,20 +251,41 @@ class PulseActor extends IPSModule
         else
         {
             $this-> StatusUpdate($SenderID);
-        }  
+        }
     }
 
-    public function UpdateTimer()
+    public function UpdatePulseTimer()
     {
+         $this->PulseAction ();
     }
-    
-    
+
+    public function UpdatePauseTimer()
+    {
+        $this->PulseAction ();
+    }
+
+
     private function AutomaticRelease ()
     {
+         $this->PulseAction ();
     }
 
     private function StatusUpdate ($senderID)
     {
+        $itemArray =  $this->GetArrayFromString ($this->ReadAttributeString('StatusList'));
+        $idx = 0;
+        $found = false;
+        foreach ($itemArray as $item)
+        {
+           if ($senderID == $this->ReadPropertyInteger($item))
+           {
+               $found = true;
+               break;
+           }
+           $idx++;
+        }
+        if (!$found) return;
+        VerifySignal();
     }
 
     public function Destroy()
@@ -263,20 +300,20 @@ class PulseActor extends IPSModule
         //Never delete this line!
         parent::ApplyChanges();
 
-         $itemsString = $this->ReadAttributeString('StatusList');
+        $itemsString = $this->ReadAttributeString('StatusList');
         foreach ( $this->GetArrayFromString($this->ReadAttributeString('StatusList')) as $item) {
             $this->RegisterStatusUpdate($item);
         }
 
         $this->RegisterStatusUpdate('ExpertModeID');
-      
+
         //TimeProfile aufdatieren
         $this->UpdateTimeProfile("PAC_PulseTime", $this->ReadPropertyInteger('MaxPulseTime'),$this->GetSuffix($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->UpdateTimeProfile("PAC_PauseTime", $this->ReadPropertyInteger('MaxPauseTime'),$this->GetSuffix($this->ReadPropertyInteger('PauseTimeUnit')));
 
         $this->WriteAttributeInteger('PulseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->WriteAttributeInteger('PauseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PauseTimeUnit')));
-      
+
     }
 
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
@@ -293,72 +330,216 @@ class PulseActor extends IPSModule
 
     public function RestartTimers()
     {
-        switch($this->GetValue('OpMode')) 
+        switch($this->GetValue('OpMode'))
         {
             case 2: //Automatikbetrieb
-                if (!$this->GetValue('AutomaticRelease')) return;
-
-                /*
-                $mainColorNumbers = array_map('intval', explode(',', $this->ReadAttributeString('MainColorList')));
-                $fadeTime =  $this->GetValue("ColorFadeTime") * 1000;
-                $setInterval =  $this->GetValue("ColorChangeTime") * 1000 *60;
-                $actColor =  $this->ReadAttributeInteger("ActColor");
-                //Falls Haupfarbe aktiv ist, dann normale Wechselzeit starten
-                if (in_array($actColor, $mainColorNumbers, true)) {
-                    $this->SetTimerInterval('LCC_Timer', $setInterval);
-                }
-                //ansonsten Übergangszeit neu starten falls grösser 0
-                else if ($fadeTime > 0) {
-                    $this->SetTimerInterval('LCC_Timer', $fadeTime);
-                }
-                //ansonsten auf nächste Farbe schalten
-                else
-                {
-                    $this->ChangeColor();
-                }
-                */
+                if (!$this->IsReleased()) return;
                 break;
         }
     }
-     
+
 
     //Methode setzt Variable, soferne dieser in der Modul-Form aktiviert ist
     public function SetDevice(string $switchName, bool $status)
     {
         $id= $this->ReadPropertyInteger($switchName);
-        
+
         if ($id>0) {
             RequestAction($id, $status);
+            StartSignalChecker();
         }
     }
-    
+
     private function HandleExpertSwitch(int $id)
     {
         $status = !GetValueBoolean($id);
         if ($id==0)  $status = false;
         //IPS_LogMessage("HandleExpertSwitch", 'id:'.$id.' value:'.$status);
         $itemString = $this->ReadAttributeString('ExpertListHide');
-        foreach (explode(',', $itemString) as $item) 
+        foreach (explode(',', $itemString) as $item)
         {
             $this->HideItem($item,$status);
         }
         $itemString = $this->ReadAttributeString('ExpertListLock');
-        foreach (explode(',', $itemString) as $item) 
+        foreach (explode(',', $itemString) as $item)
         {
             $this->LockItem($item,$status);
         }
     }
-    
+
     private function HideItem(string $item,bool $status)
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetHidden($id, $status);
     }
-    
+
     private function LockItem(string $item,bool $status)
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetDisabled($id, $status);
     }
-        
+
+    private function VerifySignal()
+    {
+        $idSet = $this->ReadPropertyInteger("SwitchActorID");
+        if ($idSet == 0) return;
+        $idAct = $this->ReadPropertyInteger("StatusActorID");
+        if ($idAct == 0) return;
+
+        $statusSet = GetValueBoolean($idSet);
+        if ($this->CheckSignal($idSet,$statusSet, $idAct))
+        {
+            $this->StopSignalChecker();
+            return;
+        }
+        $logStatus = $statusSet ? "EIN" : "AUS";
+        $logMessage = "Setze ".GetName(GetParent($idSet))." erneut auf: ".$logStatus;
+        IPS_LogMessage("PulseActor-SetSignal",$logMessage);
+        RequestAction(($idSet,$statusSet);
+        $this->StartSignalChecker();
+    }
+
+    private function StopSignalChecker()
+    {
+        $this->SetTimerInterval('PAC_SignalCheckTimer', 0);
+    }
+    private function StartSignalChecker()
+    {
+        $this->SetTimerInterval('PAC_SignalCheckTimer', 3);
+    }
+
+    private function CheckSignal(int $idSet,bool $statusSet,int $idAct)
+    {
+        $statusAct = GetValueBoolean($idAct);
+        if ($statusSet ==  $statusAct)
+        {
+            return true;
+        }
+
+        EIB_RequestStatus (GetParent($idAct));
+        $statusAct = GetValueBoolean($idAct);
+        return ($statusSet ==  $statusAct);
+    }
+
+    private function PulseAction ()
+    {
+        $betriebsart = GetValue('OperationMode');
+        $action =  GetValue('Status');
+        $actAction = $action;
+
+        switch ($betriebsart)
+        {
+	        case Aus:
+                $action = Ausschalten;
+		        break;
+	        case Manuell:
+		        $action = ManuellAktiv;
+		        break;
+	        case Automatik:
+		        break;
+	        default:
+		        break;
+        }
+
+        $action = $this->SetAction($action);
+        if ($action != $actAction)
+        {
+  	        SetValue('Status',$action);
+        }
+        IPS_LogMessage("PulsActor.PulseAction",'Status: '.$action);
+    }
+
+    function SwitchOff ()
+    {
+        $this->StopTimer();
+        SetDevice("SwitchActorID",false)
+    }
+
+    function SwitchOn ()
+    {
+        SetDevice("SwitchActorID",true)
+    }
+
+    private function SetAction ($action)
+    {
+	    $actAction = $action;
+
+	    switch ($action)
+	    {
+		    case Ausgeschaltet:
+			    break;
+		    case WarteAufFreigabe:
+                $this->SwitchOff ();
+			    if ($this->IsReleased())
+			    {
+				    $actAction =  $this->SetAction (SetzeAktiv);
+			    }
+			    break;
+		    case SetzeAktiv:
+                $this->StopTimer();
+                $this->StartPulseTime();
+			    $this->SetSwitches (true);
+			    $actAction = Aktiv;
+			    break;
+		    case Aktiv:
+                if ($this->IsReleased())
+			    {
+			        $actAction =  $this->SetAction (SetzePause);
+                }
+                else
+                {
+                    $actAction =  $this->SetAction (WarteAufFreigabe);
+                }
+			    break;
+		    case SetzePause:
+			    $this->SwitchOff ();
+                $this->StartPauseTime();
+			    $actAction = Pause;
+			    break;
+		    case Pause:
+                if ($this->IsReleased())
+                {
+                    $actAction = $this->SetAction (SetzeAktiv);
+                }
+                else
+                {
+                     $actAction = $this->SetAction (WarteAufFreigabe);
+                }
+			    break;
+		    case Ausschalten:
+			    $this->SwitchOff();
+			    $actAction =  Ausgeschaltet;
+			    break;
+		    case ManuellAktiv:
+                 $this->StopTimer();
+			     $this->SetSwitches (true);
+			    break;
+		    default:
+			    break;
+	    }
+
+	    return $actAction;
+    }
+
+    private function IsReleased()
+    {
+        return GetValue('AutomaticRelease');
+    }
+
+    private function StartPauseTime ()
+    {
+         $pauseTime =  GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
+         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
+    }
+    private function StartPulseTime ()
+    {
+         $pulseTime =  GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
+         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
+    }
+    private function Stoptimer ()
+    {
+         $this->SetTimerInterval('PAC_PauseTimer', 0);
+         $this->SetTimerInterval('PAC_PulseTimer', 0);
+    }
+
 }
