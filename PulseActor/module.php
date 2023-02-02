@@ -418,11 +418,11 @@ class PulseActor extends IPSModule
         }
         $parentId = IPS_GetParent($idAct);
 
-        if (!EIB_RequestStatus ($parentId))
+        if (!KNX_RequestStatus($parentId))
         {
-            KNX_RequestStatus($parentId );
+            EIB_RequestStatus ($parentId);
         }
-  
+
         $statusAct = GetValueBoolean($idAct);
         return ($statusSet ==  $statusAct);
     }
