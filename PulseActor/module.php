@@ -415,7 +415,7 @@ class PulseActor extends IPSModule
 
     private function PulseAction ()
     {
-        $betriebsart = $this->GetValue('OperationMode');
+        $betriebsart = $this->GetValue('OpMode');
         $action =  $this->GetValue('Status');
         $actAction = $action;
 
