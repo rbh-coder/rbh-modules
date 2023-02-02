@@ -481,7 +481,7 @@ class PulseActor extends IPSModule
 		    case  self::SetzeAktiv:
                 $this->StopTimer();
                 $this->StartPulseTime();
-			    $this->SwitchOn;
+			    $this->SwitchOn();
 			    $actAction =  self::Aktiv;
 			    break;
 		    case  self::Aktiv:
@@ -532,11 +532,13 @@ class PulseActor extends IPSModule
     private function StartPauseTime ()
     {
         $pauseTime =  $this->GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
+        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.StartPauseTime",'PauseTime: '.$pauseTime);
         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
     }
     private function StartPulseTime ()
     {
         $pulseTime =  $this->GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
+        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.StartPulseTime",'PulseTime: '.$pulseTime);
         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
     }
     private function Stoptimer ()
