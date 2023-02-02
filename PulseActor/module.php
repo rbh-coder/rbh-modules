@@ -3,17 +3,17 @@
 declare(strict_types=1);
 class PulseActor extends IPSModule
 {
-    const Aus = 0;
-    const Manuell = 1;
-    const Automatik = 2;
-    const Ausgeschaltet = 0;
-    const WarteAufFreigabe = 1;
-    const SetzeAktiv = 2;
-    const Aktiv = 3;
-    const SetzePause = 4;
-    const Pause = 5;
-    const Ausschalten = 6;
-    const ManuellAktiv = 7;
+    private const Aus = 0;
+    private const Manuell = 1;
+    private const Automatik = 2;
+    private const Ausgeschaltet = 0;
+    private const WarteAufFreigabe = 1;
+    private const SetzeAktiv = 2;
+    private const Aktiv = 3;
+    private const SetzePause = 4;
+    private const Pause = 5;
+    private const Ausschalten = 6;
+    private const ManuellAktiv = 7;
 
     public function Create()
     {
@@ -197,15 +197,15 @@ class PulseActor extends IPSModule
     public function HandleOpMode(int $opmode)
     {
         switch($opmode) {
-            case 0: //Aus
+            case self::Aus: //Aus
                 $this->HideItem("AutomaticRelease",true);
                 $this->PulseAction ();
                 break;
-            case 1: //Handbetrieb
+            case self::Manuell: //Handbetrieb
                 $this->HideItem("AutomaticRelease",true);
                 $this->PulseAction ();
                 break;
-            case 2: //Automatikbetrieb
+            case self::Automatik: //Automatikbetrieb
                 $this->HideItem("AutomaticRelease",false);
                 $this->PulseAction ();
                 break;
@@ -415,19 +415,19 @@ class PulseActor extends IPSModule
 
     private function PulseAction ()
     {
-        $betriebsart = GetValue('OperationMode');
-        $action =  GetValue('Status');
+        $betriebsart = $this->GetValue('OperationMode');
+        $action =  $this->GetValue('Status');
         $actAction = $action;
 
         switch ($betriebsart)
         {
-	        case Aus:
-                $action = Ausschalten;
+            case self::Aus:
+                $action = self::Ausschalten;
 		        break;
-	        case Manuell:
-		        $action = ManuellAktiv;
+            case self::Manuell:
+		        $action = self::ManuellAktiv;
 		        break;
-	        case Automatik:
+            case self::Automatik:
 		        break;
 	        default:
 		        break;
@@ -436,7 +436,7 @@ class PulseActor extends IPSModule
         $action = $this->SetAction($action);
         if ($action != $actAction)
         {
-            SetValue('Status',$action);
+            $this->SetValue('Status',$action);
         }
         IPS_LogMessage("PulsActor.PulseAction",'Status: '.$action);
     }
@@ -444,12 +444,12 @@ class PulseActor extends IPSModule
     function SwitchOff ()
     {
         $this->StopTimer();
-        SetDevice("SwitchActorID",false);
+        $this->SetDevice("SwitchActorID",false);
     }
 
     function SwitchOn ()
     {
-        SetDevice("SwitchActorID",true);
+        $this->SetDevice("SwitchActorID",true);
     }
 
     private function SetAction ($action)
@@ -458,51 +458,51 @@ class PulseActor extends IPSModule
 
 	    switch ($action)
 	    {
-		    case Ausgeschaltet:
+            case self::Ausgeschaltet:
 			    break;
-		    case WarteAufFreigabe:
+		    case  self::WarteAufFreigabe:
                 $this->SwitchOff ();
 			    if ($this->IsReleased())
 			    {
-				    $actAction =  $this->SetAction (SetzeAktiv);
+				    $actAction =  $this->SetAction ( self::SetzeAktiv);
 			    }
 			    break;
-		    case SetzeAktiv:
+		    case  self::SetzeAktiv:
                 $this->StopTimer();
                 $this->StartPulseTime();
 			    $this->SetSwitches (true);
-			    $actAction = Aktiv;
+			    $actAction =  self::Aktiv;
 			    break;
-		    case Aktiv:
+		    case  self::Aktiv:
                 if ($this->IsReleased())
 			    {
-			        $actAction =  $this->SetAction (SetzePause);
+			        $actAction =  $this->SetAction ( self::SetzePause);
                 }
                 else
                 {
-                    $actAction =  $this->SetAction (WarteAufFreigabe);
+                    $actAction =  $this->SetAction ( self::WarteAufFreigabe);
                 }
 			    break;
-		    case SetzePause:
+		    case  self::SetzePause:
 			    $this->SwitchOff ();
                 $this->StartPauseTime();
-			    $actAction = Pause;
+			    $actAction =  self::Pause;
 			    break;
-		    case Pause:
+		    case  self::Pause:
                 if ($this->IsReleased())
                 {
-                    $actAction = $this->SetAction (SetzeAktiv);
+                    $actAction = $this->SetAction ( self::SetzeAktiv);
                 }
                 else
                 {
-                    $actAction = $this->SetAction (WarteAufFreigabe);
+                    $actAction = $this->SetAction ( self::WarteAufFreigabe);
                 }
 			    break;
-		    case Ausschalten:
+		    case  self::Ausschalten:
 			    $this->SwitchOff();
-			    $actAction =  Ausgeschaltet;
+			    $actAction =   self::Ausgeschaltet;
 			    break;
-		    case ManuellAktiv:
+		    case  self::ManuellAktiv:
                 $this->StopTimer();
                 $this->SetSwitches (true);
 			    break;
@@ -515,17 +515,17 @@ class PulseActor extends IPSModule
 
     private function IsReleased()
     {
-        return GetValue('AutomaticRelease');
+        return $this->GetValue('AutomaticRelease');
     }
 
     private function StartPauseTime ()
     {
-        $pauseTime =  GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
+        $pauseTime =  $this->GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
     }
     private function StartPulseTime ()
     {
-        $pulseTime =  GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
+        $pulseTime =  $this->GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
     }
     private function Stoptimer ()
