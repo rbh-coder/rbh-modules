@@ -111,6 +111,7 @@ class PulseActor extends IPSModule
 
         $this->RegisterVariableIds($this->ReadAttributeString('SwitchList'));
         $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
+
         $this->RegisterPropertyInteger('MaxPulseTime', 60);
         $this->RegisterPropertyInteger('MaxPauseTime', 60);
         $this->RegisterPropertyInteger('PulseTimeUnit',0);
@@ -282,7 +283,9 @@ class PulseActor extends IPSModule
             $idx++;
         }
         if (!$found) return;
-        $this->SetValue('Aktiv', $this->GetValue('StatusActorID'));
+        $id =  $this->ReadPropertyInteger('StatusActorID');
+        if ($id < 2) return;
+        $this->SetValue('Aktiv', GetValue($id));
         $this->VerifySignal();
     }
 
