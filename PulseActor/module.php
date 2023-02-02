@@ -248,7 +248,7 @@ class PulseActor extends IPSModule
         //Die Statusänderung des Actors auswerten
         else
         {
-            $this-> StatusUpdate($SenderID);
+            $this->StatusUpdate($SenderID);
         }
     }
 
@@ -320,7 +320,7 @@ class PulseActor extends IPSModule
         $id= $this->ReadPropertyInteger($statusName);
         //Register for change notification if a variable is defined
         //IPS_LogMessage("ApplyChanges", 'id:'.$id.' name:'.$statusName);
-        if ($id>0) {
+        if ($id>1) {
             $this->RegisterMessage($id,VM_UPDATE);
         }
     }
