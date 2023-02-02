@@ -428,17 +428,7 @@ class PulseActor extends IPSModule
 		        $action = self::ManuellAktiv;
 		        break;
             case self::Automatik:
-                switch ($action)
-                {
-                    case self::Ausgeschaltet:
-                         $action = self::WarteAufFreigabe;
-                        break;
-                    case self::ManuellAktiv:
-                        $action = self::WarteAufFreigabe;
-                        break:
-                }
-		        break;
-	        default:
+                $action = $this->GetAutomaticAction ($action);
 		        break;
         }
 
@@ -448,6 +438,20 @@ class PulseActor extends IPSModule
             $this->SetValue('Status',$action);
         }
         IPS_LogMessage("PulsActor.PulseAction",'Status: '.$action);
+    }
+
+    private function GetAutomaticAction (int $action)
+    {
+        switch ($action)
+        {
+            case self::Ausgeschaltet:
+                $action = self::WarteAufFreigabe;
+                break;
+            case self::ManuellAktiv:
+                $action = self::WarteAufFreigabe;
+                break:
+        }
+        return $action;
     }
 
     private function SwitchOff ()
@@ -461,7 +465,7 @@ class PulseActor extends IPSModule
         $this->SetDevice("SwitchActorID",true);
     }
 
-    private function SetAction ($action)
+    private function SetAction (int $action)
     {
 	    $actAction = $action;
 
