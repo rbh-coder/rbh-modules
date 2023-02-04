@@ -431,6 +431,11 @@ class LightColorChanger extends IPSModule
              $this->HideItem('ColorFadeTime',true);
              $this->SetValue('ColorFadeTime',0);
         }
+        else
+        {
+            $this->HideItem('ColorFadeTime',false);
+            $this->SetValue('ColorFadeTime',5);
+        }
     }
 
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
