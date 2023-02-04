@@ -276,7 +276,7 @@ class PulseActor extends IPSModule
         $this->PulseAction ();
     }
 
-    private function StatusUpdate ($senderID)
+    private function StatusUpdate (int $senderID)
     {
         $itemArray =  $this->GetArrayFromString ($this->ReadAttributeString('StatusList'));
         $idx = 0;
@@ -305,7 +305,7 @@ class PulseActor extends IPSModule
         }
     }
 
-    private function DeleteProfile($profileName)
+    private function DeleteProfile(string $profileName)
     {
         if (empty($profileName)) return;
          $profile =  $this->CreateProfileName($profileName);
@@ -315,7 +315,7 @@ class PulseActor extends IPSModule
 
     }
 
-    public function CreateProfileName ($profileName)
+    public function CreateProfileName (string $profileName)
     {
          return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
