@@ -48,7 +48,7 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'), $profileName, 60);
-        $this->EnableAction(($variable);
+        $this->EnableAction($variable);
         //Variable für Änderungen registrieren
         $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
 
