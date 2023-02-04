@@ -32,11 +32,11 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
 
         //Profiles
-        $profileName = "PAC_Switch";
+        $profileName = "PAC_AutomaticRelease";
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
-            IPS_SetVariableProfileIcon($profileName, "Power");
+            IPS_SetVariableProfileIcon($profileName, "Ok");
             IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
             IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
         }
@@ -75,7 +75,7 @@ class PulseActor extends IPSModule
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
             IPS_SetVariableProfileValues($profileName, 0, 7, 0);
-            IPS_SetVariableProfileIcon($profileName, "Shutter");
+            IPS_SetVariableProfileIcon($profileName, "Information");
             IPS_SetVariableProfileAssociation($profileName, 0, "Ausgeschaltet", "", $transparent);
             IPS_SetVariableProfileAssociation($profileName, 1, "Warte auf Freigabe", "", $yellow);
             IPS_SetVariableProfileAssociation($profileName, 2, "Setze Aktiv", "", $green);
@@ -98,7 +98,7 @@ class PulseActor extends IPSModule
 
         $this->RegisterVariableInteger('Status', $this->Translate('Status'), 'PAC_Status', 40);
 
-        $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_Switch', 60);
+        $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_AutomaticRelease', 60);
         $this->EnableAction('AutomaticRelease');
 
         $this->RegisterTimer('PAC_PulseTimer', 0, 'PAC_UpdatePulseTimer($_IPS[\'TARGET\']);');
@@ -281,7 +281,7 @@ class PulseActor extends IPSModule
             $idx++;
         }
         if (!$found) return;
-     
+
         $this->VerifySignal();
     }
 
