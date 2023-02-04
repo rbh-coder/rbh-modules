@@ -41,15 +41,6 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
         }
 
-        $profileName = "PAC_SwitchStatus";
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
-        if (!IPS_VariableProfileExists($profileName)) {
-            IPS_CreateVariableProfile($profileName, 0);
-            IPS_SetVariableProfileIcon($profileName, "Electricity");
-            IPS_SetVariableProfileAssociation($profileName, false, "Inaktiv", "", $transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Aktiv", "", $green);
-        }
-
         $profileName = "PAC_OpMode";
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
@@ -109,8 +100,6 @@ class PulseActor extends IPSModule
 
         $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_Switch', 60);
         $this->EnableAction('AutomaticRelease');
-
-        //$this->RegisterVariableBoolean('Aktiv', $this->Translate('Active'), 'PAC_SwitchStatus', 62);
 
         $this->RegisterTimer('PAC_PulseTimer', 0, 'PAC_UpdatePulseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_PauseTimer', 0, 'PAC_UpdatePauseTimer($_IPS[\'TARGET\']);');
@@ -292,10 +281,7 @@ class PulseActor extends IPSModule
             $idx++;
         }
         if (!$found) return;
-        //$id =  $this->ReadPropertyInteger('StatusActorID');
-        //if ($id < 2) return;
-        //$this->SetValue('Aktiv', GetValue($id));
-        
+     
         $this->VerifySignal();
     }
 
@@ -325,7 +311,7 @@ class PulseActor extends IPSModule
                 $linkID = IPS_CreateLink();
             }
             IPS_SetParent($linkID, $this->InstanceID);
-            IPS_SetPosition($linkID, 20);
+            IPS_SetPosition($linkID, 70);
             IPS_SetName($linkID, 'Gerätestatus');
             IPS_SetIcon($linkID, 'Electricity');
             IPS_SetLinkTargetID($linkID, $targetID);
