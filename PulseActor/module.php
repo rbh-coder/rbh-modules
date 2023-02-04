@@ -39,7 +39,7 @@ class PulseActor extends IPSModule
         //Variablen --------------------------------------------------------------------------------------------------------
         //AutomaticRelease
         $variable = 'AutomaticRelease';
-        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
+        $profileName = $this->CreateProfileName($variable);
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
@@ -54,7 +54,7 @@ class PulseActor extends IPSModule
 
         //OpMode
         $variable = 'OpMode';
-        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
+        $profileName =  $this->CreateProfileName($variable);
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
@@ -70,7 +70,7 @@ class PulseActor extends IPSModule
 
         //PulseTime
         $variable = 'PulseTime';
-        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
+        $profileName =  $this->CreateProfileName($variable);
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
@@ -83,7 +83,7 @@ class PulseActor extends IPSModule
 
         //PauseTime
         $variable = 'PauseTime';
-        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
+        $profileName =  $this->CreateProfileName($variable);
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
@@ -97,7 +97,7 @@ class PulseActor extends IPSModule
 
         //ModuleStatus
         $variable = 'ModuleStatus';
-        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable ;
+        $profileName =  $this->CreateProfileName($variable);
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
@@ -301,18 +301,23 @@ class PulseActor extends IPSModule
         parent::Destroy();
 
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-           DeleteProfile($item);
+           $this->DeleteProfile($item);
         }
     }
 
-    public function DeleteProfile($profileName)
+    private function DeleteProfile($profileName)
     {
         if (empty($profileName)) return;
-         $profile = self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
-            if (@IPS_VariableProfileExists($profile)) {
+         $profile =  $this->CreateProfileName($profileName);
+         if (@IPS_VariableProfileExists($profile)) {
                 IPS_DeleteVariableProfile($profile);
             }
 
+    }
+
+    public function CreateProfileName ($profileName)
+    {
+         return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
 
     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.
