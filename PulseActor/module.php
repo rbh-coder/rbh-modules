@@ -110,7 +110,7 @@ class PulseActor extends IPSModule
         $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_Switch', 60);
         $this->EnableAction('AutomaticRelease');
 
-        $this->RegisterVariableBoolean('Aktiv', $this->Translate('Active'), 'PAC_SwitchStatus', 62);
+        //$this->RegisterVariableBoolean('Aktiv', $this->Translate('Active'), 'PAC_SwitchStatus', 62);
 
         $this->RegisterTimer('PAC_PulseTimer', 0, 'PAC_UpdatePulseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_PauseTimer', 0, 'PAC_UpdatePauseTimer($_IPS[\'TARGET\']);');
@@ -292,9 +292,10 @@ class PulseActor extends IPSModule
             $idx++;
         }
         if (!$found) return;
-        $id =  $this->ReadPropertyInteger('StatusActorID');
-        if ($id < 2) return;
-        $this->SetValue('Aktiv', GetValue($id));
+        //$id =  $this->ReadPropertyInteger('StatusActorID');
+        //if ($id < 2) return;
+        //$this->SetValue('Aktiv', GetValue($id));
+        
         $this->VerifySignal();
     }
 
@@ -315,6 +316,25 @@ class PulseActor extends IPSModule
             $this->RegisterStatusUpdate($item);
         }
 
+        //Link auf "StatusActorID" variable erzeugen, falls noch nicht existiert
+        $targetID = $this->ReadPropertyInteger('StatusActorID');
+        $linkID = @IPS_GetLinkIDByName('Gerätestatus', $this->InstanceID);
+        if ($targetID != 0 && @IPS_ObjectExists($targetID)) {
+            //Check for existing link
+            if (!is_int($linkID) && !$linkID) {
+                $linkID = IPS_CreateLink();
+            }
+            IPS_SetParent($linkID, $this->InstanceID);
+            IPS_SetPosition($linkID, 20);
+            IPS_SetName($linkID, 'Gerätestatus');
+            IPS_SetIcon($linkID, 'Electricity');
+            IPS_SetLinkTargetID($linkID, $targetID);
+        } else {
+            if (is_int($linkID)) {
+                IPS_SetHidden($linkID, true);
+            }
+        }
+
         $this->RegisterStatusUpdate('ExpertModeID');
 
         //TimeProfile aufdatieren
@@ -329,6 +349,7 @@ class PulseActor extends IPSModule
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
     public function RegisterStatusUpdate(string $statusName)
     {
+        if (empty($statusName)) return;
         $id= $this->ReadPropertyInteger($statusName);
         //Register for change notification if a variable is defined
         //IPS_LogMessage("ApplyChanges", 'id:'.$id.' name:'.$statusName);
