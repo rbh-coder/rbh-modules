@@ -312,7 +312,6 @@ class PulseActor extends IPSModule
          if (@IPS_VariableProfileExists($profile)) {
                 IPS_DeleteVariableProfile($profile);
             }
-
     }
 
     public function CreateProfileName (string $profileName)
