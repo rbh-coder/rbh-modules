@@ -414,12 +414,14 @@ class PulseActor extends IPSModule
 
     private function HideItem(string $item,bool $status)
     {
+        if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
         IPS_SetHidden($id, $status);
     }
 
     private function LockItem(string $item,bool $status)
     {
+        if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
         IPS_SetDisabled($id, $status);
     }
