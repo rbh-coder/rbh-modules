@@ -15,6 +15,9 @@ class PulseActor extends IPSModule
     private const Ausschalten = 6;
     private const ManuellAktiv = 7;
 
+    private const MODULE_PREFIX = 'PAC';
+    private const MODULE_NAME = 'PulseActor';
+
     public function Create()
     {
         //Never delete this line!
@@ -30,9 +33,13 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('StatusList', "StatusActorID");
         $this->RegisterAttributeString('ExpertListHide',"");
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
+        $this->RegisterAttributeString('ProfileList',"AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus");
 
-        //Profiles
-        $profileName = "PAC_AutomaticRelease";
+
+        //Variablen --------------------------------------------------------------------------------------------------------
+        //AutomaticRelease
+        $variable = 'AutomaticRelease';
+        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
@@ -40,8 +47,14 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
             IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
         }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'), $profileName, 60);
+        $this->EnableAction(($variable);
+        //Variable für Änderungen registrieren
+        $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
 
-        $profileName = "PAC_OpMode";
+        //OpMode
+        $variable = 'OpMode';
+        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
@@ -51,8 +64,13 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", $yellow);
             IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", $green);
         }
+        $this->RegisterVariableInteger($variable, $this->Translate('Operation Mode'),$profileName, 0);
+        $this->EnableAction($variable);
 
-        $profileName = "PAC_PulseTime";
+
+        //PulseTime
+        $variable = 'PulseTime';
+        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
@@ -60,8 +78,12 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileValues($profileName, 1, 60, 1);
             IPS_SetVariableProfileIcon($profileName, "Clock");
         }
+        $this->RegisterVariableInteger($variable, $this->Translate('Pulse Time'), $profileName, 10);
+        $this->EnableAction($variable);
 
-        $profileName = "PAC_PauseTime";
+        //PauseTime
+        $variable = 'PauseTime';
+        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable;
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
@@ -69,8 +91,13 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileValues($profileName, 0, 60, 1);
             IPS_SetVariableProfileIcon($profileName, "Clock");
         }
+        $this->RegisterVariableInteger($variable, $this->Translate('Pause Time'), $profileName, 20);
+        $this->EnableAction($variable);
 
-        $profileName = "PAC_Status";
+
+        //ModuleStatus
+        $variable = 'ModuleStatus';
+        $profileName = self::MODULE_PREFIX . '.' . $this->InstanceID . $variable ;
         if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
@@ -85,31 +112,16 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 6, "Ausschalten", "", $transparent);
             IPS_SetVariableProfileAssociation($profileName, 7, "Manuell Ein", "", $red);
         }
+        $this->RegisterVariableInteger($variable , $this->Translate('Status'), $profileName, 40);
 
-        //Variables
-        $this->RegisterVariableInteger('OpMode', $this->Translate('Operation Mode'), 'PAC_OpMode', 0);
-        $this->EnableAction('OpMode');
-
-        $this->RegisterVariableInteger('PulseTime', $this->Translate('Pulse Time'), 'PAC_PulseTime', 10);
-        $this->EnableAction('PulseTime');
-
-        $this->RegisterVariableInteger('PauseTime', $this->Translate('Pause Time'), 'PAC_PauseTime', 20);
-        $this->EnableAction('PauseTime');
-
-        $this->RegisterVariableInteger('Status', $this->Translate('Status'), 'PAC_Status', 40);
-
-        $this->RegisterVariableBoolean('AutomaticRelease', $this->Translate('Automatic Release'), 'PAC_AutomaticRelease', 60);
-        $this->EnableAction('AutomaticRelease');
-
+        //------------------------------------------------------------------------------------------------------------------
+        //Timer ------------------------------------------------------------------------------------------------------------
         $this->RegisterTimer('PAC_PulseTimer', 0, 'PAC_UpdatePulseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_PauseTimer', 0, 'PAC_UpdatePauseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_SignalCheckTimer', 0, 'PAC_VerifySignal($_IPS[\'TARGET\']);');
+        //------------------------------------------------------------------------------------------------------------------
 
         $this->RegisterPropertyInteger('ExpertModeID', 0);
-
-        $this->RegisterVariableIds($this->ReadAttributeString('SwitchList'));
-        $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
-
         $this->RegisterPropertyInteger('MaxPulseTime', 60);
         $this->RegisterPropertyInteger('MaxPauseTime', 60);
         $this->RegisterPropertyInteger('PulseTimeUnit',0);
@@ -120,10 +132,8 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeInteger('PulseTimeFactor',0);
         $this->RegisterAttributeInteger('PauseTimeFactor',0);
 
-        //Variablefür Änderungen registrieren
-        //Achtung hier ID für Namen holen
-        //Variable für Automatikfreigabe für Änderungen registrieren
-        $this->RegisterMessage($this->GetIDForIdent('AutomaticRelease'),VM_UPDATE);
+        $this->RegisterVariableIds($this->ReadAttributeString('SwitchList'));
+        $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
     }
 
     public function RegisterVariableIds(string $itemsString)
@@ -289,6 +299,20 @@ class PulseActor extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
+
+        foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
+           DeleteProfile($item);
+        }
+    }
+
+    public function DeleteProfile($profileName)
+    {
+        if (empty($profileName)) return;
+         $profile = self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
+            if (@IPS_VariableProfileExists($profile)) {
+                IPS_DeleteVariableProfile($profile);
+            }
+
     }
 
     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.
@@ -446,7 +470,7 @@ class PulseActor extends IPSModule
     private function PulseAction ()
     {
         $betriebsart = $this->GetValue('OpMode');
-        $action =  $this->GetValue('Status');
+        $action =  $this->GetValue('ModuleStatus');
         $actAction = $action;
 
         switch ($betriebsart)
@@ -465,9 +489,9 @@ class PulseActor extends IPSModule
         $action = $this->SetAction($action);
         if ($action != $actAction)
         {
-            $this->SetValue('Status',$action);
+            $this->SetValue('ModuleStatus',$action);
         }
-        IPS_LogMessage("PulsActor.PulseAction",'Status: '.$action);
+        IPS_LogMessage("PulsActor.PulseAction",'ModuleStatus: '.$action);
     }
 
     private function GetAutomaticAction (int $action)
