@@ -263,6 +263,7 @@ class PulseActor extends IPSModule
 
     public function UpdatePulseTimer()
     {
+        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.UpdatePulseTimer","id: ".$this->InstanceID);
         $this->PulseAction ();
     }
 
