@@ -269,6 +269,7 @@ class PulseActor extends IPSModule
 
     public function UpdatePauseTimer()
     {
+        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.UpdatePauseTimer","id: ".$this->InstanceID);
         $this->PulseAction ();
     }
 
@@ -536,7 +537,7 @@ class PulseActor extends IPSModule
                 $this->SwitchOff ();
 			    if ($this->IsReleased())
 			    {
-				    $actAction =  $this->SetAction ( self::SetzeAktiv);
+				    if ($this->GetPulseTime () > 0) $actAction =  $this->SetAction ( self::SetzeAktiv);
 			    }
 			    break;
 		    case  self::SetzeAktiv:
@@ -548,7 +549,7 @@ class PulseActor extends IPSModule
 		    case  self::Aktiv:
                 if ($this->IsReleased())
 			    {
-			        $actAction =  $this->SetAction ( self::SetzePause);
+                    if ($this->GetPauseTime () > 0) $actAction =  $this->SetAction ( self::SetzePause);
                 }
                 else
                 {
@@ -592,16 +593,29 @@ class PulseActor extends IPSModule
 
     private function StartPauseTime ()
     {
-        $pauseTime =  $this->GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
+        $pauseTime =   $this-GetPauseTime ();
         if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.StartPauseTime",'PauseTime: '.$pauseTime);
         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
+        return $pauseTime > 0;
     }
     private function StartPulseTime ()
     {
-        $pulseTime =  $this->GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
+        $pulseTime =  $this-GetPulseTime ();
         if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.StartPulseTime",'PulseTime: '.$pulseTime);
         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
+        return $pulseTime > 0;
     }
+
+    private function GetPulseTime ()
+    {
+        return $this->GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
+    }
+
+    private function GetPauseTime ()
+    {
+        return $this->GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
+    }
+
     private function Stoptimer ()
     {
         $this->SetTimerInterval('PAC_PauseTimer', 0);
