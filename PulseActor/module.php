@@ -537,7 +537,7 @@ class PulseActor extends IPSModule
                 $this->SwitchOff ();
 			    if ($this->IsReleased())
 			    {
-				    if ($this->GetPulseTime () > 0) $actAction =  $this->SetAction ( self::SetzeAktiv);
+				    if ($this->GetPulseTime() > 0) $actAction =  $this->SetAction ( self::SetzeAktiv);
 			    }
 			    break;
 		    case  self::SetzeAktiv:
