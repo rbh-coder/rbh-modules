@@ -593,7 +593,7 @@ class PulseActor extends IPSModule
 
     private function StartPauseTime ()
     {
-        $pauseTime =   $this-GetPauseTime ();
+        $pauseTime =   $this->GetPauseTime ();
         if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.StartPauseTime",'PauseTime: '.$pauseTime);
         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
         return $pauseTime > 0;
