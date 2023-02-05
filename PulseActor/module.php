@@ -606,12 +606,12 @@ class PulseActor extends IPSModule
         return $pulseTime > 0;
     }
 
-    private function GetPulseTime ()
+    public function GetPulseTime ()
     {
         return $this->GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
     }
 
-    private function GetPauseTime ()
+    public function GetPauseTime ()
     {
         return $this->GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
     }
