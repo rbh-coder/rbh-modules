@@ -39,6 +39,8 @@ class LightColorChanger extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
             IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
         }
+
+       
         //-------------------------------------------------------------------------------------------------------------
 
         //Variable----------------------------------------------------------------------------------------------------
@@ -119,15 +121,32 @@ class LightColorChanger extends IPSModule
 
         //Position 50
         $variable = 'CleaningMode';
-        $this->RegisterVariableBoolean($variable, $this->Translate('Cleaning Modus'),$this->CreateProfileName('Switch'), 50);
+        $profileName = $this->CreateProfileName($variable);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Ok");
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
+        }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Cleaning Modus'),$profileName, 50);
         $this->EnableAction($variable);
         $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
 
-        //Position 60
+         //Position 60
         $variable = 'AutomaticRelease';
-        $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'),$this->CreateProfileName('Switch'), 60);
+        $profileName = $this->CreateProfileName($variable);
+        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Ok");
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
+        }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'),$profileName, 60);
         $this->EnableAction($variable);
         $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
+       
         //-------------------------------------------------------------------------------------------------------------
 
         //Timer--------------------------------------------------------------------------------------------------------
