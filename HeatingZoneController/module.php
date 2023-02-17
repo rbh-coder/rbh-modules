@@ -124,6 +124,7 @@ class HeatingZoneController extends IPSModule
         //Check runlevel
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
+        }
         
             //Delete all references
         foreach ($this->GetReferenceList() as $referenceID) {
