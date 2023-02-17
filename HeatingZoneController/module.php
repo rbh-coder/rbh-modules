@@ -47,12 +47,6 @@ class HeatingZoneController extends IPSModule
            $this->DeleteProfile($item);
         }
 
-        //Info
-        $this->RegisterPropertyString('Note', '');
-        //Functions
-     
-        $this->RegisterPropertyInteger('RoomTemperature', 0);
-      
         //Temperatures
         $this->RegisterPropertyFloat('SetBackTemperature', 18.0);
         $this->RegisterPropertyFloat('HeatingTemperature', 22.0);
@@ -364,6 +358,10 @@ class HeatingZoneController extends IPSModule
                 //$this->HandleOpMode($Value);
                 break;
             case "AutomaticRelease":
+                 $this->SetValue($Ident, $Value);
+                //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
+                break;
+            case "AdaptRoomTemperature":
                  $this->SetValue($Ident, $Value);
                 //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
                 break;

@@ -2,11 +2,6 @@
   "elements": [
     {
       "type": "ExpansionPanel",
-      "caption": "Info",
-      "items": []
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Heizungs Informationen",
       "items": [
         {
