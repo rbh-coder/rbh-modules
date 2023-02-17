@@ -35,8 +35,9 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
         $this->RegisterAttributeString('ProfileList',"AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus");
 
-          foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
+        foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
            $this->DeleteProfile($item);
+        }
 
         //Variablen --------------------------------------------------------------------------------------------------------
         //AutomaticRelease
