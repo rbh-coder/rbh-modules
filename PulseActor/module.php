@@ -35,12 +35,13 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
         $this->RegisterAttributeString('ProfileList',"AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus");
 
+          foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
+           $this->DeleteProfile($item);
 
         //Variablen --------------------------------------------------------------------------------------------------------
         //AutomaticRelease
         $variable = 'AutomaticRelease';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Ok");
@@ -55,7 +56,6 @@ class PulseActor extends IPSModule
         //OpMode
         $variable = 'OpMode';
         $profileName =  $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
@@ -71,7 +71,6 @@ class PulseActor extends IPSModule
         //PulseTime
         $variable = 'PulseTime';
         $profileName =  $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileText($profileName, "", " sec");
@@ -84,7 +83,6 @@ class PulseActor extends IPSModule
         //PauseTime
         $variable = 'PauseTime';
         $profileName =  $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
             IPS_SetVariableProfileText($profileName, "", " sec");
@@ -98,7 +96,6 @@ class PulseActor extends IPSModule
         //ModuleStatus
         $variable = 'ModuleStatus';
         $profileName =  $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName,1);
             IPS_SetVariableProfileValues($profileName, 0, 7, 0);

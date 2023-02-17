@@ -1,0 +1,127 @@
+{
+  "elements": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Info",
+      "items": []
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Heizungs Informationen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "name": "IdRoomThermostat",
+          "type": "SelectVariable",
+          "caption": "ID Raumthermostat"
+        },
+        {
+          "name": "IdRoomTemperatue",
+          "type": "SelectVariable",
+          "caption": "ID Raumtemperatur"
+        },
+        {
+          "name": "IdHeatingPump",
+          "type": "SelectVariable",
+          "caption": "ID Heizungspumpe"
+        },
+        {
+          "name": "IdMixerPosition",
+          "type": "SelectVariable",
+          "caption": "ID Mischerposition"
+        },
+        {
+          "name": "IdSetHeat",
+          "type": "SelectVariable",
+          "caption": "ID Vorlauf Soll"
+        },
+        {
+          "name": "IdActHeat",
+          "type": "SelectVariable",
+          "caption": "ID Vorlauf Ist"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Temperaturen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Temperatur für den Absenkmodus:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "SetBackTemperature",
+          "caption": "Absenkmodus",
+          "digits": 1,
+          "suffix": "°C"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "Label",
+          "caption": "Temperatur für den Heizmodus:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "HeatingTemperature",
+          "caption": "Heizmodus",
+          "digits": 1,
+          "suffix": "°C"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "Label",
+          "caption": "Temperatur für den Boostmodus:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "BoostTemperature",
+          "caption": "Boostmodus",
+          "digits": 1,
+          "suffix": "°C"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Wochenplan",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Auswahl für Wochenplan:"
+        },
+        {
+          "type": "SelectEvent",
+          "name": "WeekTimer",
+          "caption": "Wochenplan",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        }
+      ]
+    }
+  ],
+    "actions": [
+        {
+            "type": "ExpansionPanel",
+            "caption": "Testbereich",
+            "items": [
+                {
+                    "type": "TestCenter"
+                }
+            ]
+        }
+    ]
+}

@@ -8,3 +8,5 @@ Folgende Module beinhaltet das RBH Modules Repository:
 	Kurze Beschreibung des Moduls.
 - __PulseActor__ ([Dokumentation](PulseActor))  
 	Kurze Beschreibung des Moduls.
+- __HeatingZoneController__ ([Dokumentation](HeatingZoneController))  
+	Kurze Beschreibung des Moduls.

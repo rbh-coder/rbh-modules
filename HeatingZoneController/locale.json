@@ -1,0 +1,10 @@
+{
+    "translations": {
+      "de": {
+        "Operation Mode": "Betriebsart",
+        "Automatic Release": "Automatikfreigabe",
+        "Adapt Room Temperature": "Raumtemperatur anpassen",
+        "Scheduled Switch":  "Schaltuhr"
+      }
+    }
+}

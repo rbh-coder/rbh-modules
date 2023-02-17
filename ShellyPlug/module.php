@@ -213,6 +213,22 @@ class ShellyPlug extends IPSModule
         //Never delete this line!
         parent::ApplyChanges();
 
+        foreach ($this->GetReferenceList() as $referenceID) {
+            $this->UnregisterReference($referenceID);
+        }
+
+        //Delete all message registrations
+        foreach ($this->GetMessageList() as $senderID => $messages) {
+            foreach ($messages as $message) {
+                if ($message == EM_UPDATE) {
+                    $this->UnregisterMessage($senderID, EM_UPDATE);
+                }
+                if ($message == VM_UPDATE) {
+                    $this->UnregisterMessage($senderID, VM_UPDATE);
+                }
+            }
+        }
+
         if ($this->RegisterStatusUpdate('SwitchVariable')) {
             if ($this->ReadPropertyInteger('PollingTime') == 0) {
                 $this->SetTimerInterval('SPL_Timer', 0);
