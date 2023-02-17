@@ -230,6 +230,11 @@ class HeatingZoneController extends IPSModule
          }
     }
 
+    private function GetArrayFromString (string $itemsString)
+    {
+        return explode(',', $itemsString);
+    }
+
     private function CreateProfileName (string $profileName)
     {
          return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
