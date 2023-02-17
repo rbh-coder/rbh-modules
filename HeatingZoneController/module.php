@@ -366,7 +366,6 @@ class HeatingZoneController extends IPSModule
             case "OpMode":
                 $this->SetValue($Ident, $Value);
                 $this->HandleOpMode ($Value);
-                //$this->HandleOpMode($Value);
                 break;
             case "AutomaticRelease":
                  $this->SetValue($Ident, $Value);
@@ -382,12 +381,11 @@ class HeatingZoneController extends IPSModule
     private function HandleOpMode (int $opmode)
     {
         $hide=true;
+
          switch($opmode) {
-            case self::Aus: //Aus
-               
+            case self::Aus: //Aus       
                 break;
             case self::Manuell: //Handbetrieb
-               
                 break;
             case self::Automatik: //Automatikbetrieb
                 $hide=false;
@@ -395,11 +393,11 @@ class HeatingZoneController extends IPSModule
             default:
         }
 
-         $this->HideItemById ( $this->GetIDForIdent("AutomaticRelease"),$hide );
-         $this->HideItemById ( $this->ReadAttributeInteger("WeekTimer"),$hide );
+         $this->HideItemById ( $this->GetIDForIdent('AutomaticRelease'),$hide );
+         $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),$hide );
     }
 
-    private HideItemById (int $id, bool $hide )
+    private function HideItemById (int $id, bool $hide )
     {
         if ($id==0) return;
         IPS_SetHidden($id,$hide);
