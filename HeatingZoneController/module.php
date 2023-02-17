@@ -136,7 +136,7 @@ class HeatingZoneController extends IPSModule
         foreach ($this->GetMessageList() as $senderID => $messages) {
             foreach ($messages as $message) {
                 if ($message == EM_UPDATE) {
-                    $this->UnregisterMessage($senderId, EM_UPDATE);
+                    $this->UnregisterMessage($senderID, EM_UPDATE);
                 }
                 if ($message == VM_UPDATE) {
                     $this->UnregisterMessage($senderID, VM_UPDATE);
