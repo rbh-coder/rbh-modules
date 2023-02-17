@@ -177,7 +177,7 @@ class HeatingZoneController extends IPSModule
 
         //Weekly schedule
         $this->CreateLink ( $this->ReadPropertyInteger('WeekTimer'),'Wochenplan','Calendar', 20);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Raumptemperatur anpassen','Temperature', 100);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Heizungsanforderung','Flame', 100);
         $this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumptemperatur','Temperature', 110);
         $this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120);
         $this->CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140);
@@ -197,9 +197,13 @@ class HeatingZoneController extends IPSModule
         if ($targetID != 0 && @IPS_ObjectExists($targetID)) {
             //Check for existing link
             if (!is_int($linkID) && !$linkID) {
-                IPS_DeleteLink($linkID);
                 $linkID = IPS_CreateLink();
             }
+            else {
+	            IPS_DeleteLink($linkID);
+                $linkID = IPS_CreateLink();
+            }
+
             IPS_SetParent($linkID, $this->InstanceID);
             IPS_SetPosition($linkID,$position);
             IPS_SetName($linkID, $name);
