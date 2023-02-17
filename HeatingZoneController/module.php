@@ -32,7 +32,12 @@ class HeatingZoneController extends IPSModule
         //Never delete this line!
         parent::Create();
 
-        
+         //Some color definitions
+        $transparent = 0xffffff00;
+        $red=0xFF0000;
+        $yellow = 0xFFFF00;
+        $green=0x00FF00;
+        $blue=0x0000FF;
 
         ########## Properties
          $this->RegisterAttributeString('ProfileList',"AutomaticRelease,OpMode,CorrectRoomTemperature");
@@ -95,8 +100,8 @@ class HeatingZoneController extends IPSModule
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 2);
             IPS_SetVariableProfileIcon($profileName, "Temperature");
-            IPS_SetVariableProfileValues($profile, -10, +10, 1);
-            IPS_SetVariableProfileDigits($profile, 0);
+            IPS_SetVariableProfileValues($profileName, -10, +10, 1);
+            IPS_SetVariableProfileDigits($profileName, 0);
         }
         $this->RegisterVariableFloat($variable, $this->Translate('Adapt Room Temperature'), $profileName, 60);
         $this->EnableAction($variable);
