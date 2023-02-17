@@ -227,7 +227,7 @@ class HeatingZoneController extends IPSModule
             }
     }
 
-     private function CreateProfileName (string $profileName)
+    private function CreateProfileName (string $profileName)
     {
          return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }

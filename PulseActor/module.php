@@ -133,7 +133,7 @@ class PulseActor extends IPSModule
         $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
     }
 
-    public function RegisterVariableIds(string $itemsString)
+    private function RegisterVariableIds(string $itemsString)
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
@@ -198,7 +198,7 @@ class PulseActor extends IPSModule
         }
     }
 
-    public function GetArrayFromString (string $itemsString)
+    private function GetArrayFromString (string $itemsString)
     {
         return explode(',', $itemsString);
     }
