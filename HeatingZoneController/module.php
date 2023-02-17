@@ -197,6 +197,7 @@ class HeatingZoneController extends IPSModule
         if ($targetID != 0 && @IPS_ObjectExists($targetID)) {
             //Check for existing link
             if (!is_int($linkID) && !$linkID) {
+                IPS_DeleteLink($linkID);
                 $linkID = IPS_CreateLink();
             }
             IPS_SetParent($linkID, $this->InstanceID);
@@ -206,7 +207,7 @@ class HeatingZoneController extends IPSModule
             IPS_SetLinkTargetID($linkID, $targetID);
         } else {
             if (is_int($linkID)) {
-                IPS_SetHidden($linkID, true);
+                 IPS_DeleteLink($linkID);
             }
         }
     }
