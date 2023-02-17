@@ -44,7 +44,7 @@ class HeatingZoneController extends IPSModule
          $this->RegisterAttributeString('LinkList', "WeekTimer,IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
 
         $this->DeleteProfileList ('ProfileList');
-        }
+       
         ########## Variables
 
        //Variablen --------------------------------------------------------------------------------------------------------
