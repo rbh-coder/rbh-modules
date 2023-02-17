@@ -178,7 +178,7 @@ class HeatingZoneController extends IPSModule
         //Weekly schedule
         $this->CreateLink ( $this->ReadPropertyInteger('WeekTimer'),'Wochenplan','Calendar', 20);
         $this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Heizungsanforderung','Flame', 100);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumptemperatur','Temperature', 110);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumtemperatur','Temperature', 110);
         $this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120);
         $this->CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140);
         $this->CreateLink ( $this->ReadPropertyInteger('IdSetHeat'),'Vorlauftemperatur Sollwert','Temperature',160);

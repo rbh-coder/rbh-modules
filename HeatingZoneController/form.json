@@ -14,7 +14,7 @@
           "caption": "ID Raumthermostat"
         },
         {
-          "name": "IdRoomTemperatue",
+          "name": "IdRoomTemperature",
           "type": "SelectVariable",
           "caption": "ID Raumtemperatur"
         },
