@@ -105,7 +105,7 @@ class HeatingZoneController extends IPSModule
         ########## Timer
     }
 
-    public function RegisterVariableIds(string $itemsString)
+    private function RegisterVariableIds(string $itemsString)
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
