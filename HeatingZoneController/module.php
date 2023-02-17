@@ -40,7 +40,7 @@ class HeatingZoneController extends IPSModule
         $blue=0x0000FF;
 
         ########## Properties
-         $this->RegisterAttributeString('ProfileList',"AutomaticRelease,OpMode,CorrectRoomTemperature");
+         $this->RegisterAttributeString('ProfileList',"AutomaticRelease,OpMode,AdaptRoomTemperature");
          $this->RegisterAttributeString('LinkList', "IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
 
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
