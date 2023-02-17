@@ -180,13 +180,13 @@ class HeatingZoneController extends IPSModule
         ########## Links
 
         //Weekly schedule
-        CreateLink ( $this->ReadPropertyInteger('WeekTimer'),'Wochenplan','Calendar', 20);
-        CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Raumptemperatur anpassen','Temperature', 100);
-        CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumptemperatur','Temperature', 110);
-        CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120);
-        CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140);
-        CreateLink ( $this->ReadPropertyInteger('IdSetHeat'),'Vorlauftemperatur Sollwert','Temperature',160);
-        CreateLink ( $this->ReadPropertyInteger('IdActHeat'),'Vorlauftemperatur Istwert','Temperature',180);
+        $this->CreateLink ( $this->ReadPropertyInteger('WeekTimer'),'Wochenplan','Calendar', 20);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Raumptemperatur anpassen','Temperature', 100);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumptemperatur','Temperature', 110);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdSetHeat'),'Vorlauftemperatur Sollwert','Temperature',160);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdActHeat'),'Vorlauftemperatur Istwert','Temperature',180);
 
         ########## Timer
 
