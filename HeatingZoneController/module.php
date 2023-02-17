@@ -262,6 +262,7 @@ class HeatingZoneController extends IPSModule
                 //$Data[4] = timestamp value changed
                 //$Data[5] = timestamp last value
 
+                /*
                 //Room temperature
                 if ($SenderID == $this->ReadPropertyInteger('RoomTemperature')) {
                     if ($Data[1]) {
@@ -282,6 +283,7 @@ class HeatingZoneController extends IPSModule
                         }
                     }
                 }
+                */
                 break;
 
             case EM_UPDATE:
