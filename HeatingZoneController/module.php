@@ -229,14 +229,15 @@ class HeatingZoneController extends IPSModule
         //Never delete this line!
         parent::Destroy();
         //Delete profiles
-       $this-> DeleteProfileList ('ProfileList');
+       $this->DeleteProfileList ('ProfileList');
     }
+
     private function DeleteProfileList (string $listName)
     {
           foreach ($this->GetArrayFromString($this->ReadAttributeString( $listName)) as $item) {
                 if (is_string($item)) {
                      $cleanedItem = trim($item);
-                     if ($cleanedItem != "") DeleteProfile($cleanedItem);
+                     if ($cleanedItem != "") $this->DeleteProfile($cleanedItem);
                 }
           }
     }
