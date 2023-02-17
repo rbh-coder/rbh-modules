@@ -44,7 +44,7 @@ class HeatingZoneController extends IPSModule
          $this->RegisterAttributeString('LinkList', "WeekTimer,IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
 
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-           $this->DeleteProfile($item);
+           if ($item != "") $this->DeleteProfile($item);
         }
         ########## Variables
 
@@ -232,7 +232,7 @@ class HeatingZoneController extends IPSModule
 
         //Delete profiles
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-           $this->DeleteProfile($item);
+           if ($item != "") $this->DeleteProfile($item);
         }
     }
 

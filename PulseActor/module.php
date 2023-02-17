@@ -36,7 +36,7 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('ProfileList',"AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus");
 
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-           $this->DeleteProfile($item);
+           if ($item != "") $this->DeleteProfile($item);
         }
 
         //Variablen --------------------------------------------------------------------------------------------------------
@@ -301,17 +301,17 @@ class PulseActor extends IPSModule
         parent::Destroy();
 
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-           $this->DeleteProfile($item);
+           if ($item != "") $this->DeleteProfile($item);
         }
     }
 
     private function DeleteProfile(string $profileName)
     {
         if (empty($profileName)) return;
-         $profile =  $this->CreateProfileName($profileName);
-         if (@IPS_VariableProfileExists($profile)) {
+        $profile =  $this->CreateProfileName($profileName);
+        if (@IPS_VariableProfileExists($profile)) {
                 IPS_DeleteVariableProfile($profile);
-            }
+         }
     }
 
     private function CreateProfileName (string $profileName)
