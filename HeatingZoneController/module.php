@@ -96,6 +96,8 @@ class HeatingZoneController extends IPSModule
             IPS_SetVariableProfileIcon($profileName, "Temperature");
             IPS_SetVariableProfileValues($profileName, -10, +10, 1);
             IPS_SetVariableProfileDigits($profileName, 0);
+            IPS_SetVariableProfileText($profileName,"","°C");
+
         }
         $this->RegisterVariableFloat($variable, $this->Translate('Adapt Room Temperature'), $profileName, 60);
         $this->EnableAction($variable);
