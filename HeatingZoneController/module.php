@@ -218,6 +218,7 @@ class HeatingZoneController extends IPSModule
         //Delete profiles
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
            $this->DeleteProfile($item);
+        }
     }
 
     private function DeleteProfile(string $profileName)
@@ -226,7 +227,7 @@ class HeatingZoneController extends IPSModule
          $profile =  $this->CreateProfileName($profileName);
          if (@IPS_VariableProfileExists($profile)) {
                 IPS_DeleteVariableProfile($profile);
-            }
+         }
     }
 
     private function CreateProfileName (string $profileName)
