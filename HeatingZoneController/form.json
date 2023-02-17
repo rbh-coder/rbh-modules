@@ -42,53 +42,6 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Temperaturen",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Temperatur für den Absenkmodus:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "SetBackTemperature",
-          "caption": "Absenkmodus",
-          "digits": 1,
-          "suffix": "°C"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
-        {
-          "type": "Label",
-          "caption": "Temperatur für den Heizmodus:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "HeatingTemperature",
-          "caption": "Heizmodus",
-          "digits": 1,
-          "suffix": "°C"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
-        {
-          "type": "Label",
-          "caption": "Temperatur für den Boostmodus:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "BoostTemperature",
-          "caption": "Boostmodus",
-          "digits": 1,
-          "suffix": "°C"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Wochenplan",
       "items": [
         {

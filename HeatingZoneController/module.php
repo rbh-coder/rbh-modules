@@ -41,21 +41,11 @@ class HeatingZoneController extends IPSModule
 
         ########## Properties
          $this->RegisterAttributeString('ProfileList',"AutomaticRelease,OpMode,AdaptRoomTemperature");
-         $this->RegisterAttributeString('LinkList', "IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
+         $this->RegisterAttributeString('LinkList', "WeekTimer,IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
 
         foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
            $this->DeleteProfile($item);
         }
-
-        //Temperatures
-        $this->RegisterPropertyFloat('SetBackTemperature', 18.0);
-        $this->RegisterPropertyFloat('HeatingTemperature', 22.0);
-        $this->RegisterPropertyFloat('BoostTemperature', 30.0);
-      
-        //Weekly schedule
-        $this->RegisterPropertyInteger('WeekTimer', 0);
-       
-   
         ########## Variables
 
        //Variablen --------------------------------------------------------------------------------------------------------
@@ -103,6 +93,8 @@ class HeatingZoneController extends IPSModule
         $this->EnableAction($variable);
 
         $this->RegisterVariableIds($this->ReadAttributeString('LinkList'));
+        //Attribute mit Ids von Links anlegen
+        $this->RegisterLinkIds($this->ReadAttributeString('LinkList'));
       
         ########## Timer
     }
@@ -111,6 +103,13 @@ class HeatingZoneController extends IPSModule
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
+        }
+    }
+
+     private function RegisterLinkIds(string $itemsString)
+    {
+        foreach (explode(',', $itemsString) as $item) {
+            $this->RegisterAttributeInteger($item, 0);
         }
     }
 
@@ -176,13 +175,13 @@ class HeatingZoneController extends IPSModule
         ########## Links
 
         //Weekly schedule
-        $this->CreateLink ( $this->ReadPropertyInteger('WeekTimer'),'Wochenplan','Calendar', 20);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Heizungsanforderung','Flame', 100);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumtemperatur','Temperature', 110);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdSetHeat'),'Vorlauftemperatur Sollwert','Temperature',160);
-        $this->CreateLink ( $this->ReadPropertyInteger('IdActHeat'),'Vorlauftemperatur Istwert','Temperature',180);
+        $this->WriteAttributeInteger('WeekTimer',$this->CreateLink ( $this->ReadPropertyInteger('WeekTimer'),'Wochenplan','Calendar', 20));
+        $this->WriteAttributeInteger('IdRoomThermostat',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Heizungsanforderung','Flame', 100));
+        $this->WriteAttributeInteger('IdRoomTemperature',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumtemperatur','Temperature', 110));
+        $this->WriteAttributeInteger('IdHeatingPump',$this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120));
+        $this->WriteAttributeInteger('IdMixerPosition',$this->CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140));
+        $this->WriteAttributeInteger('IdSetHeat',$this->CreateLink ( $this->ReadPropertyInteger('IdSetHeat'),'Vorlauftemperatur Sollwert','Temperature',160));
+        $this->WriteAttributeInteger('IdActHeat',$this->CreateLink ( $this->ReadPropertyInteger('IdActHeat'),'Vorlauftemperatur Istwert','Temperature',180));
 
         ########## Timer
 
@@ -209,11 +208,21 @@ class HeatingZoneController extends IPSModule
             IPS_SetName($linkID, $name);
             IPS_SetIcon($linkID,$iconName);
             IPS_SetLinkTargetID($linkID, $targetID);
+            return $linkID;
+
         } else {
             if (is_int($linkID)) {
                  IPS_DeleteLink($linkID);
             }
         }
+         return 0;
+    }
+
+    private function HideItem(string $item,bool $status)
+    {
+        if (empty($item)) return;
+        $id = $this->GetIDForIdent($item);
+        IPS_SetHidden($id, $status);
     }
 
     public function Destroy()
@@ -320,21 +329,15 @@ class HeatingZoneController extends IPSModule
                     $this->SendDebug(__FUNCTION__, '0 = Keine Aktion gefunden!', 0);
                     break;
 
-                case 1: # Set-back temperature
-                    $this->SendDebug(__FUNCTION__, '1 = Absenkmodus', 0);
+                case 1: # Heizung AUS
+                    $this->SendDebug(__FUNCTION__, '1 = AUS', 0);
                     $temperature = $this->ReadPropertyFloat('SetBackTemperature');
                     break;
 
-                case 3: # Heating temperature
-                    $this->SendDebug(__FUNCTION__, '2 = Heizmodus', 0);
+                case 3: # Heizung EIN
+                    $this->SendDebug(__FUNCTION__, '2 = EIN', 0);
                     $temperature = $this->ReadPropertyFloat('HeatingTemperature');
                     break;
-
-                case 4: # Boost temperature
-                    $this->SendDebug(__FUNCTION__, '3= Boostmodus', 0);
-                    $temperature = $this->ReadPropertyFloat('BoostTemperature');
-                    break;
-
             }
            //Irgendwas....
         }
@@ -362,6 +365,7 @@ class HeatingZoneController extends IPSModule
            switch($Ident) {
             case "OpMode":
                 $this->SetValue($Ident, $Value);
+                $this->HandleOpMode ($Value);
                 //$this->HandleOpMode($Value);
                 break;
             case "AutomaticRelease":
@@ -373,6 +377,32 @@ class HeatingZoneController extends IPSModule
                 //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
                 break;
         }
+    }
+
+    private function HandleOpMode (int $opmode)
+    {
+        $hide=true;
+         switch($opmode) {
+            case self::Aus: //Aus
+               
+                break;
+            case self::Manuell: //Handbetrieb
+               
+                break;
+            case self::Automatik: //Automatikbetrieb
+                $hide=false;
+                break;
+            default:
+        }
+
+         $this->HideItemById ( $this->GetIDForIdent("AutomaticRelease"),$hide );
+         $this->HideItemById ( $this->ReadAttributeInteger("WeekTimer"),$hide );
+    }
+
+    private HideItemById (int $id, bool $hide )
+    {
+        if ($id==0) return;
+        IPS_SetHidden($id,$hide);
     }
 
     #################### Private
