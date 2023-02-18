@@ -35,9 +35,7 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
         $this->RegisterAttributeString('ProfileList',"AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus");
 
-        foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-           if ($item != "") $this->DeleteProfile($item);
-        }
+        $this->DeleteProfileList ('ProfileList');
 
         //Variablen --------------------------------------------------------------------------------------------------------
         //AutomaticRelease
@@ -299,10 +297,17 @@ class PulseActor extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
+        $this->DeleteProfileList ('ProfileList');
+    }
 
-        foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-           if ($item != "") $this->DeleteProfile($item);
-        }
+    private function DeleteProfileList (string $listName) :void
+    {
+          foreach ($this->GetArrayFromString($this->ReadAttributeString($listName)) as $item) {
+                if (is_string($item)) {
+                     $cleanedItem = trim($item);
+                     if ($cleanedItem != "") $this->DeleteProfile($cleanedItem);
+                }
+          }
     }
 
     private function DeleteProfile(string $profileName)
