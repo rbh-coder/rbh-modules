@@ -203,6 +203,7 @@ class HeatingZoneController extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Test:Setze Profile Werte:'.$status , 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
+                IPS_SetVariableProfileAssociation($profileName, 2, "", "", self::Transparent);
             }
             else {
                 IPS_SetVariableProfileValues($profileName, 0, 2, 0);
