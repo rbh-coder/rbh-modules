@@ -2,9 +2,9 @@
     "translations": {
       "de": {
         "Operation Mode": "Betriebsart",
-        "Automatic Release": "Automatikfreigabe",
+        "Status Week Timer": "Status Wochenplan",
         "Adapt Room Temperature": "Raumtemperatur anpassen",
-        "Scheduled Switch":  "Schaltuhr"
+        "Scheduled Switch": "Schaltuhr"
       }
     }
 }
