@@ -439,8 +439,17 @@ class HeatingZoneController extends IPSModule
             default:
         }
 
-         $this->HideItemById ( $this->GetIDForIdent('AutomaticRelease'),$hide );
          $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),$hide );
+         //Wenn Weektimer gar nicht referenziert ist, dann den Status auch nicht anzeigen 
+         if  ($this->ReadAttributeInteger('WeekTimer') == 0)
+         {
+             $this->HideItemById ( $this->GetIDForIdent('AutomaticRelease'),true);
+         }
+         else 
+         {
+	        $this->HideItemById ( $this->GetIDForIdent('AutomaticRelease'),$hide );
+         }
+
          $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),$hide );
     }
 
