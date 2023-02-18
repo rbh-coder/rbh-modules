@@ -228,6 +228,7 @@ class HeatingZoneController extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
+
         //Delete profiles
        $this->DeleteProfileList ('ProfileList');
     }
@@ -313,9 +314,9 @@ class HeatingZoneController extends IPSModule
                 //$Data[1] = next run
                 //Weekly schedule
 
-                //$this->TriggerAction(true);
-                $scriptText = self::MODULE_PREFIX . '_TriggerAction(' . $this->InstanceID . ', true);';
-                IPS_RunScriptText($scriptText);
+                $this->TriggerAction(true);
+                //$scriptText = self::MODULE_PREFIX . '_TriggerAction(' . $this->InstanceID . ', true);';
+                //IPS_RunScriptText($scriptText);
                 break;
 
         }
