@@ -28,7 +28,7 @@ class HeatingZoneController extends IPSModule
     private const Automatik = 2;
 
     private const HeatUndef = 0;
-    private const HeatOff = 1
+    private const HeatOff = 1;
     private const HeatOn = 2;
   
     public function Create()
@@ -342,16 +342,19 @@ class HeatingZoneController extends IPSModule
             switch ($actionID) {
                 case self::HeatUndef # No actual action found
                     $this->SendDebug(__FUNCTION__, '0 = Keine Aktion gefunden!', 0);
+                    $this->SetValue('AutomaticRelease',false); 
                     break;
 
                 case self::HeatOff: # Heizung AUS
                     $this->SendDebug(__FUNCTION__, '1 = AUS', 0);
                     $this->SetWeekTimerAction ($actionID);
+                    $this->SetValue('AutomaticRelease',false); 
                     break;
 
                 case self::HeatOn: # Heizung EIN
                     $this->SendDebug(__FUNCTION__, '2 = EIN', 0);
                     $this->SetWeekTimerAction ($actionID);
+                    $this->SetValue('AutomaticRelease',true); 
                     break;
             }
         }
