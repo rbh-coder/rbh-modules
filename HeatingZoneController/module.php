@@ -194,7 +194,7 @@ class HeatingZoneController extends IPSModule
       
 
         ########## Misc
-        $this->HandleOpMode ($this->GetValue('OpMode');
+        $this->HandleOpMode ($this->GetValue('OpMode'));
     }
 
     private function CreateLink (int $targetID,string $name,string $iconName, int $position) :int
