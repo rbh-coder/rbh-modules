@@ -26,6 +26,10 @@ class HeatingZoneController extends IPSModule
     private const Aus = 0;
     private const Manuell = 1;
     private const Automatik = 2;
+
+    private const HeatUndef = 0;
+    private const HeatOff = 1
+    private const HeatOn = 2;
   
     public function Create()
     {
@@ -146,6 +150,7 @@ class HeatingZoneController extends IPSModule
 
 
         //Weekly schedule
+        /*
         $id = @IPS_GetLinkIDByName('Wochenplan', $this->InstanceID);
         if (is_int($id)) {
             $hide = true;
@@ -156,6 +161,8 @@ class HeatingZoneController extends IPSModule
             }
             IPS_SetHidden($id, $hide);
         }
+        */
+       
         ########## References and Messages
 
 
@@ -187,6 +194,7 @@ class HeatingZoneController extends IPSModule
       
 
         ########## Misc
+        $this->HandleOpMode ($this->GetValue('OpMode');
     }
 
     private function CreateLink (int $targetID,string $name,string $iconName, int $position) :int
@@ -323,7 +331,7 @@ class HeatingZoneController extends IPSModule
     }
 
    public function TriggerAction(bool $SetTemperature): void
-    {
+   {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (!$this->ValidateEventPlan()) {
             return;
@@ -332,23 +340,27 @@ class HeatingZoneController extends IPSModule
         if ($this->GetValue('OpMode') == self::Automatik) {
             $actionID = $this->DetermineAction();
             switch ($actionID) {
-                case 0: # No actual action found
+                case self::HeatUndef # No actual action found
                     $this->SendDebug(__FUNCTION__, '0 = Keine Aktion gefunden!', 0);
                     break;
 
-                case 1: # Heizung AUS
+                case self::HeatOff: # Heizung AUS
                     $this->SendDebug(__FUNCTION__, '1 = AUS', 0);
-                    $temperature = $this->ReadPropertyFloat('SetBackTemperature');
+                    $this->SetWeekTimerAction ($actionID);
                     break;
 
-                case 3: # Heizung EIN
+                case self::HeatOn: # Heizung EIN
                     $this->SendDebug(__FUNCTION__, '2 = EIN', 0);
-                    $temperature = $this->ReadPropertyFloat('HeatingTemperature');
+                    $this->SetWeekTimerAction ($actionID);
                     break;
             }
-           //Irgendwas....
         }
-    }
+   }
+
+   private function SetWeekTimerAction (int $action)
+   {
+
+   }
 
 
     private function ValidateEventPlan(): bool
@@ -426,6 +438,7 @@ class HeatingZoneController extends IPSModule
 
          $this->HideItemById ( $this->GetIDForIdent('AutomaticRelease'),$hide );
          $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),$hide );
+         $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),$hide );
     }
 
     private function HideItemById (int $id, bool $hide )
