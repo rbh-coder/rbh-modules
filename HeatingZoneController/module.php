@@ -197,16 +197,14 @@ class HeatingZoneController extends IPSModule
         $profileName =  $this->CreateProfileName('OpMode');
       
         if (IPS_VariableProfileExists($profileName)) {
-              $this->SendDebug(__FUNCTION__, 'Test1 erreicht', 0);
             if (($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
-                 $this->SendDebug(__FUNCTION__, 'Test2 erreicht', 0);
-                IPS_SetVariableProfileValues($profileName, 0, 1, 0);
+                $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
+                $this->SendDebug(__FUNCTION__, 'Test:Setze Profile Werte:'.$status , 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
             }
             else {
-                $this->SendDebug(__FUNCTION__, 'Test3 erreicht', 0);
                 IPS_SetVariableProfileValues($profileName, 0, 2, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
@@ -263,7 +261,7 @@ class HeatingZoneController extends IPSModule
 
     private function DeleteProfileList (string $listName) :void
     {
-          foreach ($this->GetArrayFromString($this->ReadAttributeString( $listName)) as $item) {
+          foreach ($this->GetArrayFromString($this->ReadAttributeString($listName)) as $item) {
                 if (is_string($item)) {
                      $cleanedItem = trim($item);
                      if ($cleanedItem != "") $this->DeleteProfile($cleanedItem);
