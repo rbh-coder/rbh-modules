@@ -322,7 +322,7 @@ class HeatingZoneController extends IPSModule
                 //$Data[1] = next run
                 //Weekly schedule
 
-                $this->TriggerAction(true);
+                $this->TriggerAction();
                 //$scriptText = self::MODULE_PREFIX . '_TriggerAction(' . $this->InstanceID . ', true);';
                 //IPS_RunScriptText($scriptText);
                 break;
@@ -330,7 +330,7 @@ class HeatingZoneController extends IPSModule
         }
     }
 
-   public function TriggerAction(bool $SetTemperature): void
+   public function TriggerAction(): void
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (!$this->ValidateEventPlan()) {
@@ -340,7 +340,7 @@ class HeatingZoneController extends IPSModule
         if ($this->GetValue('OpMode') == self::Automatik) {
             $actionID = $this->DetermineAction();
             switch ($actionID) {
-                case self::HeatUndef # No actual action found
+                case self::HeatUndef: # No actual action found
                     $this->SendDebug(__FUNCTION__, '0 = Keine Aktion gefunden!', 0);
                     $this->SetValue('AutomaticRelease',false); 
                     break;
