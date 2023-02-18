@@ -2,7 +2,7 @@
     "translations": {
       "de": {
         "Operation Mode": "Betriebsart",
-        "Status Week Timer": "Status Wochenplan",
+        "Week Timer Status": "Wochenplan Status",
         "Adapt Room Temperature": "Raumtemperatur anpassen",
         "Scheduled Switch": "Schaltuhr"
       }

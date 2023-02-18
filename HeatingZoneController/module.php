@@ -43,7 +43,7 @@ class HeatingZoneController extends IPSModule
         parent::Create();
 
         ########## Properties
-         $this->RegisterAttributeString('ProfileList',"AutomaticRelease,OpMode,AdaptRoomTemperature");
+         $this->RegisterAttributeString('ProfileList',"WeekTimerStatus,OpMode,AdaptRoomTemperature");
          $this->RegisterAttributeString('LinkList', "WeekTimer,IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
 
         $this->DeleteProfileList ('ProfileList');
@@ -67,15 +67,16 @@ class HeatingZoneController extends IPSModule
         $this->EnableAction($variable);
 
          //AutomaticRelease
-        $variable = 'AutomaticRelease';
+        $variable = 'WeekTimerStatus';
         $profileName = $this->CreateProfileName($variable);
         if (!IPS_VariableProfileExists($profileName)) {
-            IPS_CreateVariableProfile($profileName, 0);
-            IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", self::Blue);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", self::Green);
+           IPS_CreateVariableProfile($profileName, 1);
+           IPS_SetVariableProfileIcon($profileName, "Ok");
+           IPS_SetVariableProfileAssociation($profileName, 0, "Undefiniert", "", self::Transparent);
+           IPS_SetVariableProfileAssociation($profileName, 1, "Ausgeschaltet", "", self::Yellow);
+           IPS_SetVariableProfileAssociation($profileName, 2, "Freigegeben", "", self::Green);
         }
-        $this->RegisterVariableBoolean($variable, $this->Translate('Status Week Timer'), $profileName, 30);
+        $this->RegisterVariableBoolean($variable, $this->Translate('Week Timer Status'), $profileName, 30);
         $this->EnableAction($variable);
         //Variable für Änderungen registrieren
         $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
@@ -203,7 +204,7 @@ class HeatingZoneController extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Test:Setze Profile Werte:'.$status , 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
-                IPS_SetVariableProfileAssociation($profileName, 2, "", "", self::Transparent);
+                IPS_SetVariableProfileAssociation($profileName, 2, "", "", self::Transparent);//Leerer Name und Icon löschen den Werteeintrag 
             }
             else {
                 IPS_SetVariableProfileValues($profileName, 0, 2, 0);
@@ -358,30 +359,43 @@ class HeatingZoneController extends IPSModule
         //Trigger action only in automatic mode
         if ($this->GetValue('OpMode') == self::Automatik) {
             $actionID = $this->DetermineAction();
+            $this->SetValue('WeekTimerStatus',$actionID); 
             switch ($actionID) {
                 case self::HeatUndef: # No actual action found
                     $this->SendDebug(__FUNCTION__, '0 = Keine Aktion gefunden!', 0);
-                    $this->SetValue('AutomaticRelease',false); 
                     break;
 
                 case self::HeatOff: # Heizung AUS
                     $this->SendDebug(__FUNCTION__, '1 = AUS', 0);
                     $this->SetWeekTimerAction ($actionID);
-                    $this->SetValue('AutomaticRelease',false); 
+                   
                     break;
 
                 case self::HeatOn: # Heizung EIN
                     $this->SendDebug(__FUNCTION__, '2 = EIN', 0);
                     $this->SetWeekTimerAction ($actionID);
-                    $this->SetValue('AutomaticRelease',true); 
                     break;
             }
+          
         }
    }
 
    private function SetWeekTimerAction (int $action)
    {
+       switch ($action) {
+                case self::HeatUndef: # No actual action found
+                 
+                    break;
 
+                case self::HeatOff: # Heizung AUS
+                  
+                    break;
+
+                case self::HeatOn: # Heizung EIN
+              
+                    break;
+            }
+          
    }
 
 
