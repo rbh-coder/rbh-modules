@@ -73,7 +73,7 @@ class HeatingZoneController extends IPSModule
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $blue);
             IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Status Week Timer'), $profileName, 30);
@@ -194,6 +194,23 @@ class HeatingZoneController extends IPSModule
       
 
         ########## Misc
+  
+        $profileName =  $this->CreateProfileName('OpMode');
+        if (IPS_VariableProfileExists($profileName)) {
+            if (($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
+            {
+                IPS_SetVariableProfileValues($profileName, 0, 1, 0);
+                IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", $transparent);
+                IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", $yellow);
+            }
+            else {
+                IPS_SetVariableProfileValues($profileName, 0, 2, 0);
+                IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", $transparent);
+                IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", $yellow);
+                IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", $green);
+            }
+
+        }
         $this->HandleOpMode ($this->GetValue('OpMode'));
     }
 
