@@ -98,14 +98,14 @@ class HeatingZoneController extends IPSModule
         ########## Timer
     }
 
-    private function RegisterVariableIds(string $itemsString)
+    private function RegisterVariableIds(string $itemsString) ; void
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
         }
     }
 
-     private function RegisterLinkIds(string $itemsString)
+     private function RegisterLinkIds(string $itemsString) :void
     {
         foreach (explode(',', $itemsString) as $item) {
             $this->RegisterAttributeInteger($item, 0);
@@ -189,7 +189,7 @@ class HeatingZoneController extends IPSModule
         ########## Misc
     }
 
-    private function CreateLink (int $targetID,string $name,string $iconName, int $position)
+    private function CreateLink (int $targetID,string $name,string $iconName, int $position) :int
     {
         $linkID = @IPS_GetLinkIDByName($name, $this->InstanceID);
         if ($targetID != 0 && @IPS_ObjectExists($targetID)) {
@@ -217,7 +217,7 @@ class HeatingZoneController extends IPSModule
          return 0;
     }
 
-    private function HideItem(string $item,bool $status)
+    private function HideItem(string $item,bool $status) :void
     {
         if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
@@ -233,7 +233,7 @@ class HeatingZoneController extends IPSModule
        $this->DeleteProfileList ('ProfileList');
     }
 
-    private function DeleteProfileList (string $listName)
+    private function DeleteProfileList (string $listName) :void
     {
           foreach ($this->GetArrayFromString($this->ReadAttributeString( $listName)) as $item) {
                 if (is_string($item)) {
@@ -243,7 +243,7 @@ class HeatingZoneController extends IPSModule
           }
     }
 
-    private function DeleteProfile(string $profileName)
+    private function DeleteProfile(string $profileName) : void
     {
         if (empty($profileName)) return;
          $profile =  $this->CreateProfileName($profileName);
@@ -257,7 +257,7 @@ class HeatingZoneController extends IPSModule
         return explode(',', $itemsString);
     }
 
-    private function CreateProfileName (string $profileName)
+    private function CreateProfileName (string $profileName) : string
     {
          return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
@@ -383,6 +383,30 @@ class HeatingZoneController extends IPSModule
                 //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
                 break;
         }
+    }
+
+    private function DetermineAction(): int
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $actionID = 0;
+        if ($this->ValidateEventPlan()) {
+            $event = IPS_GetEvent($this->ReadPropertyInteger('WeekTimer'));
+            $timestamp = time();
+            $searchTime = date('H', $timestamp) * 3600 + date('i', $timestamp) * 60 + date('s', $timestamp);
+            $weekDay = date('N', $timestamp);
+            foreach ($event['ScheduleGroups'] as $group) {
+                if (($group['Days'] & pow(2, $weekDay - 1)) > 0) {
+                    $points = $group['Points'];
+                    foreach ($points as $point) {
+                        $startTime = $point['Start']['Hour'] * 3600 + $point['Start']['Minute'] * 60 + $point['Start']['Second'];
+                        if ($startTime <= $searchTime) {
+                            $actionID = $point['ActionID'];
+                        }
+                    }
+                }
+            }
+        }
+        return $actionID;
     }
 
     private function HandleOpMode (int $opmode)
