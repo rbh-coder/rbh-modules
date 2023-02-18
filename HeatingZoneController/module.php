@@ -329,7 +329,7 @@ class HeatingZoneController extends IPSModule
             return;
         }
         //Trigger action only in automatic mode
-        if ($this->GetValue('AutomaticMode')) {
+        if ($this->GetValue('OpMode') == self::Automatik) {
             $actionID = $this->DetermineAction();
             switch ($actionID) {
                 case 0: # No actual action found
