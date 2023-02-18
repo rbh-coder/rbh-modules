@@ -195,16 +195,18 @@ class HeatingZoneController extends IPSModule
         ########## Misc
         $this->SendDebug(__FUNCTION__, 'Profile werden angepasst.', 0);
         $profileName =  $this->CreateProfileName('OpMode');
-        $this->SendDebug(__FUNCTION__, 'Test1:'.$this->ReadAttributeInteger('WeekTimer'), 0);
-        $this->SendDebug(__FUNCTION__, 'Test2:'.$this->ReadAttributeInteger('IdRoomThermostat'), 0);
+      
         if (IPS_VariableProfileExists($profileName)) {
+              $this->SendDebug(__FUNCTION__, 'Test1 erreicht', 0);
             if (($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
+                 $this->SendDebug(__FUNCTION__, 'Test2 erreicht', 0);
                 IPS_SetVariableProfileValues($profileName, 0, 1, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
             }
             else {
+                $this->SendDebug(__FUNCTION__, 'Test3 erreicht', 0);
                 IPS_SetVariableProfileValues($profileName, 0, 2, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
