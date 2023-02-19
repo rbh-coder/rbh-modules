@@ -78,7 +78,7 @@ class HeatingZoneController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, 2, "Freigegeben", "", self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Week Timer Status'), $profileName, 30);
-        $this->EnableAction($variable);
+        //$this->EnableAction($variable);
         //Variable für Änderungen registrieren
         $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
 
