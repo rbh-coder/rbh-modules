@@ -73,7 +73,7 @@ class HeatingZoneController extends IPSModule
         if (!IPS_VariableProfileExists($profileName)) {
            IPS_CreateVariableProfile($profileName, 1);
            IPS_SetVariableProfileIcon($profileName, "Ok");
-           IPS_SetVariableProfileAssociation($profileName, 0, "Undefiniert", "", self::Transparent);
+           IPS_SetVariableProfileAssociation($profileName, 0, "Inaktiv", "", self::Transparent);
            IPS_SetVariableProfileAssociation($profileName, 1, "Ausgeschaltet", "", self::Yellow);
            IPS_SetVariableProfileAssociation($profileName, 2, "Freigegeben", "", self::Green);
         }
@@ -332,8 +332,6 @@ class HeatingZoneController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (!$this->ValidateEventPlan()) $actionID = 0;
         else $actionID = $this->DetermineAction(true);
-
-        if  ($actionID==self::HeatUndef) $actionID = self::HeatOff;
         $this->SetValue('WeekTimerStatus',$actionID); 
    }
 
@@ -346,11 +344,7 @@ class HeatingZoneController extends IPSModule
            case self::Manuell:
                 return;
        }
-       switch ($value)
-       {
-            case self::HeatUndef:
-                return;
-       }
+     
        $this->SendOpMode($this->GetControlOpMode($value));
    }
 
@@ -361,6 +355,7 @@ class HeatingZoneController extends IPSModule
             case self::HeatOff:
                 return self::Aus;
             case self::HeatOn:
+            case self::HeatUndef:
                 return self::Automatik;
        }
        return $value;
