@@ -331,7 +331,7 @@ class HeatingZoneController extends IPSModule
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (!$this->ValidateEventPlan()) $actionID = 0;
-        else $actionID = $this->DetermineAction();
+        else $actionID = $this->DetermineAction(true);
         $this->SetValue('WeekTimerStatus',$actionID); 
    }
 
@@ -413,11 +413,11 @@ class HeatingZoneController extends IPSModule
         }
     }
 
-    private function DetermineAction(): int
+    private function DetermineAction(bool isChecked): int
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $actionID = 0;
-        if ($this->ValidateEventPlan()) {
+        if ($isChecked || $this->ValidateEventPlan()) {
             $event = IPS_GetEvent($this->ReadPropertyInteger('WeekTimer'));
             $timestamp = time();
             $searchTime = date('H', $timestamp) * 3600 + date('i', $timestamp) * 60 + date('s', $timestamp);
