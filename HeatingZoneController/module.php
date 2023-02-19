@@ -332,6 +332,8 @@ class HeatingZoneController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (!$this->ValidateEventPlan()) $actionID = 0;
         else $actionID = $this->DetermineAction(true);
+
+        if  ($actionID==self::HeatUndef) $actionID = self::HeatOff;
         $this->SetValue('WeekTimerStatus',$actionID); 
    }
 
