@@ -250,7 +250,7 @@ class HeatingZoneController extends IPSModule
 
     private function DeleteProfileList (string $listName) :void
     {
-          $list = $this->ReadAttributeString($listName);
+          $list = $this->@ReadAttributeString($listName);
           if (!is_string($list)) return;
           $list = trim($list);
           if  ($list == "") return;
