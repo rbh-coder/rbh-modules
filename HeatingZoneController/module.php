@@ -74,8 +74,8 @@ class HeatingZoneController extends IPSModule
            IPS_CreateVariableProfile($profileName, 1);
            IPS_SetVariableProfileIcon($profileName, "Ok");
            IPS_SetVariableProfileAssociation($profileName, 0, "Inaktiv", "", self::Transparent);
-           IPS_SetVariableProfileAssociation($profileName, 1, "Ausgeschaltet", "", self::Yellow);
-           IPS_SetVariableProfileAssociation($profileName, 2, "Freigegeben", "", self::Green);
+           IPS_SetVariableProfileAssociation($profileName, 1, "Nicht Heizen", "", self::Yellow);
+           IPS_SetVariableProfileAssociation($profileName, 2, "Heizen", "", self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Week Timer Status'), $profileName, 30);
         //$this->EnableAction($variable);
