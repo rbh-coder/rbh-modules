@@ -66,7 +66,7 @@ class HeatingZoneController extends IPSModule
         $this->RegisterVariableInteger($variable, $this->Translate('Operation Mode'),$profileName, 10);
         $this->EnableAction($variable);
 
-         //AutomaticRelease
+         //WeekTimerStatus
         $variable = 'WeekTimerStatus';
         $profileName = $this->CreateProfileName($variable);
         if (!IPS_VariableProfileExists($profileName)) {
@@ -427,7 +427,7 @@ class HeatingZoneController extends IPSModule
                 $this->SetValue($Ident, $Value);
                 $this->HandleOpMode ($Value);
                 break;
-            case "AutomaticRelease":
+            case "WeekTimerStatus":
                  $this->SetValue($Ident, $Value);
                 //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
                 break;
@@ -481,11 +481,11 @@ class HeatingZoneController extends IPSModule
          //Wenn Weektimer gar nicht referenziert ist, dann den Status auch nicht anzeigen 
          if  ($this->ReadAttributeInteger('WeekTimer') == 0)
          {
-             $this->HideItemById ( $this->GetIDForIdent('AutomaticRelease'),true);
+             $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
          }
          else 
          {
-	        $this->HideItemById ( $this->GetIDForIdent('AutomaticRelease'),$hide );
+	        $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),$hide );
          }
 
          $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),$hide );
