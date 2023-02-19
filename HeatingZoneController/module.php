@@ -266,7 +266,7 @@ class HeatingZoneController extends IPSModule
           $list = $this->ReadAttributeString($listName);
           if (!is_string($list)) return;
           $list = trim($list);
-          if  ($list == ""
+          if  ($list == "") return;
 
           foreach ($this->GetArrayFromString($list) as $item) {
                 if (is_string($item)) {
