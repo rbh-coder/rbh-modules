@@ -353,7 +353,7 @@ class HeatingZoneController extends IPSModule
    }
 
    private function GetControlOpMode(int $value) : int
-   
+   {
        switch ($value)
        {
             case self::HeatOff:
