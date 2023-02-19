@@ -40,6 +40,29 @@
         }
       ]
     },
+
+    {
+      "type": "ExpansionPanel",
+      "caption": "Sende-Dateninstanzen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "name": "IdOpModeSend",
+          "type": "SelectVariable",
+          "caption": "ID Betriebsart"
+        },
+        {
+          "name": "IdAdaptRoomTemperatureSend",
+          "type": "SelectVariable",
+          "caption": "ID Raumtemperatur Anpassung"
+        }
+      ]
+    },
+
+
     {
       "type": "ExpansionPanel",
       "caption": "Wochenplan",

@@ -45,6 +45,7 @@ class HeatingZoneController extends IPSModule
         ########## Properties
          $this->RegisterAttributeString('ProfileList',"WeekTimerStatus,OpMode,AdaptRoomTemperature");
          $this->RegisterAttributeString('LinkList', "WeekTimer,IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
+         $this->RegisterAttributeString('SendList', "IdOpModeSend,IdAdaptRoomTemperatureSend");
 
         $this->DeleteProfileList ('ProfileList');
        
@@ -98,6 +99,8 @@ class HeatingZoneController extends IPSModule
         $this->RegisterVariableIds($this->ReadAttributeString('LinkList'));
         //Attribute mit Ids von Links anlegen
         $this->RegisterLinkIds($this->ReadAttributeString('LinkList'));
+
+        $this->RegisterVariableIds($this->ReadAttributeString('SendList'));
       
         ########## Timer
     }
@@ -147,21 +150,6 @@ class HeatingZoneController extends IPSModule
         }
 
         ########## WebFront options
-
-
-        //Weekly schedule
-        /*
-        $id = @IPS_GetLinkIDByName('Wochenplan', $this->InstanceID);
-        if (is_int($id)) {
-            $hide = true;
-            if ($this->ValidateEventPlan()) {
-                if ($this->GetValue('OpMode') == self::Automatik) {
-                    $hide = false;
-                }
-            }
-            IPS_SetHidden($id, $hide);
-        }
-        */
        
         ########## References and Messages
 
@@ -201,7 +189,6 @@ class HeatingZoneController extends IPSModule
             if (($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
-                $this->SendDebug(__FUNCTION__, 'Test:Setze Profile Werte:'.$status , 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
                 IPS_SetVariableProfileAssociation($profileName, 2, "", "", self::Transparent);//Leerer Name und Icon löschen den Werteeintrag 
@@ -317,92 +304,80 @@ class HeatingZoneController extends IPSModule
                 //$Data[4] = timestamp value changed
                 //$Data[5] = timestamp last value
 
-                /*
-                //Room temperature
-                if ($SenderID == $this->ReadPropertyInteger('RoomTemperature')) {
+               
+                //Wochenplan Status
+                if ($SenderID == $this->ReadPropertyInteger('WeekTimerStatus')) {
                     if ($Data[1]) {
-                        $this->SendDebug(__FUNCTION__, 'Die Raum-Temperatur hat sich auf ' . $Data[0] . '°C geändert.', 0);
-                        //$this->UpdateRoomTemperature();
-                        $scriptText = self::MODULE_PREFIX . '_UpdateRoomTemperature(' . $this->InstanceID . ');';
-                        IPS_RunScriptText($scriptText);
+                        $this->SendDebug(__FUNCTION__, 'Der Wochenplan Status hat sich auf ' . $Data[0] . ' geändert.', 0);
+                        $this->SetWeekTimerStatus($Data[0]);
                     }
                 }
-                //Door and window sensors
-                $doorWindowSensors = json_decode($this->ReadPropertyString('DoorWindowSensors'), true);
-                if (!empty($doorWindowSensors)) {
-                    if (in_array($SenderID, array_column($doorWindowSensors, 'ID'))) {
-                        if ($Data[1]) {
-                            //$this->CheckDoorWindowSensors();
-                            $scriptText = self::MODULE_PREFIX . '_CheckDoorWindowSensors(' . $this->InstanceID . ');';
-                            IPS_RunScriptText($scriptText);
-                        }
-                    }
-                }
-                */
+         
                 break;
 
             case EM_UPDATE:
 
                 //$Data[0] = last run
                 //$Data[1] = next run
+                
                 //Weekly schedule
-
                 $this->TriggerAction();
-                //$scriptText = self::MODULE_PREFIX . '_TriggerAction(' . $this->InstanceID . ', true);';
-                //IPS_RunScriptText($scriptText);
                 break;
 
         }
     }
 
-   public function TriggerAction(): void
+   private function TriggerAction(): void
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        if (!$this->ValidateEventPlan()) {
-            return;
-        }
-        //Trigger action only in automatic mode
-        if ($this->GetValue('OpMode') == self::Automatik) {
-            $actionID = $this->DetermineAction();
-            $this->SetValue('WeekTimerStatus',$actionID); 
-            switch ($actionID) {
-                case self::HeatUndef: # No actual action found
-                    $this->SendDebug(__FUNCTION__, '0 = Keine Aktion gefunden!', 0);
-                    break;
-
-                case self::HeatOff: # Heizung AUS
-                    $this->SendDebug(__FUNCTION__, '1 = AUS', 0);
-                    $this->SetWeekTimerAction ($actionID);
-                   
-                    break;
-
-                case self::HeatOn: # Heizung EIN
-                    $this->SendDebug(__FUNCTION__, '2 = EIN', 0);
-                    $this->SetWeekTimerAction ($actionID);
-                    break;
-            }
-          
-        }
+        if (!$this->ValidateEventPlan()) $actionID = 0;
+        else $actionID = $this->DetermineAction();
+        $this->SetValue('WeekTimerStatus',$actionID); 
    }
 
-   private function SetWeekTimerAction (int $action)
+   private function SetWeekTimerStatus(int $value): void
    {
-       switch ($action) {
-                case self::HeatUndef: # No actual action found
-                 
-                    break;
-
-                case self::HeatOff: # Heizung AUS
-                  
-                    break;
-
-                case self::HeatOn: # Heizung EIN
-              
-                    break;
-            }
-          
+       switch ($this->GetValue('OpMode'))
+       {
+           case self::Aus:
+                return;
+           case self::Manuell:
+                return;
+       }
+       switch ($value)
+       {
+            case self::HeatUndef:
+                return;
+       }
+       $this->SendOpMode($this->GetControlOpMode($value));
    }
 
+   private function GetControlOpMode(int $value) : int
+   
+       switch ($value)
+       {
+            case self::HeatOff:
+                return self::Aus;
+            case self::HeatOn:
+                return self::Automatik;
+       }
+       return $value;
+   }
+
+   private function SendOpMode(int $value): void
+   {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $id= $this->ReadPropertyInteger('IdOpModeSend');
+        if ($id>0) RequestAction($id, $value);
+   }
+
+   private function SendAdaptRoomTemperature (float $value): void
+   {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $id= $this->ReadPropertyInteger('IdAdaptRoomTemperatureSend');
+        if ($id>0) RequestAction($id, $value);
+        
+   }
 
     private function ValidateEventPlan(): bool
     {
@@ -433,7 +408,7 @@ class HeatingZoneController extends IPSModule
                 break;
             case "AdaptRoomTemperature":
                  $this->SetValue($Ident, $Value);
-                //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
+                 $this->SendAdaptRoomTemperature($Value);
                 break;
         }
     }
@@ -467,28 +442,23 @@ class HeatingZoneController extends IPSModule
         $hide=true;
 
          switch($opmode) {
-            case self::Aus: //Aus       
-                break;
+            case self::Aus: //Aus 
             case self::Manuell: //Handbetrieb
+                 $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),true);
+                 $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
+                 $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
                 break;
             case self::Automatik: //Automatikbetrieb
-                $hide=false;
+                $hide= $this->ReadAttributeInteger('WeekTimer') == 0;
+                $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),$hide);
+                $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
+                $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),false);
+                $this->TriggerAction(); 
+                $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
                 break;
             default:
-        }
-
-         $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),$hide );
-         //Wenn Weektimer gar nicht referenziert ist, dann den Status auch nicht anzeigen 
-         if  ($this->ReadAttributeInteger('WeekTimer') == 0)
-         {
-             $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
          }
-         else 
-         {
-	        $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),$hide );
-         }
-
-         $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),$hide );
+         $this->SendOpMode($opmode);
     }
 
     private function HideItemById (int $id, bool $hide )
