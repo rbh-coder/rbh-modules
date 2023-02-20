@@ -311,12 +311,14 @@ class HeatingZoneController extends IPSModule
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
+        /*
         $this->SendDebug('MessageSink', 'Message from SenderID ' . $SenderID . ' with Message ' . $Message . "\r\n Data: " . print_r($Data, true), 0);
         if (!empty($Data)) {
             foreach ($Data as $key => $value) {
                 $this->SendDebug(__FUNCTION__, 'Data[' . $key . '] = ' . json_encode($value), 0);
             }
         }
+        */
         switch ($Message) {
             case IPS_KERNELSTARTED:
                 $this->KernelReady();
