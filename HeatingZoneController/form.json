@@ -37,6 +37,11 @@
           "name": "IdActHeat",
           "type": "SelectVariable",
           "caption": "ID Vorlauf Ist"
+        },
+        {
+          "name": "ExpertModeID",
+          "type": "SelectVariable",
+          "caption": "Expert Mode"
         }
       ]
     },

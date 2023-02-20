@@ -2,9 +2,11 @@
     "translations": {
       "de": {
         "Operation Mode": "Betriebsart",
+        "Active Operation Mode": "Aktive Betriebsart",
         "Week Timer Status": "Wochenplan Status",
         "Adapt Room Temperature": "Raumtemperatur anpassen",
-        "Scheduled Switch": "Schaltuhr"
+        "Scheduled Switch": "Schaltuhr",
+        "Expert Mode": "Expertenmodus"
       }
     }
 }

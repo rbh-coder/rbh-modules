@@ -46,6 +46,8 @@ class HeatingZoneController extends IPSModule
          $this->RegisterAttributeString('ProfileList',"WeekTimerStatus,OpMode,AdaptRoomTemperature");
          $this->RegisterAttributeString('LinkList', "WeekTimer,IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
          $this->RegisterAttributeString('SendList', "IdOpModeSend,IdAdaptRoomTemperatureSend");
+         $this->RegisterAttributeString('ExpertListHide',"OpModeActive");
+         $this->RegisterAttributeString('ExpertListLock',"OpMode");
 
         $this->DeleteProfileList ('ProfileList');
        
@@ -66,6 +68,20 @@ class HeatingZoneController extends IPSModule
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Operation Mode'),$profileName, 10);
         $this->EnableAction($variable);
+
+
+        $variable = 'OpModeActive';
+        $profileName =  $this->CreateProfileName($variable);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 1);
+            IPS_SetVariableProfileValues($profileName, 0, 2, 0);
+            IPS_SetVariableProfileIcon($profileName, "Information");
+            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Ein", "", self::Yellow);
+            IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", self::Green);
+        }
+        $this->RegisterVariableInteger($variable, $this->Translate('Active Operation Mode'),$profileName, 10);
+       
 
          //WeekTimerStatus
         $variable = 'WeekTimerStatus';
@@ -101,7 +117,7 @@ class HeatingZoneController extends IPSModule
         $this->RegisterLinkIds($this->ReadAttributeString('LinkList'));
 
         $this->RegisterVariableIds($this->ReadAttributeString('SendList'));
-      
+        $this->RegisterPropertyInteger('ExpertModeID', 0);
         ########## Timer
     }
 
@@ -164,6 +180,8 @@ class HeatingZoneController extends IPSModule
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_UPDATE);
         }
+
+         $this->RegisterStatusUpdate('ExpertModeID');
         
 
         ########## Links
@@ -230,6 +248,15 @@ class HeatingZoneController extends IPSModule
             }
         }
          return 0;
+    }
+
+    //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
+    private function RegisterStatusUpdate(string $statusName)
+    {
+        $id= $this->ReadPropertyInteger($statusName);
+        if ($id>0) {
+            $this->RegisterMessage($id,VM_UPDATE);
+        }
     }
 
     private function HideItem(string $item,bool $status) :void
@@ -312,7 +339,10 @@ class HeatingZoneController extends IPSModule
                         $this->SetWeekTimerStatus($Data[0]);
                     }
                 }
-         
+                else if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
+                {
+                    $this->HandleExpertSwitch($SenderID);
+                }
                 break;
 
             case EM_UPDATE:
@@ -361,9 +391,28 @@ class HeatingZoneController extends IPSModule
        return $value;
    }
 
+   public function HandleExpertSwitch(int $id)
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $status = !GetValueBoolean($id);
+        if ($id==0)  $status = false;
+        $itemString = $this->ReadAttributeString('ExpertListHide');
+        foreach (explode(',', $itemString) as $item)
+        {
+            $this->HideItem($item,$status);
+        }
+        $itemString = $this->ReadAttributeString('ExpertListLock');
+        foreach (explode(',', $itemString) as $item)
+        {
+            $this->LockItem($item,$status);
+        }
+        $this->HideItem('ColorFadeTime',$status || !$this->ReadPropertyBoolean('UseFading'));
+    }
+
    private function SendOpMode(int $value): void
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SetValue('OpModeActive') = $value:
         $id= $this->ReadPropertyInteger('IdOpModeSend');
         if ($id>0) RequestAction($id, $value);
    }
