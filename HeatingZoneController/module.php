@@ -49,7 +49,7 @@ class HeatingZoneController extends IPSModule
          $this->RegisterAttributeString('ExpertListHide',"OpModeActive");
          $this->RegisterAttributeString('ExpertListLock',"OpMode");
 
-         $this->RegisterAttributeBoolean('RecurseFlag',false;);
+         $this->RegisterAttributeBoolean('RecurseFlag',false);
 
         $this->DeleteProfileList ('ProfileList');
        
