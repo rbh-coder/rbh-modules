@@ -80,7 +80,7 @@ class HeatingZoneController extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 1, "Ein", "", self::Yellow);
             IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", self::Green);
         }
-        $this->RegisterVariableInteger($variable, $this->Translate('Active Operation Mode'),$profileName, 10);
+        $this->RegisterVariableInteger($variable, $this->Translate('Active Operation Mode'),$profileName, 15);
        
 
          //WeekTimerStatus
