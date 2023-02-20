@@ -262,13 +262,7 @@ class HeatingZoneController extends IPSModule
         }
     }
 
-    private function HideItem(string $item,bool $status) :void
-    {
-        if (empty($item)) return;
-        $id = $this->GetIDForIdent($item);
-        IPS_SetHidden($id, $status);
-    }
-
+  
     public function Destroy()
     {
         //Never delete this line!
@@ -518,6 +512,18 @@ class HeatingZoneController extends IPSModule
     {
         if ($id==0) return;
         IPS_SetHidden($id,$hide);
+    }
+
+    private function LockItem(string $item,bool $status)
+    {
+        $id = $this->GetIDForIdent($item);
+        IPS_SetDisabled($id, $status);
+    }
+     private function HideItem(string $item,bool $status) :void
+    {
+        if (empty($item)) return;
+        $id = $this->GetIDForIdent($item);
+        IPS_SetHidden($id, $status);
     }
 
     #################### Private

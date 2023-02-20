@@ -173,14 +173,14 @@ class LightColorChanger extends IPSModule
     }
 
 
-    public function RegisterVariableIds(string $itemsString)
+    private function RegisterVariableIds(string $itemsString)
     {
         foreach (explode(',', $itemsString) as $item) {
             $this->RegisterPropertyInteger($item, 0);
         }
     }
 
-    public function CreateProfileAssociation(string $profileName, int $colorCode)
+    private function CreateProfileAssociation(string $profileName, int $colorCode)
     {
         //$transparent = 0xffffff00;
         //$white = 0xffffff;
@@ -227,7 +227,7 @@ class LightColorChanger extends IPSModule
         IPS_SetVariableProfileAssociation($profileName, $colorCode, $colorString, "", $colorCodeHex);
     }
 
-    public function CalculateMixedColor(int $numberColors, int $actNumber, int $sumNumber)
+    private function CalculateMixedColor(int $numberColors, int $actNumber, int $sumNumber)
     {
         $sumNumber += $actNumber / $numberColors;
         return (int)min($sumNumber, 0xFF);
@@ -267,7 +267,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function UpdateColorStatus(int $senderID)
+    private function UpdateColorStatus(int $senderID)
     {
         $itemArray =  $this->GetArrayFromString ($this->ReadAttributeString('StatusList'));
         $idx = 0;
@@ -287,12 +287,12 @@ class LightColorChanger extends IPSModule
         $this->SetValue('ActiveColors', $colorNumber);
     }
 
-    public function GetArrayFromString (string $itemsString)
+    private function GetArrayFromString (string $itemsString)
     {
         return explode(',', $itemsString);
     }
 
-    public function SetColorNumber (int $colorNumber, int $digit , bool $status )
+    private function SetColorNumber (int $colorNumber, int $digit , bool $status )
     {
         if ($status)
         {
@@ -304,7 +304,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function HandleOpMode(int $opmode)
+    private function HandleOpMode(int $opmode)
     {
         switch($opmode) {
             case 0: //Aus
@@ -323,7 +323,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function ColorManager (int $opmode)
+    private function ColorManager (int $opmode)
     {
         $actualColors = $this->GetValue('ActiveColors');
         $color = $actualColors;
@@ -366,7 +366,7 @@ class LightColorChanger extends IPSModule
         if ($color != $actualColors) $this->SetActualColor ($color);
     }
 
-    public function SetActualColor (int $color)
+    private function SetActualColor (int $color)
     {
          if ($this->ReadAttributeInteger("ActColor") ==  $color) return;
          $this->WriteAttributeInteger("ActColor",$color);
@@ -475,7 +475,7 @@ class LightColorChanger extends IPSModule
     }
 
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
-    public function RegisterStatusUpdate(string $statusName)
+    private function RegisterStatusUpdate(string $statusName)
     {
         $id= $this->ReadPropertyInteger($statusName);
         //Register for change notification if a variable is defined
@@ -485,7 +485,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function ChangeColor()
+    private function ChangeColor()
     {
         $allowedColorNumbers = array_map('intval', explode(',', $this->ReadAttributeString('ColorList')));
         $mainColorNumbers = array_map('intval', explode(',', $this->ReadAttributeString('MainColorList')));
@@ -507,7 +507,7 @@ class LightColorChanger extends IPSModule
         $this->SetColor($actColor);
     }
 
-    public function SetManualColor()
+    private function SetManualColor()
     {
         switch($this->GetValue('OpMode'))
         {
@@ -518,7 +518,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function StartAutomaticColor()
+    private function StartAutomaticColor()
     {
         //IPS_LogMessage("StartAutomaticColor", 'status:'.$status);
         switch($this->GetValue('OpMode'))
@@ -530,7 +530,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function RestartTimers()
+    private function RestartTimers()
     {
         switch($this->GetValue('OpMode'))
         {
@@ -558,7 +558,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function SetCleaningMode(int $opMode)
+    private function SetCleaningMode(int $opMode)
     {
         $actCleaningStatus =  $this->ReadAttributeInteger('CleaningStatus');
         $newCleaningStatus =  $this->CleaningStatusManager($actCleaningStatus);
@@ -567,7 +567,7 @@ class LightColorChanger extends IPSModule
         $this->ColorManager($opMode);
     }
 
-    public function UpdateCleaningStatus()
+    private function UpdateCleaningStatus()
     {
          $actCleaningStatus = $this->ReadAttributeInteger('CleaningStatus');
          $newCleaningStatus = $this->CleaningStatusManager($actCleaningStatus);
@@ -575,7 +575,7 @@ class LightColorChanger extends IPSModule
          $this->WriteAttributeInteger('CleaningStatus',$newCleaningStatus);
     }
 
-    public function CleaningStatusManager(int $actCleaningStatus)
+    private function CleaningStatusManager(int $actCleaningStatus)
     {
         $cleaningStatus = $actCleaningStatus;
         switch($cleaningStatus)
@@ -606,7 +606,7 @@ class LightColorChanger extends IPSModule
         return  $cleaningStatus;
     }
 
-    public function IsCleaningModeAllowed()
+    private function IsCleaningModeAllowed()
     {
         $result = true;
         switch($this->GetValue('OpMode'))
@@ -618,7 +618,7 @@ class LightColorChanger extends IPSModule
         return  $result;
     }
 
-    public function IsCleaningRequested()
+    private function IsCleaningRequested()
     {
         return $this->GetValue('CleaningMode');
     }
@@ -629,14 +629,14 @@ class LightColorChanger extends IPSModule
         $this->SetValue('CleaningMode',false);
     }
 
-    public function StartCleaningMode()
+    private function StartCleaningMode()
     {
        $stopTime = $this->ReadPropertyInteger('CleaningModeTime') * 1000 *60;
        $this->SetTimerInterval('LCC_CleaningTimer', $stopTime);
     }
 
 
-    public function FindNextColor(int $actColor, array $allowedColorNumbers, array $mainColorNumbers, bool $useFading)
+    private function FindNextColor(int $actColor, array $allowedColorNumbers, array $mainColorNumbers, bool $useFading)
     {
         if ($actColor == 0) {
             $actColor = reset($allowedColorNumbers);
@@ -655,7 +655,7 @@ class LightColorChanger extends IPSModule
         return $actColor;
     }
 
-    public function SetColor(int $actColor)
+    private function SetColor(int $actColor)
     {
         $this->SetValue('ActiveColors', $actColor);
         $itemArray =  $this->GetArrayFromString ($this->ReadAttributeString('SwitchList'));
@@ -668,7 +668,7 @@ class LightColorChanger extends IPSModule
     }
 
     //Methode setzt Lampenausgang, soferne dieser in der Modul-Form aktiviert ist
-    public function SetLamp(string $switchName, int $actColor,int $mask)
+    private function SetLamp(string $switchName, int $actColor,int $mask)
     {
         $status =   ($actColor & $mask) > 0;
         $id= $this->ReadPropertyInteger($switchName);
@@ -679,7 +679,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function HandleExpertSwitch(int $id)
+    privte function HandleExpertSwitch(int $id)
     {
         $status = !GetValueBoolean($id);
         if ($id==0)  $status = false;
@@ -697,13 +697,13 @@ class LightColorChanger extends IPSModule
         $this->HideItem('ColorFadeTime',$status || !$this->ReadPropertyBoolean('UseFading'));
     }
 
-    public function HideItem(string $item,bool $status)
+    private function HideItem(string $item,bool $status)
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetHidden($id, $status);
     }
 
-    public function LockItem(string $item,bool $status)
+    private function LockItem(string $item,bool $status)
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetDisabled($id, $status);
