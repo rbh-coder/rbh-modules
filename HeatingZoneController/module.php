@@ -147,11 +147,7 @@ class HeatingZoneController extends IPSModule
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-        
-        $this->SendDebug(__FUNCTION__, 'GetReferenceList: '.json_encode($this->GetReferenceList(), JSON_PRETTY_PRINT), 0);
-        $this->SendDebug(__FUNCTION__, 'GetReferenceList: '.json_encode($this->GetMessageList(), JSON_PRETTY_PRINT), 0);
-
-
+     
         //Delete all references
         foreach ($this->GetReferenceList() as $referenceID) {
             $this->UnregisterReference($referenceID);
@@ -168,10 +164,7 @@ class HeatingZoneController extends IPSModule
                 }
             }
         }
-        $this->SendDebug(__FUNCTION__, 'GetReferenceList: '.json_encode($this->GetReferenceList(), JSON_PRETTY_PRINT), 0);
-        $this->SendDebug(__FUNCTION__, 'GetReferenceList: '.json_encode($this->GetMessageList(), JSON_PRETTY_PRINT), 0);
-      
-
+     
         ########## WebFront options
        
         ########## References and Messages
@@ -226,6 +219,9 @@ class HeatingZoneController extends IPSModule
             }
 
         }
+
+        $this->SendDebug(__FUNCTION__, 'GetReferenceList: '.json_encode($this->GetReferenceList(), JSON_PRETTY_PRINT), 0);
+        $this->SendDebug(__FUNCTION__, 'GetMessageList: '.json_encode($this->GetMessageList(), JSON_PRETTY_PRINT), 0);
         $this->HandleOpMode ($this->GetValue('OpMode'));
     }
 
