@@ -412,7 +412,7 @@ class HeatingZoneController extends IPSModule
    private function SendOpMode(int $value): void
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SetValue('OpModeActive') = $value;
+        $this->SetValue('OpModeActive',$value);
         $id= $this->ReadPropertyInteger('IdOpModeSend');
         if ($id>0) RequestAction($id, $value);
    }
