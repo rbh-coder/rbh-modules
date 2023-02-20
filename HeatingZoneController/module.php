@@ -464,9 +464,9 @@ class HeatingZoneController extends IPSModule
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $actionID = 0;
-        if ($isChecked || $this->ValidateEventPlan()) {
+        if ($isChecked) {
+        //if ($isChecked || $this->ValidateEventPlan()) {
             $event = IPS_GetEvent($this->ReadPropertyInteger('WeekTimer'));
-            $this->SendDebug(__FUNCTION__, ' Eventlist: '.json_encode($event, JSON_PRETTY_PRINT), 0);
             $timestamp = time();
             $searchTime = date('H', $timestamp) * 3600 + date('i', $timestamp) * 60 + date('s', $timestamp);
             $weekDay = date('N', $timestamp);
