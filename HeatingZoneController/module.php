@@ -331,13 +331,13 @@ class HeatingZoneController extends IPSModule
                 //$Data[4] = timestamp value changed
                 //$Data[5] = timestamp last value
 
+                //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
+                if ($Data[1]==0) return;
+                $this->SendDebug(__FUNCTION__, 'Der Wochenplan Status hat sich auf ' . $Data[0] . ' geändert.', 0);
                
                 //Wochenplan Status
-                if ($SenderID == $this->ReadPropertyInteger('WeekTimerStatus')) {
-                    if ($Data[1]) {
-                        $this->SendDebug(__FUNCTION__, 'Der Wochenplan Status hat sich auf ' . $Data[0] . ' geändert.', 0);
-                        $this->SetWeekTimerStatus($Data[0]);
-                    }
+                if ($SenderID == $this->ReadPropertyInteger('WeekTimerStatus')) {   
+                    $this->SetWeekTimerStatus($Data[0]);
                 }
                 else if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
                 {
@@ -351,6 +351,7 @@ class HeatingZoneController extends IPSModule
                 //$Data[1] = next run
                 
                 //Weekly schedule
+                $this->SendDebug(__FUNCTION__, 'Trigger durch EM_UPDATE.', 0);
                 $this->TriggerAction();
                 break;
 
@@ -367,6 +368,7 @@ class HeatingZoneController extends IPSModule
 
    private function SetWeekTimerStatus(int $value): void
    {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        switch ($this->GetValue('OpMode'))
        {
            case self::Aus:
