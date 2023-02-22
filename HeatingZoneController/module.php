@@ -185,6 +185,8 @@ class HeatingZoneController extends IPSModule
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
             $this->RegisterMessage($id,EM_CHANGETRIGGER);
             IPS_SetEventScript($id,self::MODULE_PREFIX . '_WeekTimerAction($_IPS[\'ACTION\']);');
+            IPS_SetEventScheduleAction(($id,1,"Aus",2420837,self::MODULE_PREFIX . '_WeekTimerAction('.$this->InstanceID.',1);')
+            IPS_SetEventScheduleAction(($id,2,"Ein",2420837,self::MODULE_PREFIX . '_WeekTimerAction('.$this->InstanceID.',2);')
             $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
         }
 
@@ -409,7 +411,7 @@ class HeatingZoneController extends IPSModule
        return $value;
    }
 
-   public function HandleExpertSwitch(int $id)
+   private function HandleExpertSwitch(int $id)
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $status = !GetValueBoolean($id);
