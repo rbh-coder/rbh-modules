@@ -469,6 +469,7 @@ class HeatingZoneController extends IPSModule
 
     private function DetermineAction(bool $isChecked): int
     {
+        return 0;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $actionID = 0;
         if ($isChecked || $this->ValidateEventPlan()) {
