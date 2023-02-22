@@ -679,7 +679,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    privte function HandleExpertSwitch(int $id)
+    private function HandleExpertSwitch(int $id)
     {
         $status = !GetValueBoolean($id);
         if ($id==0)  $status = false;
