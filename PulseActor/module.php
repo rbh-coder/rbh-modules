@@ -302,20 +302,20 @@ class PulseActor extends IPSModule
         $this->DeleteProfileList ('ProfileList');
     }
 
-    private function DeleteProfileList (string $listName) :void
-    {
-          $list = @$this->ReadAttributeString($listName);
-          if (!is_string($list)) return;
-          $list = trim($list);
-          if  ($list == "") return;
+   private function DeleteProfileList (string $listName) : void
+   {
+		  $list = @$this->ReadAttributeString($listName);
+		  if (!is_string($list)) return;
+		  $list = trim($list);
+		  if  (strlen($list) == 0) return;
 
-          foreach ($this->GetArrayFromString($list) as $item) {
-                if (is_string($item)) {
-                     $cleanedItem = trim($item);
-                     if ($cleanedItem != "") $this->DeleteProfile($cleanedItem);
-                }
-          }
-    }
+		  foreach ($this->GetArrayFromString($list) as $item) {
+				if (is_string($item)) {
+					 $cleanedItem = trim($item);
+					 if (strlen($cleanedItem) > 0) $this->DeleteProfile($cleanedItem);
+				}
+		  }
+	}
 
     private function DeleteProfile(string $profileName)
     {

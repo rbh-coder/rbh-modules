@@ -185,6 +185,7 @@ class HeatingZoneController extends IPSModule
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
             $this->RegisterMessage($id,EM_CHANGETRIGGER);
             IPS_SetEventScript($id,self::MODULE_PREFIX . '_WeekTimerAction($_IPS[\'ACTION\']);');
+            $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
         }
 
          $this->RegisterStatusUpdate('ExpertModeID');
@@ -283,12 +284,12 @@ class HeatingZoneController extends IPSModule
           $list = @$this->ReadAttributeString($listName);
           if (!is_string($list)) return;
           $list = trim($list);
-          if  ($list == "") return;
+          if  (strlen($list) == 0) return;
 
           foreach ($this->GetArrayFromString($list) as $item) {
                 if (is_string($item)) {
                      $cleanedItem = trim($item);
-                     if ($cleanedItem != "") $this->DeleteProfile($cleanedItem);
+                     if (strlen($cleanedItem) > 0) $this->DeleteProfile($cleanedItem);
                 }
           }
     }
