@@ -352,6 +352,7 @@ class HeatingZoneController extends IPSModule
                 //$Data[1] = next run
                 
                 //Weekly schedule
+                /*
                 if  ($this->ReadAttributeBoolean('RecurseFlag')) return;
                 $this->SendDebug(__FUNCTION__, 'Trigger durch EM_UPDATE.', 0);
                 $this->SendDebug(__FUNCTION__, 'Data[] = ' . json_encode($Data), 0);
@@ -359,6 +360,7 @@ class HeatingZoneController extends IPSModule
 
                 $this->TriggerAction();
                 $this->WriteAttributeBoolean('RecurseFlag',false);
+                */
                 break;
 
         }
@@ -469,7 +471,6 @@ class HeatingZoneController extends IPSModule
 
     private function DetermineAction(bool $isChecked): int
     {
-        return 0;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $actionID = 0;
         if ($isChecked || $this->ValidateEventPlan()) {
