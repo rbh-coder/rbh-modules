@@ -183,6 +183,7 @@ class HeatingZoneController extends IPSModule
             //$this->RegisterMessage($id, EM_UPDATE);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
+            $this->RegisterMessage($id,EM_CHANGETRIGGER);
         }
 
          $this->RegisterStatusUpdate('ExpertModeID');
@@ -351,6 +352,7 @@ class HeatingZoneController extends IPSModule
             //case EM_UPDATE:
             case EM_CHANGEACTIVE:
             case EM_CHANGESCHEDULEGROUPPOINT:
+            case EM_CHANGETRIGGER:
 
                 //$Data[0] = last run
                 //$Data[1] = next run
