@@ -297,12 +297,14 @@ class PulseActor extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
+        
+        
         $this->DeleteProfileList ('ProfileList');
     }
 
     private function DeleteProfileList (string $listName)
     {
-         $list = $this->ReadAttributeString($listName);
+         $list = $this->ReadAttributeString('ProfileList');
          if (!is_string($list)) return;
          $list = trim($list);
          if  ($list == "") return;
