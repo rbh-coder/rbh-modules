@@ -180,7 +180,9 @@ class HeatingZoneController extends IPSModule
         $id = $this->ReadPropertyInteger('WeekTimer');
         if ($id != 0 && @IPS_ObjectExists($id)) {
             $this->RegisterReference($id);
-            $this->RegisterMessage($id, EM_UPDATE);
+            //$this->RegisterMessage($id, EM_UPDATE);
+            $this->RegisterMessage($id, EM_CHANGEACTIVE);
+            $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
         }
 
          $this->RegisterStatusUpdate('ExpertModeID');
@@ -346,25 +348,20 @@ class HeatingZoneController extends IPSModule
                 }
                 break;
 
-            case EM_UPDATE:
+            //case EM_UPDATE:
+            case EM_CHANGEACTIVE:
+            case EM_CHANGESCHEDULEGROUPPOINT:
 
                 //$Data[0] = last run
                 //$Data[1] = next run
                 
                 //Weekly schedule
-                 $this->SendDebug(__FUNCTION__, 'Trigger durch EM_UPDATE.', 0);
-                  $this->SendDebug(__FUNCTION__, 'Data[] = ' . json_encode($Data). ' ID: '. $SenderID . 'Message: '. $Message, 0);
-                /*
-                if  ($this->ReadAttributeBoolean('RecurseFlag')) return;
-                $this->SendDebug(__FUNCTION__, 'Trigger durch EM_UPDATE.', 0);
-                $this->SendDebug(__FUNCTION__, 'Data[] = ' . json_encode($Data), 0);
-                $this->WriteAttributeBoolean('RecurseFlag',true);
-
+                $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+                $this->SendDebug(__FUNCTION__, 'Data[] = ' . json_encode($Data). ' ID: '. $SenderID, 0);
                 $this->TriggerAction();
-                $this->WriteAttributeBoolean('RecurseFlag',false);
-                */
+             
                 break;
-
+          
         }
     }
 
