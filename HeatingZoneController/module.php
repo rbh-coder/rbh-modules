@@ -375,7 +375,8 @@ class HeatingZoneController extends IPSModule
 
    public function WeekTimerAction (int $action) : void
    {
-       $this->TriggerAction();
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $this->SetValue('WeekTimerStatus',$action); 
    }
 
    private function TriggerAction(): void
