@@ -184,6 +184,7 @@ class HeatingZoneController extends IPSModule
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
             $this->RegisterMessage($id,EM_CHANGETRIGGER);
+            IPS_SetEventScript($id,self::MODULE_PREFIX . '_WeekTimerAction($_IPS[\'ACTION\']);');
         }
 
          $this->RegisterStatusUpdate('ExpertModeID');
@@ -366,6 +367,11 @@ class HeatingZoneController extends IPSModule
           
         }
     }
+
+   public function WeekTimerAction (int $action) : void
+   {
+       $this->TriggerAction();
+   }
 
    private function TriggerAction(): void
    {
