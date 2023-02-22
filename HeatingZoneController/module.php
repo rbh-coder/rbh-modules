@@ -352,6 +352,7 @@ class HeatingZoneController extends IPSModule
                 //$Data[1] = next run
                 
                 //Weekly schedule
+                 $this->SendDebug(__FUNCTION__, 'Trigger durch EM_UPDATE.', 0);
                 /*
                 if  ($this->ReadAttributeBoolean('RecurseFlag')) return;
                 $this->SendDebug(__FUNCTION__, 'Trigger durch EM_UPDATE.', 0);
