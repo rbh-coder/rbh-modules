@@ -328,7 +328,11 @@ class HeatingZoneController extends IPSModule
           foreach ($this->GetArrayFromString($list) as $item) {
                 if (is_string($item)) {
                      $cleanedItem = trim($item);
-                     if (strlen($cleanedItem) > 0) $this->DeleteProfile($cleanedItem);
+                     if (strlen($cleanedItem) > 0)
+                     {
+                        $this->SendDebug(__FUNCTION__, 'Lösche Profil ' .$cleanedItem. '.', 0);
+                        $this->DeleteProfile($cleanedItem);
+                     }
                 }
           }
     }
