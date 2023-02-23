@@ -18,6 +18,7 @@ class PulseActor extends IPSModule
     private const MODULE_PREFIX = 'PAC';
     private const MODULE_NAME = 'PulseActor';
 
+    private const ProfileList = 'AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus';
     public function Create()
     {
         //Never delete this line!
@@ -33,9 +34,8 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('StatusList', "StatusActorID");
         $this->RegisterAttributeString('ExpertListHide',"");
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
-        $this->RegisterAttributeString('ProfileList',"AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus");
 
-        $this->DeleteProfileList ('ProfileList');
+        $this->DeleteProfileList (self::ProfileList);
 
         //Variablen --------------------------------------------------------------------------------------------------------
         //AutomaticRelease
@@ -299,29 +299,33 @@ class PulseActor extends IPSModule
         parent::Destroy();
         
         
-        $this->DeleteProfileList ('ProfileList');
+        $this->DeleteProfileList (slef::ProfileList);
     }
 
-   private function DeleteProfileList (string $listName) : void
-   {
-		  $list = @$this->ReadAttributeString($listName);
-		  if (!is_string($list)) return;
-		  $list = trim($list);
-		  if  (strlen($list) == 0) return;
+   
+    private function DeleteProfileList (string $list) :void
+    {
+          if (!is_string($list)) return;
+          $list = trim($list);
+          if  (strlen($list) == 0) return;
 
-		  foreach ($this->GetArrayFromString($list) as $item) {
-				if (is_string($item)) {
-					 $cleanedItem = trim($item);
-					 if (strlen($cleanedItem) > 0) $this->DeleteProfile($cleanedItem);
-				}
-		  }
-	}
+          foreach ($this->GetArrayFromString($list) as $item) {
+                if (is_string($item)) {
+                     $cleanedItem = trim($item);
+                     if (strlen($cleanedItem) > 0)
+                     {
+                        $this->DeleteProfile($cleanedItem);
+                     }
+                }
+          }
+    }
 
-    private function DeleteProfile(string $profileName)
+    private function DeleteProfile(string $profileName) : void
     {
         if (empty($profileName)) return;
-        $profile =  $this->CreateProfileName($profileName);
-        if (@IPS_VariableProfileExists($profile)) {
+         $profile =  $this->CreateProfileName($profileName);
+         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
+         if (@IPS_VariableProfileExists($profile)) {
                 IPS_DeleteVariableProfile($profile);
          }
     }

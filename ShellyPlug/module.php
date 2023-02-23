@@ -5,34 +5,31 @@ class ShellyPlug extends IPSModule
 {
     private const MODULE_PREFIX = 'SPL';
     private const MODULE_NAME = 'ShellyPlug';
+    private const ProfileList = 'Status';
+    private const  Transparent = 0xffffff00;
+    private const  Red = 0xFF0000;
+    private const  Yellow = 0xFFFF00;
+    private const  Green=0x00FF00;
+    private const  Blue=0x0000FF;
 
     public function Create()
     {
         //Never delete this line!
         parent::Create();
 
-        //Some color definitions
-        $transparent = 0xffffff00;
-        $white = 0xffffff;
-        $red=0xFF0000;
-        $yellow = 0xFFFF00;
-        $green_blue=0x0CBAA6;
-        $green=0x00FF00;
-        $blue=0x0000FF;
-
-       $this->RegisterAttributeString('ProfileList',"Status");
+        $this->DeleteProfileList (self::ProfileList);
 
         //Profiles
         $variable = 'Status';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
+
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, -1, 1, 0);
             IPS_SetVariableProfileIcon($profileName, "Lamp");
-            IPS_SetVariableProfileAssociation($profileName, -1, "Undefiniert", "", $red);
-            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "",  $transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Ein", "", $green);
+            IPS_SetVariableProfileAssociation($profileName, -1, "Undefiniert", "", self::Red);
+            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "",  self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Ein", "", self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Status'),$profileName, -1);
 
@@ -57,7 +54,7 @@ class ShellyPlug extends IPSModule
     }
 
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
-    public function RegisterStatusUpdate(string $statusName)
+    private function RegisterStatusUpdate(string $statusName) : bool
     {
         $id= $this->ReadPropertyInteger($statusName);
         //Register for change notification if a variable is defined
@@ -92,7 +89,7 @@ class ShellyPlug extends IPSModule
         }
     }
 
-    public function TimerSwitch()
+    public function TimerSwitch() : void
     {
         $this->SetTimerInterval('SPL_TimerSwitch', 0);
 
@@ -130,7 +127,7 @@ class ShellyPlug extends IPSModule
         }
     }
 
-    public function GetSwitchStatus()
+    private function SetSwitchStatus() : void
     {
         $ipAddress = $this->ReadPropertyString('IpAddress');
 
@@ -161,7 +158,7 @@ class ShellyPlug extends IPSModule
         }
     }
 
-    public function Status (string $jsonCode)
+    private function Status (string $jsonCode) : int
     {
         $status = -1;
         if ( $jsonCode == false) return $status;
@@ -188,21 +185,38 @@ class ShellyPlug extends IPSModule
         //Never delete this line!
         parent::Destroy();
 
-        foreach ($this->GetArrayFromString($this->ReadAttributeString('ProfileList')) as $item) {
-            $this->DeleteProfile($item);
-        }
+        $this-> DeleteProfileList (self::ProfileList);
+      
+    }
+    
+    private function DeleteProfileList (string $list) :void
+    {
+          if (!is_string($list)) return;
+          $list = trim($list);
+          if  (strlen($list) == 0) return;
+
+          foreach ($this->GetArrayFromString($list) as $item) {
+                if (is_string($item)) {
+                     $cleanedItem = trim($item);
+                     if (strlen($cleanedItem) > 0)
+                     {
+                        $this->DeleteProfile($cleanedItem);
+                     }
+                }
+          }
     }
 
-    private function DeleteProfile(string $profileName)
+    private function DeleteProfile(string $profileName) : void
     {
         if (empty($profileName)) return;
-        $profile =  $this->CreateProfileName($profileName);
-        if (@IPS_VariableProfileExists($profile)) {
-            IPS_DeleteVariableProfile($profile);
-        }
+         $profile =  $this->CreateProfileName($profileName);
+         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
+         if (@IPS_VariableProfileExists($profile)) {
+                IPS_DeleteVariableProfile($profile);
+         }
     }
 
-    public function CreateProfileName (string $profileName)
+    private function CreateProfileName (string $profileName) : string
     {
          return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
@@ -238,9 +252,9 @@ class ShellyPlug extends IPSModule
         }
     }
 
-    public function UpdateTimer()
+    public function UpdateTimer() : void
     {
-        $this->GetSwitchStatus();
+        $this->SetSwitchStatus();
     }
 
 }

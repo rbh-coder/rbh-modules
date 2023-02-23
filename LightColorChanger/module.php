@@ -6,19 +6,25 @@ class LightColorChanger extends IPSModule
     private const MODULE_PREFIX = 'LCC';
     private const MODULE_NAME = 'LightColorChanger';
 
+    private const  Transparent = 0xffffff00;
+    private const  Red = 0xFF0000;
+    private const  Yellow = 0xFFFF00;
+    private const  Green=0x00FF00;
+    private const  Blue=0x0000FF;
+    private const  White =  0xffffff;
+
+    private const Undefined = -1;
+    private const IsOff= 0;
+    private const IsOn = 1;
+    private const SwitchOn = 2;
+    private const SwitchOff = 3;
+
+    private const ProfileList = 'Switch,OpMode,ColorChangeTime,ColorFadeTime,ManualColorSelection,ActiveColors,CleaningMode,AutomaticRelease';
+
     public function Create()
     {
         //Never delete this line!
         parent::Create();
-
-        //Some color definitions
-        $transparent = 0xffffff00;
-        $white = 0xffffff;
-        $red=0xFF0000;
-        $yellow = 0xFFFF00;
-        $green_blue=0x0CBAA6;
-        $green=0x00FF00;
-        $blue=0x0000FF;
 
         $this->RegisterAttributeString('SwitchList', "SwitchAmberLightID,SwitchRedLightID,SwitchGreenLightID,SwitchBlueLightID");
         $this->RegisterAttributeString('StatusList', "StatusAmberLightID,StatusRedLightID,StatusGreenLightID,StatusBlueLightID");
@@ -29,15 +35,16 @@ class LightColorChanger extends IPSModule
 
         $allowedColorNumbers = array_map('intval', explode(',', $this->ReadAttributeString('ColorList')));
 
+        $this->DeleteProfileList (self::ProfileList);
+
         //Allgemeine Profile
         $variable = 'Switch';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Power");
-            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", self::Green);
         }
 
        
@@ -47,15 +54,13 @@ class LightColorChanger extends IPSModule
         //Position 0
         $variable = 'OpMode';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
-            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", $transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", $yellow);
-            IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", $green);
+            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
+            IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Operation Mode'),$profileName, 0);
         $this->EnableAction($variable);
@@ -63,7 +68,6 @@ class LightColorChanger extends IPSModule
         //Position 10
         $variable = 'ColorChangeTime';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileText($profileName, "", " min");
@@ -76,7 +80,6 @@ class LightColorChanger extends IPSModule
         //Position 20
         $variable = 'ColorFadeTime';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileText($profileName, "", " sec");
@@ -89,13 +92,12 @@ class LightColorChanger extends IPSModule
         //Position 30
         $variable = 'ManualColorSelection';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 16, 0);
             IPS_SetVariableProfileIcon($profileName, "Flower");
 
-            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
             foreach ($allowedColorNumbers as $i) {
                 if (in_array($i, $allowedColorNumbers, true)) {
                     $this->CreateProfileAssociation($profileName, $i);
@@ -108,11 +110,10 @@ class LightColorChanger extends IPSModule
         //Position 40
         $variable = 'ActiveColors';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileIcon($profileName, "Flower");
-            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
             for ($i=1; $i < 16; $i++) {
                 $this->CreateProfileAssociation($profileName, $i);
             }
@@ -122,12 +123,11 @@ class LightColorChanger extends IPSModule
         //Position 50
         $variable = 'CleaningMode';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", self::Green);
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Cleaning Modus'),$profileName, 50);
         $this->EnableAction($variable);
@@ -136,12 +136,11 @@ class LightColorChanger extends IPSModule
          //Position 60
         $variable = 'AutomaticRelease';
         $profileName = $this->CreateProfileName($variable);
-        if (IPS_VariableProfileExists($profileName)) IPS_DeleteVariableProfile($profileName);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", self::Green);
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'),$profileName, 60);
         $this->EnableAction($variable);
@@ -173,22 +172,16 @@ class LightColorChanger extends IPSModule
     }
 
 
-    private function RegisterVariableIds(string $itemsString)
+    private function RegisterVariableIds(string $itemsString) : void
     {
         foreach (explode(',', $itemsString) as $item) {
             $this->RegisterPropertyInteger($item, 0);
         }
     }
 
-    private function CreateProfileAssociation(string $profileName, int $colorCode)
+    private function CreateProfileAssociation(string $profileName, int $colorCode) : void
     {
-        //$transparent = 0xffffff00;
-        //$white = 0xffffff;
-        //$red=0xFF0000;
-        //$yellow = 0xFFFF00;
-        //$green=0x00FF00;
-        //$blue=0x0000FF;
-
+       
         $keyTable = array(1,2,4,8);
         $colorTable = array(0xFFFF00,0xFF0000,0x00FF00,0x0000FF);
         $colorNameTable = array('Gelb','Rot','Grün','Blau');
@@ -227,7 +220,7 @@ class LightColorChanger extends IPSModule
         IPS_SetVariableProfileAssociation($profileName, $colorCode, $colorString, "", $colorCodeHex);
     }
 
-    private function CalculateMixedColor(int $numberColors, int $actNumber, int $sumNumber)
+    private function CalculateMixedColor(int $numberColors, int $actNumber, int $sumNumber) : int
     {
         $sumNumber += $actNumber / $numberColors;
         return (int)min($sumNumber, 0xFF);
@@ -258,16 +251,16 @@ class LightColorChanger extends IPSModule
                 break;
             case "CleaningMode":
                 $this->SetValue($Ident, $Value);
-                //$this->SetCleaningMode($this->GetValue('OpMode')); //wird ohen hin bei Änderung in MessageSink verarbeitet
+                //$this->SetCleaningMode($this->GetValue('OpMode')); //wird ohnehin bei Änderung in MessageSink verarbeitet
                 break;
             case "AutomaticRelease":
                  $this->SetValue($Ident, $Value);
-                //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
+                //$this->StartAutomaticColor(); //wird ohnehin bei Änderung in MessageSink verarbeitet
                 break;
         }
     }
 
-    private function UpdateColorStatus(int $senderID)
+    private function UpdateColorStatus(int $senderID) : void
     {
         $itemArray =  $this->GetArrayFromString ($this->ReadAttributeString('StatusList'));
         $idx = 0;
@@ -292,7 +285,7 @@ class LightColorChanger extends IPSModule
         return explode(',', $itemsString);
     }
 
-    private function SetColorNumber (int $colorNumber, int $digit , bool $status )
+    private function SetColorNumber (int $colorNumber, int $digit , bool $status ) : int
     {
         if ($status)
         {
@@ -304,7 +297,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function HandleOpMode(int $opmode)
+    private function HandleOpMode(int $opmode) : void
     {
         switch($opmode) {
             case 0: //Aus
@@ -323,13 +316,11 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function ColorManager (int $opmode)
+    private function ColorManager (int $opmode) : void
     {
         $actualColors = $this->GetValue('ActiveColors');
         $color = $actualColors;
         $actCleaningStatus =  $this->ReadAttributeInteger('CleaningStatus');
-
-        //IPS_LogMessage("ColorManager", '$opMode:'.$opmode.' $actCleaningStatus:'.$actCleaningStatus);
 
         //Ggf. laufenden Timer stoppen
         $this->SetTimerInterval('LCC_Timer', 0);
@@ -366,7 +357,7 @@ class LightColorChanger extends IPSModule
         if ($color != $actualColors) $this->SetActualColor ($color);
     }
 
-    private function SetActualColor (int $color)
+    private function SetActualColor (int $color) : void
     {
          if ($this->ReadAttributeInteger("ActColor") ==  $color) return;
          $this->WriteAttributeInteger("ActColor",$color);
@@ -410,13 +401,13 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    public function UpdateTimer()
+    public function UpdateTimer() : void
     {
         $this->ChangeColor();
     }
 
 
-    public function AutomaticRelease ()
+    public function AutomaticRelease () : void
     {
         $this->SetTimerInterval('LCC_AutomaticRelease', 0);
         $this->StartAutomaticColor();
@@ -426,6 +417,37 @@ class LightColorChanger extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
+
+         //Delete profiles
+       $this->DeleteProfileList (self::ProfileList);
+       IPS_LogMessage( $this->InstanceID,'Destroy Methode ausgeführt.');
+    }
+
+    private function DeleteProfileList (string $list) :void
+    {
+          if (!is_string($list)) return;
+          $list = trim($list);
+          if  (strlen($list) == 0) return;
+
+          foreach ($this->GetArrayFromString($list) as $item) {
+                if (is_string($item)) {
+                     $cleanedItem = trim($item);
+                     if (strlen($cleanedItem) > 0)
+                     {
+                        $this->DeleteProfile($cleanedItem);
+                     }
+                }
+          }
+    }
+
+    private function DeleteProfile(string $profileName) : void
+    {
+        if (empty($profileName)) return;
+         $profile =  $this->CreateProfileName($profileName);
+         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
+         if (@IPS_VariableProfileExists($profile)) {
+                IPS_DeleteVariableProfile($profile);
+         }
     }
 
     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.
@@ -475,7 +497,7 @@ class LightColorChanger extends IPSModule
     }
 
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
-    private function RegisterStatusUpdate(string $statusName)
+    private function RegisterStatusUpdate(string $statusName) : void
     {
         $id= $this->ReadPropertyInteger($statusName);
         //Register for change notification if a variable is defined
@@ -485,7 +507,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function ChangeColor()
+    private function ChangeColor() : void
     {
         $allowedColorNumbers = array_map('intval', explode(',', $this->ReadAttributeString('ColorList')));
         $mainColorNumbers = array_map('intval', explode(',', $this->ReadAttributeString('MainColorList')));
@@ -507,7 +529,7 @@ class LightColorChanger extends IPSModule
         $this->SetColor($actColor);
     }
 
-    private function SetManualColor()
+    private function SetManualColor() : void
     {
         switch($this->GetValue('OpMode'))
         {
@@ -518,7 +540,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function StartAutomaticColor()
+    private function StartAutomaticColor() : void
     {
         //IPS_LogMessage("StartAutomaticColor", 'status:'.$status);
         switch($this->GetValue('OpMode'))
@@ -530,7 +552,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function RestartTimers()
+    private function RestartTimers() : void
     {
         switch($this->GetValue('OpMode'))
         {
@@ -558,7 +580,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function SetCleaningMode(int $opMode)
+    private function SetCleaningMode(int $opMode) : void
     {
         $actCleaningStatus =  $this->ReadAttributeInteger('CleaningStatus');
         $newCleaningStatus =  $this->CleaningStatusManager($actCleaningStatus);
@@ -567,7 +589,7 @@ class LightColorChanger extends IPSModule
         $this->ColorManager($opMode);
     }
 
-    private function UpdateCleaningStatus()
+    private function UpdateCleaningStatus() : void
     {
          $actCleaningStatus = $this->ReadAttributeInteger('CleaningStatus');
          $newCleaningStatus = $this->CleaningStatusManager($actCleaningStatus);
@@ -575,38 +597,38 @@ class LightColorChanger extends IPSModule
          $this->WriteAttributeInteger('CleaningStatus',$newCleaningStatus);
     }
 
-    private function CleaningStatusManager(int $actCleaningStatus)
+    private function CleaningStatusManager(int $actCleaningStatus) : int
     {
         $cleaningStatus = $actCleaningStatus;
         switch($cleaningStatus)
         {
-            case -1: //Undefined
-            case 0: //Off
-                if (!$this->IsCleaningRequested()) return;
-                if ($this->IsCleaningModeAllowed())  $cleaningStatus = $this->CleaningStatusManager(2);
+            case self::Undefined: //Undefined
+            case self::IsOff: //Off
+                if (!$this->IsCleaningRequested()) return $actCleaningStatus;
+                if ($this->IsCleaningModeAllowed())  $cleaningStatus = $this->CleaningStatusManager(self::SwitchOn);
                 else
                 {
-                    $cleaningStatus = $this->CleaningStatusManager(3);
+                    $cleaningStatus = $this->CleaningStatusManager(self:SwitchOff);
                 }
                break;
-            case 1: //On
-                 if (!$this->IsCleaningRequested() || !$this->IsCleaningModeAllowed())  $cleaningStatus = $this->CleaningStatusManager(3); //Switch Off
+            case self::IsOn: //On
+                 if (!$this->IsCleaningRequested() || !$this->IsCleaningModeAllowed())  $cleaningStatus = $this->CleaningStatusManager(self:SwitchOff); //Switch Off
                 break;
-            case 2: //Switch On
+            case self::SwitchOn: //Switch On
                  IPS_LogMessage("CleaningStatusManager", $this->Translate('Start Cleaning Mode.'));
                  $this->StartCleaningMode();
-                 $cleaningStatus = 1;
+                 $cleaningStatus = self:IsOn;
                 break;
-             case 3: //Switch Off
+             case self:SwitchOff: //Switch Off
                  IPS_LogMessage("CleaningStatusManager", $this->Translate('Stop Cleaning Mode.'));
                  $this->StopCleaningMode();
-                 $cleaningStatus = 0;
+                 $cleaningStatus = self:IsOff;
                 break;
         }
         return  $cleaningStatus;
     }
 
-    private function IsCleaningModeAllowed()
+    private function IsCleaningModeAllowed() : bool
     {
         $result = true;
         switch($this->GetValue('OpMode'))
@@ -618,25 +640,25 @@ class LightColorChanger extends IPSModule
         return  $result;
     }
 
-    private function IsCleaningRequested()
+    private function IsCleaningRequested() : bool
     {
         return $this->GetValue('CleaningMode');
     }
 
-    public function StopCleaningMode()
+    public function StopCleaningMode() : void
     {
         $this->SetTimerInterval('LCC_CleaningTimer', 0);
         $this->SetValue('CleaningMode',false);
     }
 
-    private function StartCleaningMode()
+    private function StartCleaningMode() : void
     {
        $stopTime = $this->ReadPropertyInteger('CleaningModeTime') * 1000 *60;
        $this->SetTimerInterval('LCC_CleaningTimer', $stopTime);
     }
 
 
-    private function FindNextColor(int $actColor, array $allowedColorNumbers, array $mainColorNumbers, bool $useFading)
+    private function FindNextColor(int $actColor, array $allowedColorNumbers, array $mainColorNumbers, bool $useFading) :int
     {
         if ($actColor == 0) {
             $actColor = reset($allowedColorNumbers);
@@ -655,7 +677,7 @@ class LightColorChanger extends IPSModule
         return $actColor;
     }
 
-    private function SetColor(int $actColor)
+    private function SetColor(int $actColor) : void
     {
         $this->SetValue('ActiveColors', $actColor);
         $itemArray =  $this->GetArrayFromString ($this->ReadAttributeString('SwitchList'));
@@ -668,7 +690,7 @@ class LightColorChanger extends IPSModule
     }
 
     //Methode setzt Lampenausgang, soferne dieser in der Modul-Form aktiviert ist
-    private function SetLamp(string $switchName, int $actColor,int $mask)
+    private function SetLamp(string $switchName, int $actColor,int $mask) : void
     {
         $status =   ($actColor & $mask) > 0;
         $id= $this->ReadPropertyInteger($switchName);
@@ -679,7 +701,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function HandleExpertSwitch(int $id)
+    private function HandleExpertSwitch(int $id) : void
     {
         $status = !GetValueBoolean($id);
         if ($id==0)  $status = false;
@@ -697,21 +719,21 @@ class LightColorChanger extends IPSModule
         $this->HideItem('ColorFadeTime',$status || !$this->ReadPropertyBoolean('UseFading'));
     }
 
-    private function HideItem(string $item,bool $status)
+    private function HideItem(string $item,bool $status) : void
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetHidden($id, $status);
     }
 
-    private function LockItem(string $item,bool $status)
+    private function LockItem(string $item,bool $status) : void
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetDisabled($id, $status);
     }
 
-    private function CreateProfileName (string $profileName)
+    private function CreateProfileName (string $profileName) : string
     {
-        return self::MODULE_PREFIX . '_' . $profileName;
+        return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
 
 }

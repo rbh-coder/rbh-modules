@@ -23,7 +23,7 @@ class HeatingZoneController extends IPSModule
     private const MODULE_VERSION = '1.0, 14.02.2023';
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
-    private const ProfileList = 'WeekTimerStatus,OpMode,AdaptRoomTemperature';
+    private const ProfileList = 'WeekTimerStatus,OpMode,OpModeActive,AdaptRoomTemperature';
 
     private const Aus = 0;
     private const Manuell = 1;
@@ -48,7 +48,6 @@ class HeatingZoneController extends IPSModule
         parent::Create();
 
         ########## Properties
-         $this->RegisterAttributeString('ProfileList',self::ProfileList);
          $this->RegisterAttributeString('LinkList', "IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
          $this->RegisterAttributeString('SendList', "IdOpModeSend,IdAdaptRoomTemperatureSend");
          $this->RegisterAttributeString('ExpertListHide',"OpModeActive");
