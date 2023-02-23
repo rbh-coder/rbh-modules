@@ -218,9 +218,7 @@ class HeatingZoneController extends IPSModule
 	         $this->WriteAttributeInteger('WeekTimer',0);
              $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),true);
         }
-         $this->SendDebug(__FUNCTION__, 'Wochenplan mit ID: '.$this->ReadAttributeInteger('WeekTimer'), 0);
-
-
+       
         $this->RegisterStatusUpdate('ExpertModeID');
         
 
@@ -258,9 +256,6 @@ class HeatingZoneController extends IPSModule
             }
 
         }
-
-        $this->SendDebug(__FUNCTION__, 'GetReferenceList: '.json_encode($this->GetReferenceList(), JSON_PRETTY_PRINT), 0);
-        $this->SendDebug(__FUNCTION__, 'GetMessageList: '.json_encode($this->GetMessageList(), JSON_PRETTY_PRINT), 0);
         $this->HandleOpMode ($this->GetValue('OpMode'));
     }
 
