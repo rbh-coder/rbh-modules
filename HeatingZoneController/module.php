@@ -197,12 +197,21 @@ class HeatingZoneController extends IPSModule
                 IPS_SetIcon($id,'Calendar');
                 switch ( $this->ReadPropertyInteger('WeekTimerGroups'))
                 {
-                    case 0:
-                         IPS_SetEventScheduleGroup($id, 0, 127); //Mo - SO (1 + 2 + 4 + 8 + 16+ 32 + 64)
+                      case 0: //Täglich
+                          IPS_SetEventScheduleGroup($id, 0, 1);     //Mo (1)
+                          IPS_SetEventScheduleGroup($id, 1, 2);     //Di (2)
+                          IPS_SetEventScheduleGroup($id, 2, 4);     //Mi (4)
+                          IPS_SetEventScheduleGroup($id, 3, 8);     //Do (8)
+                          IPS_SetEventScheduleGroup($id, 4, 16);    //Fr (16)
+                          IPS_SetEventScheduleGroup($id, 5, 32);    //Sa (32)
+                          IPS_SetEventScheduleGroup($id, 6, 64);    //So (64)
                         break;
-                    case 1:
-                         IPS_SetEventScheduleGroup($id, 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
-                         IPS_SetEventScheduleGroup($id, 1, 96); //Sa + So (32 + 64)
+                     case 1:
+                         IPS_SetEventScheduleGroup($id, 0, 31);     //Mo - Fr (1 + 2 + 4 + 8 + 16)
+                         IPS_SetEventScheduleGroup($id, 1, 96);     //Sa + So (32 + 64)
+                        break;
+                    case 2:
+                         IPS_SetEventScheduleGroup($id, 0, 127);    //Mo - SO (1 + 2 + 4 + 8 + 16+ 32 + 64)
                         break;
                 }
                

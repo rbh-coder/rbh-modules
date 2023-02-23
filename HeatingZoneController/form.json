@@ -87,12 +87,16 @@
           "caption": "Auswahl Schaltgruppen",
           "options": [
             {
-              "caption": "Ganze Woche",
+              "caption": "Täglich",
               "value": 0
             },
             {
-              "caption": "Wochentage und Wochenende",
+              "caption": "Wochentage, Wochenende",
               "value": 1
+            },
+            {
+              "caption": "Ganze Woche",
+              "value": 2
             }
           ]
         },
