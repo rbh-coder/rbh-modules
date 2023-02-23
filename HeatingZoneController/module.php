@@ -181,9 +181,9 @@ class HeatingZoneController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         
         //Weekly schedule
+        $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
         if ($this->ReadPropertyBoolean('UseWeekTimer'))
         {
-            $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
             if (!$id || !@IPS_ObjectExists($id))
             {
                 $id = IPS_CreateEvent (2); 
@@ -206,18 +206,19 @@ class HeatingZoneController extends IPSModule
                 IPS_SetEventScheduleAction($id,1,"Aus",2420837,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
                 IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             }
-            $this->WriteAttributeInteger('WeekTimer', $id);
+            
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
             $this->RegisterMessage($id,EM_CHANGETRIGGER);
-            $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),false);
+            $this->HideItemById ($id,false);
         }
         else 
         {
-	         $this->WriteAttributeInteger('WeekTimer',0);
-             $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),true);
+             $this->SendDebug(__FUNCTION__, 'Verstecke Wochenplaner mit ID: '.$id, 0);
+             $this->HideItemById ($id,true);
         }
+        $this->WriteAttributeInteger('WeekTimer', $id);
        
         $this->RegisterStatusUpdate('ExpertModeID');
         
