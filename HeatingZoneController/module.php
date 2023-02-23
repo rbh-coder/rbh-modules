@@ -535,7 +535,7 @@ class HeatingZoneController extends IPSModule
                  $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
                 break;
             case self::Automatik: //Automatikbetrieb
-                $hide= !$this->ReadPropertyBoolen('UseWeekTimer');
+                $hide= !$this->ReadPropertyBoolean('UseWeekTimer');
                 $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),$hide);
                 $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
                 $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),false);
