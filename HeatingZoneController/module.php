@@ -36,6 +36,9 @@ class HeatingZoneController extends IPSModule
     private const  Yellow = 0xFFFF00;
     private const  Green=0x00FF00;
     private const  Blue=0x0000FF;
+
+    private const DarkGreen = 0x0D0FE4;
+    private const DarkBlue  = 0x24F065;
   
     public function Create()
     {
@@ -203,8 +206,8 @@ class HeatingZoneController extends IPSModule
                         break;
                 }
                
-                IPS_SetEventScheduleAction($id,1,"Aus",2420837,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
-                IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+                IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
+                IPS_SetEventScheduleAction($id,2,"Ein",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             }
             
             $this->RegisterReference($id);
