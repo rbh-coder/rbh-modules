@@ -238,7 +238,7 @@ class HeatingZoneController extends IPSModule
         $profileName =  $this->CreateProfileName('OpMode');
       
         if (IPS_VariableProfileExists($profileName)) {
-            if ((($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
+            if (($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
