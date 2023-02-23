@@ -122,7 +122,8 @@ class HeatingZoneController extends IPSModule
         $this->RegisterPropertyInteger('ExpertModeID', 0);
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyBoolean('UseWeekTimer',0);
-        $this->RegisterPropertyInteger('WeekTimer', 0);
+       
+        $this->RegisterAttributeInteger('WeekTimer', 0);
         ########## Timer
     }
 
