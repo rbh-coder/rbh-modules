@@ -191,8 +191,27 @@ class HeatingZoneController extends IPSModule
             IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
         }
+        $id = IPS_GetEventIDByName('WeekTimer');
+        if (!@IPS_ObjectExists($id))
+        {
+            $id = IPS_CreateEvent (""); 
+            IPS_SetParent($id, $this->InstanceID);
+            IPS_SetPosition($id,20);
+            IPS_SetName($id,'WeekTimer');
+            IPS_SetIcon($id,'Calendar');
+            IPS_SetEventScheduleGroup($EreignisID, 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
+            IPS_SetEventScheduleGroup($EreignisID, 1, 96); //Sa + So (32 + 64)
+            $this->SendDebug(__FUNCTION__, 'Test ID: '.$this->InstanceID, 0);
+            IPS_SetEventScheduleAction($id,1,"Aus",2420837,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
+            IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+            $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
+        }
+        $this->RegisterReference($id);
+        $this->RegisterMessage($id, EM_CHANGEACTIVE);
+        $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
+        $this->RegisterMessage($id,EM_CHANGETRIGGER);
 
-         $this->RegisterStatusUpdate('ExpertModeID');
+        $this->RegisterStatusUpdate('ExpertModeID');
         
 
         ########## Links
