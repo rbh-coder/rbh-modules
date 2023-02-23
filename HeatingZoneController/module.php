@@ -213,10 +213,12 @@ class HeatingZoneController extends IPSModule
             $this->RegisterMessage($id,EM_CHANGETRIGGER);
             $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),false);
         }
-        else {
+        else 
+        {
 	         $this->WriteAttributeInteger('WeekTimer',0);
-             $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
+             $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),true);
         }
+         $this->SendDebug(__FUNCTION__, 'Wochenplan mit ID: '.$this->ReadAttributeInteger('WeekTimer'), 0);
 
 
         $this->RegisterStatusUpdate('ExpertModeID');
