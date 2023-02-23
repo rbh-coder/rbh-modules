@@ -241,7 +241,7 @@ class HeatingZoneController extends IPSModule
         $profileName =  $this->CreateProfileName('OpMode');
       
         if (IPS_VariableProfileExists($profileName)) {
-            if (!$this->ReadPropertyBoolen('UseWeekTimer') && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
+            if (!$this->ReadPropertyBoolean('UseWeekTimer') && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
@@ -390,14 +390,14 @@ class HeatingZoneController extends IPSModule
 
    public function WeekTimerAction (int $action) : void
    {
-       if (!$this->ReadPropertyBoolen('UseWeekTimer')) return;
+       if (!$this->ReadPropertyBoolean('UseWeekTimer')) return;
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $this->SetValue('WeekTimerStatus',$action); 
    }
 
    private function TriggerAction(): void
    {
-        if (!$this->ReadPropertyBoolen('UseWeekTimer')) return;
+        if (!$this->ReadPropertyBoolean('UseWeekTimer')) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (!$this->ValidateEventPlan()) $actionID = 0;
         else $actionID = $this->DetermineAction(true);
