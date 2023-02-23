@@ -77,10 +77,24 @@
           "caption": "Auswahl für Wochenplan:"
         },
         {
-          "type": "SelectEvent",
-          "name": "WeekTimer",
-          "caption": "Wochenplan",
-          "width": "600px"
+          "name": "UseWeekTimer",
+          "type": "CheckBox",
+          "caption": "Use Week Timer"
+        },
+        {
+          "type": "Select",
+          "name": "WeekTimerGroups",
+          "caption": "Auswahl Schaltgruppen",
+          "options": [
+            {
+              "caption": "Ganze Woche",
+              "value": 0
+            },
+            {
+              "caption": "Wochentage und Wochenende",
+              "value": 1
+            }
+          ]
         },
         {
           "type": "Label",

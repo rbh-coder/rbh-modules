@@ -44,7 +44,7 @@ class HeatingZoneController extends IPSModule
 
         ########## Properties
          $this->RegisterAttributeString('ProfileList',"WeekTimerStatus,OpMode,AdaptRoomTemperature");
-         $this->RegisterAttributeString('LinkList', "WeekTimer,IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
+         $this->RegisterAttributeString('LinkList', "IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
          $this->RegisterAttributeString('SendList', "IdOpModeSend,IdAdaptRoomTemperatureSend");
          $this->RegisterAttributeString('ExpertListHide',"OpModeActive");
          $this->RegisterAttributeString('ExpertListLock',"OpMode");
@@ -120,6 +120,9 @@ class HeatingZoneController extends IPSModule
 
         $this->RegisterVariableIds($this->ReadAttributeString('SendList'));
         $this->RegisterPropertyInteger('ExpertModeID', 0);
+        $this->RegisterPropertyInteger('WeekTimerGroups',0);
+        $this->RegisterPropertyBoolean('UseWeekTimer',0);
+        $this->RegisterPropertyInteger('WeekTimer', 0);
         ########## Timer
     }
 
@@ -177,41 +180,41 @@ class HeatingZoneController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         
         //Weekly schedule
-        /*
-        $id = $this->ReadPropertyInteger('WeekTimer');
-        if ($id != 0 && @IPS_ObjectExists($id)) {
+        if ($this->ReadPropertyBoolean('UseWeekTimer'))
+        {
+            $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
+            if (!$id || !@IPS_ObjectExists($id))
+            {
+                $id = IPS_CreateEvent (2); 
+                $this->SendDebug(__FUNCTION__, 'Erstelle Wochenplan mit ID: '.$id, 0);
+                IPS_SetParent($id, $this->InstanceID);
+                IPS_SetPosition($id,20);
+                IPS_SetName($id,'Wochenplan');
+                IPS_SetIcon($id,'Calendar');
+                switch ( $this->ReadPropertyInteger('WeekTimerGroups'))
+                {
+                    case 0:
+                         IPS_SetEventScheduleGroup($id, 0, 127); //Mo - SO (1 + 2 + 4 + 8 + 16+ 32 + 64)
+                        break;
+                    case 1:
+                         IPS_SetEventScheduleGroup($id, 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
+                         IPS_SetEventScheduleGroup($id, 1, 96); //Sa + So (32 + 64)
+                        break;
+                }
+               
+                IPS_SetEventScheduleAction($id,1,"Aus",2420837,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
+                IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+            }
+            $this->WritePropertyInteger('WeekTimer', $id);
             $this->RegisterReference($id);
-            //$this->RegisterMessage($id, EM_UPDATE);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
             $this->RegisterMessage($id,EM_CHANGETRIGGER);
-            //IPS_SetEventScript($id,self::MODULE_PREFIX . '_WeekTimerAction($_IPS[\'ACTION\']);');
-            //IPS_SetEventScheduleAction(($id,1,"Aus",2420837,self::MODULE_PREFIX . '_WeekTimerAction('.$this->InstanceID.',1);');
-            $this->SendDebug(__FUNCTION__, 'Test ID: '.$this->InstanceID, 0);
-            IPS_SetEventScheduleAction($id,1,"Aus",2420837,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
-            IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-            $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
         }
-        */
-        $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
-        if (!$id || !@IPS_ObjectExists($id))
-        {
-            $id = IPS_CreateEvent (2); 
-            $this->SendDebug(__FUNCTION__, 'Erstelle Wochenplan mit ID: '.$id, 0);
-            IPS_SetParent($id, $this->InstanceID);
-            IPS_SetPosition($id,20);
-            IPS_SetName($id,'Wochenplan');
-            IPS_SetIcon($id,'Calendar');
-            IPS_SetEventScheduleGroup($id, 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
-            IPS_SetEventScheduleGroup($id, 1, 96); //Sa + So (32 + 64)
-            IPS_SetEventScheduleAction($id,1,"Aus",2420837,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
-            IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-            $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
+        else {
+	         $this->WritePropertyInteger('WeekTimer',0);
         }
-        $this->RegisterReference($id);
-        $this->RegisterMessage($id, EM_CHANGEACTIVE);
-        $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
-        $this->RegisterMessage($id,EM_CHANGETRIGGER);
+
 
         $this->RegisterStatusUpdate('ExpertModeID');
         
@@ -219,7 +222,6 @@ class HeatingZoneController extends IPSModule
         ########## Links
 
         //Weekly schedule
-        $this->WriteAttributeInteger('WeekTimer',$this->CreateLink ( $this->ReadPropertyInteger('WeekTimer'),'Wochenplan','Calendar', 20));
         $this->WriteAttributeInteger('IdRoomThermostat',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Raumthermostat','Flame', 100));
         $this->WriteAttributeInteger('IdRoomTemperature',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumtemperatur','Temperature', 110));
         $this->WriteAttributeInteger('IdHeatingPump',$this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120));
@@ -236,7 +238,7 @@ class HeatingZoneController extends IPSModule
         $profileName =  $this->CreateProfileName('OpMode');
       
         if (IPS_VariableProfileExists($profileName)) {
-            if (($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
+            if ((($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
@@ -340,14 +342,6 @@ class HeatingZoneController extends IPSModule
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-        /*
-        $this->SendDebug('MessageSink', 'Message from SenderID ' . $SenderID . ' with Message ' . $Message . "\r\n Data: " . print_r($Data, true), 0);
-        if (!empty($Data)) {
-            foreach ($Data as $key => $value) {
-                $this->SendDebug(__FUNCTION__, 'Data[' . $key . '] = ' . json_encode($value), 0);
-            }
-        }
-        */
         switch ($Message) {
             case IPS_KERNELSTARTED:
                 $this->KernelReady();
@@ -494,7 +488,6 @@ class HeatingZoneController extends IPSModule
                 break;
             case "WeekTimerStatus":
                  $this->SetValue($Ident, $Value);
-                //$this->StartAutomaticColor(); //wird ohenhin bei Änderung in MessageSink verarbeitet
                 break;
             case "AdaptRoomTemperature":
                  $this->SetValue($Ident, $Value);
