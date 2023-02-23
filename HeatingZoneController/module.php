@@ -23,6 +23,8 @@ class HeatingZoneController extends IPSModule
     private const MODULE_VERSION = '1.0, 14.02.2023';
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
+    private const ProfileList = 'WeekTimerStatus,OpMode,AdaptRoomTemperature';
+
     private const Aus = 0;
     private const Manuell = 1;
     private const Automatik = 2;
@@ -46,7 +48,7 @@ class HeatingZoneController extends IPSModule
         parent::Create();
 
         ########## Properties
-         $this->RegisterAttributeString('ProfileList',"WeekTimerStatus,OpMode,AdaptRoomTemperature");
+         $this->RegisterAttributeString('ProfileList',self::ProfileList);
          $this->RegisterAttributeString('LinkList', "IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
          $this->RegisterAttributeString('SendList', "IdOpModeSend,IdAdaptRoomTemperatureSend");
          $this->RegisterAttributeString('ExpertListHide',"OpModeActive");
@@ -54,7 +56,7 @@ class HeatingZoneController extends IPSModule
 
          $this->RegisterAttributeBoolean('RecurseFlag',false);
 
-        $this->DeleteProfileList ('ProfileList');
+        $this->DeleteProfileList (self::ProfileList);
        
         ########## Variables
 
@@ -315,13 +317,12 @@ class HeatingZoneController extends IPSModule
         parent::Destroy();
 
         //Delete profiles
-       $this->DeleteProfileList ('ProfileList');
+       $this->DeleteProfileList (self::ProfileList);
        IPS_LogMessage( $this->InstanceID,'Destroy Methode ausgeführt.');
     }
 
-    private function DeleteProfileList (string $listName) :void
+    private function DeleteProfileList (string $list) :void
     {
-          $list = @$this->ReadAttributeString($listName);
           if (!is_string($list)) return;
           $list = trim($list);
           if  (strlen($list) == 0) return;
