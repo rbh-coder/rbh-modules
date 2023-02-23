@@ -316,6 +316,7 @@ class HeatingZoneController extends IPSModule
 
         //Delete profiles
        $this->DeleteProfileList ('ProfileList');
+       IPS_LogMessage( $this->InstanceID,'Destroy Methode ausgeführt.');
     }
 
     private function DeleteProfileList (string $listName) :void
