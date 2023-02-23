@@ -177,6 +177,7 @@ class HeatingZoneController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         
         //Weekly schedule
+        /*
         $id = $this->ReadPropertyInteger('WeekTimer');
         if ($id != 0 && @IPS_ObjectExists($id)) {
             $this->RegisterReference($id);
@@ -191,17 +192,18 @@ class HeatingZoneController extends IPSModule
             IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
         }
-        $id = IPS_GetEventIDByName('WeekTimer',$this->InstanceID);
-        if (!@IPS_ObjectExists($id))
+        */
+        $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
+        if (!$id || !@IPS_ObjectExists($id))
         {
             $id = IPS_CreateEvent (2); 
+            $this->SendDebug(__FUNCTION__, 'Erstelle Wochenplan mit ID: '.$id, 0);
             IPS_SetParent($id, $this->InstanceID);
             IPS_SetPosition($id,20);
-            IPS_SetName($id,'WeekTimer');
+            IPS_SetName($id,'Wochenplan');
             IPS_SetIcon($id,'Calendar');
-            IPS_SetEventScheduleGroup($EreignisID, 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
-            IPS_SetEventScheduleGroup($EreignisID, 1, 96); //Sa + So (32 + 64)
-            $this->SendDebug(__FUNCTION__, 'Test ID: '.$this->InstanceID, 0);
+            IPS_SetEventScheduleGroup($id, 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
+            IPS_SetEventScheduleGroup($id, 1, 96); //Sa + So (32 + 64)
             IPS_SetEventScheduleAction($id,1,"Aus",2420837,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
             IPS_SetEventScheduleAction($id,2,"Ein",8560364,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             $this->SendDebug(__FUNCTION__, 'IPS_GetEvent: '.json_encode(IPS_GetEvent($id), JSON_PRETTY_PRINT), 0);
