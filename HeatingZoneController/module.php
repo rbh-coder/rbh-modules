@@ -218,7 +218,7 @@ class HeatingZoneController extends IPSModule
         }
         else 
         {
-             $this->HideItemById ($id,true);
+             if (is_int($id)) $this->HideItemById ($id,true);
         }
         $this->WriteAttributeInteger('WeekTimer', $id);
        
