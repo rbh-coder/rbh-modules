@@ -37,8 +37,8 @@ class HeatingZoneController extends IPSModule
     private const  Green=0x00FF00;
     private const  Blue=0x0000FF;
 
-    private const DarkGreen = 0x0D0FE4;
-    private const DarkBlue  = 0x24F065;
+    private const DarkGreen = 0x24F065;
+    private const DarkBlue  = 0x0D0FE4;
   
     public function Create()
     {
