@@ -299,7 +299,7 @@ class PulseActor extends IPSModule
         parent::Destroy();
         
         
-        $this->DeleteProfileList (slef::ProfileList);
+        $this->DeleteProfileList (self::ProfileList);
     }
 
    
