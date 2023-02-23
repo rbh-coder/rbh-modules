@@ -215,7 +215,6 @@ class HeatingZoneController extends IPSModule
         }
         else 
         {
-             $this->SendDebug(__FUNCTION__, 'Verstecke Wochenplaner mit ID: '.$id, 0);
              $this->HideItemById ($id,true);
         }
         $this->WriteAttributeInteger('WeekTimer', $id);
@@ -242,7 +241,7 @@ class HeatingZoneController extends IPSModule
         $profileName =  $this->CreateProfileName('OpMode');
       
         if (IPS_VariableProfileExists($profileName)) {
-            if (($this->ReadAttributeInteger('WeekTimer') == 0) && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
+            if (!$this->ReadPropertyBoolen('UseWeekTimer') && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
@@ -391,12 +390,14 @@ class HeatingZoneController extends IPSModule
 
    public function WeekTimerAction (int $action) : void
    {
+       if (!$this->ReadPropertyBoolen('UseWeekTimer')) return;
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $this->SetValue('WeekTimerStatus',$action); 
    }
 
    private function TriggerAction(): void
    {
+        if (!$this->ReadPropertyBoolen('UseWeekTimer')) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (!$this->ValidateEventPlan()) $actionID = 0;
         else $actionID = $this->DetermineAction(true);
@@ -534,8 +535,8 @@ class HeatingZoneController extends IPSModule
                  $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
                 break;
             case self::Automatik: //Automatikbetrieb
-                $hide= $this->ReadAttributeInteger('WeekTimer') == 0;
-                $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),$hide);
+                $hide= !$this->ReadPropertyBoolen('UseWeekTimer');
+                $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),$hide);
                 $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
                 $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),false);
                 $this->TriggerAction(); 
