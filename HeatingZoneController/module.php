@@ -330,7 +330,6 @@ class HeatingZoneController extends IPSModule
                      $cleanedItem = trim($item);
                      if (strlen($cleanedItem) > 0)
                      {
-                        IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$cleanedItem. '.');
                         $this->DeleteProfile($cleanedItem);
                      }
                 }
@@ -341,6 +340,7 @@ class HeatingZoneController extends IPSModule
     {
         if (empty($profileName)) return;
          $profile =  $this->CreateProfileName($profileName);
+         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
          if (@IPS_VariableProfileExists($profile)) {
                 IPS_DeleteVariableProfile($profile);
          }
