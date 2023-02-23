@@ -216,6 +216,11 @@ class ShellyPlug extends IPSModule
          }
     }
 
+    private function GetArrayFromString (string $itemsString)
+    {
+        return explode(',', $itemsString);
+    }
+
     private function CreateProfileName (string $profileName) : string
     {
          return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
