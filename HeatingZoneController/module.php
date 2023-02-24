@@ -193,6 +193,10 @@ class HeatingZoneController extends IPSModule
         
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         
+
+         $this->WriteAttributeString('ExpertListHide',"OpModeActive");
+         $this->WriteAttributeString('ExpertListLock',"");
+
         //Weekly schedule
         $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
         if ($this->ReadPropertyBoolean('UseWeekTimer'))
