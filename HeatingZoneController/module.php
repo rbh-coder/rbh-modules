@@ -469,7 +469,6 @@ class HeatingZoneController extends IPSModule
         {
             $this->LockItem($item,$status);
         }
-        $this->HideItem('ColorFadeTime',$status || !$this->ReadPropertyBoolean('UseFading'));
     }
 
    private function SendOpMode(int $value): void
