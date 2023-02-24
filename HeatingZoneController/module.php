@@ -165,6 +165,7 @@ class HeatingZoneController extends IPSModule
         }
 
         //Delete all message registrations
+       
         foreach ($this->GetMessageList() as $senderID => $messages) {
             foreach ($messages as $message) {
                 if ($message == EM_UPDATE) {
@@ -175,6 +176,7 @@ class HeatingZoneController extends IPSModule
                 }
             }
         }
+      
      
         ########## WebFront options
        
@@ -219,8 +221,9 @@ class HeatingZoneController extends IPSModule
                
                 IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
                 IPS_SetEventScheduleAction($id,2,"Ein",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-                $this->RegisterMessage($this->GetIDForIdent('WeekTimerStatus'),VM_UPDATE);
             }
+
+            $this->RegisterMessage($this->GetIDForIdent('WeekTimerStatus'),VM_UPDATE);
             
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
