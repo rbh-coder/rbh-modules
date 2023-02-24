@@ -33,6 +33,7 @@ class HeatingZoneController extends IPSModule
     private const HeatUndef = 0;
     private const HeatOff = 1;
     private const HeatOn = 2;
+    private const HeatOnReduced = 3;
 
     private const  Transparent = 0xffffff00;
     private const  Red = 0xFF0000;
@@ -99,6 +100,7 @@ class HeatingZoneController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, 0, "Inaktiv", "", self::Transparent);
            IPS_SetVariableProfileAssociation($profileName, 1, "Nicht Heizen", "", self::Yellow);
            IPS_SetVariableProfileAssociation($profileName, 2, "Heizen", "", self::Green);
+           IPS_SetVariableProfileAssociation($profileName, 3, "Absenken", "", self::Blue);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Week Timer Status'), $profileName, 30);
 
@@ -137,6 +139,7 @@ class HeatingZoneController extends IPSModule
         $this->RegisterPropertyInteger('IdControlAlive',0);
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyBoolean('UseWeekTimer',0);
+        $this->RegisterPropertyFloat('OffsetTemperature',0);
        
         $this->RegisterAttributeInteger('WeekTimer', 0);
         
@@ -240,10 +243,10 @@ class HeatingZoneController extends IPSModule
                          IPS_SetEventScheduleGroup($id, 0, 127);    //Mo - SO (1 + 2 + 4 + 8 + 16+ 32 + 64)
                         break;
                 }
-               
-                IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
-                IPS_SetEventScheduleAction($id,2,"Ein",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             }
+            IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
+            IPS_SetEventScheduleAction($id,2,"Normal",self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+            IPS_SetEventScheduleAction($id,3,"Absenken",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
@@ -485,6 +488,7 @@ class HeatingZoneController extends IPSModule
             case self::HeatOff:
                 return self::Aus;
             case self::HeatOn:
+            case self::HeatOnReduced:
             case self::HeatUndef:
                 if (($this->ReadAttributeInteger('IdRoomThermostat')>0) && $this->GetValue('IgnoreThermostat'))
                 {
@@ -524,6 +528,25 @@ class HeatingZoneController extends IPSModule
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id= $this->ReadPropertyInteger('IdAdaptRoomTemperatureSend');
+
+        $actValue = $value;
+        switch ($this->GetValue('OpMode'))
+           {
+               case self::Aus:
+               case self::Manuell:
+                    $actValue = 0.0;
+                    break;
+               case self::Automatik:
+                    $actValue = 0.0;
+                    switch ($this->GetValue('WeekTimerStatus'))
+                    {
+                        case self::HeatOnReduced:
+                            $actValue = $this->ReadPropertyFloat('OffsetTemperature')
+                        break;
+                    }
+                    break;
+           }
+
         if ($id>0) RequestAction($id, $value);
         
    }
