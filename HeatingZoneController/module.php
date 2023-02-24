@@ -541,8 +541,8 @@ class HeatingZoneController extends IPSModule
                     switch ($this->GetValue('WeekTimerStatus'))
                     {
                         case self::HeatOnReduced:
-                            $actValue = $this->ReadPropertyFloat('OffsetTemperature')
-                        break;
+                            $actValue = $this->ReadPropertyFloat('OffsetTemperature');
+                            break;
                     }
                     break;
            }
