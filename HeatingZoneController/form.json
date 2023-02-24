@@ -39,6 +39,11 @@
           "caption": "ID Vorlauf Ist"
         },
         {
+          "name": "IdControlAlive",
+          "type": "SelectVariable",
+          "caption": "ID Steuerung gestartet"
+        },
+        {
           "name": "ExpertModeID",
           "type": "SelectVariable",
           "caption": "Expert Mode"

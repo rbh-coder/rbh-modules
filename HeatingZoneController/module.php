@@ -124,6 +124,7 @@ class HeatingZoneController extends IPSModule
 
         $this->RegisterVariableIds($this->ReadAttributeString('SendList'));
         $this->RegisterPropertyInteger('ExpertModeID', 0);
+        $this->RegisterPropertyInteger('IdControlAlive',0);
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyBoolean('UseWeekTimer',0);
        
@@ -233,11 +234,10 @@ class HeatingZoneController extends IPSModule
         $this->WriteAttributeInteger('WeekTimer', $id);
        
         $this->RegisterStatusUpdate('ExpertModeID');
-        
+        $this->RegisterStatusUpdate('IdControlAlive');
 
         ########## Links
 
-        //Weekly schedule
         $this->WriteAttributeInteger('IdRoomThermostat',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Raumthermostat','Flame', 100));
         $this->WriteAttributeInteger('IdRoomTemperature',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumtemperatur','Temperature', 110));
         $this->WriteAttributeInteger('IdHeatingPump',$this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120));
@@ -384,6 +384,12 @@ class HeatingZoneController extends IPSModule
                 else if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
                 {
                     $this->HandleExpertSwitch($SenderID);
+                }
+                else if ($this->ReadPropertyInteger('IdControlAlive') == $SenderID)
+                {
+                   if (!$Data[0]) return;
+                    $this->SendOpMode($this->GetValue('OpModeActive'));
+                    $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
                 }
                 break;
 
