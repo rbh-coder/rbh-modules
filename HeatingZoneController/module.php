@@ -375,7 +375,7 @@ class HeatingZoneController extends IPSModule
 
                 //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
                 if ($Data[1]==0) return;
-                $this->SendDebug(__FUNCTION__, 'Der Wochenplan Status hat sich auf ' . $Data[0] . ' geändert.', 0);
+                $this->SendDebug(__FUNCTION__, 'Wert sich auf ' . $Data[0] . ' geändert.', 0);
                
                 //Wochenplan Status
                 if ($this->GetIDForIdent('WeekTimerStatus') == $SenderID ) {   
