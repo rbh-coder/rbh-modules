@@ -219,6 +219,7 @@ class HeatingZoneController extends IPSModule
                
                 IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
                 IPS_SetEventScheduleAction($id,2,"Ein",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+                $this->RegisterMessage($this->GetIDForIdent('WeekTimerStatus'),VM_UPDATE);
             }
             
             $this->RegisterReference($id);
