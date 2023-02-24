@@ -614,21 +614,21 @@ class LightColorChanger extends IPSModule
                 if ($this->IsCleaningModeAllowed())  $cleaningStatus = $this->CleaningStatusManager(self::SwitchOn);
                 else
                 {
-                    $cleaningStatus = $this->CleaningStatusManager(self:SwitchOff);
+                    $cleaningStatus = $this->CleaningStatusManager(self::SwitchOff);
                 }
                break;
             case self::IsOn: //On
-                 if (!$this->IsCleaningRequested() || !$this->IsCleaningModeAllowed())  $cleaningStatus = $this->CleaningStatusManager(self:SwitchOff); //Switch Off
+                 if (!$this->IsCleaningRequested() || !$this->IsCleaningModeAllowed())  $cleaningStatus = $this->CleaningStatusManager(self::SwitchOff); //Switch Off
                 break;
             case self::SwitchOn: //Switch On
                  IPS_LogMessage("CleaningStatusManager", $this->Translate('Start Cleaning Mode.'));
                  $this->StartCleaningMode();
-                 $cleaningStatus = self:IsOn;
+                 $cleaningStatus = self::IsOn;
                 break;
-             case self:SwitchOff: //Switch Off
+             case self::SwitchOff: //Switch Off
                  IPS_LogMessage("CleaningStatusManager", $this->Translate('Stop Cleaning Mode.'));
                  $this->StopCleaningMode();
-                 $cleaningStatus = self:IsOff;
+                 $cleaningStatus = self::IsOff;
                 break;
         }
         return  $cleaningStatus;
