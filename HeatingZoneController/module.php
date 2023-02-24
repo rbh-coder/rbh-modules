@@ -444,6 +444,8 @@ class HeatingZoneController extends IPSModule
        $id = $this->ReadAttributeInteger('IdRoomThermostat');
        if ($id==0) return;
        $this->HideItemById($id,$value);
+       $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
+       $this->SendOpMode($opmode);
    }
 
    public function WeekTimerAction (int $action) : void
@@ -604,8 +606,8 @@ class HeatingZoneController extends IPSModule
                 $hide= !$this->ReadPropertyBoolean('UseWeekTimer');
                 $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),$hide);
                 $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
-                $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),false);
                 $this->HideItemById ($this->GetIDForIdent('IgnoreThermostat'),$this->ReadAttributeInteger('IdRoomThermostat')==0);
+                $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),$this->GetValue('IgnoreThermostat'));
                 $this->TriggerAction(); 
                 $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
                 break;
