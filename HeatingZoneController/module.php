@@ -443,7 +443,7 @@ class HeatingZoneController extends IPSModule
    {
        $id = $this->ReadAttributeInteger('IdRoomThermostat');
        if ($id==0) return;
-       $this->HideItemById($value);
+       $this->HideItemById($id,$value);
    }
 
    public function WeekTimerAction (int $action) : void
