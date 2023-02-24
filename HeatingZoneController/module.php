@@ -70,7 +70,7 @@ class HeatingZoneController extends IPSModule
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
             IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Manuell", "", self::Yellow);
             IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Operation Mode'),$profileName, 10);
@@ -270,13 +270,13 @@ class HeatingZoneController extends IPSModule
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
-                IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
+                IPS_SetVariableProfileAssociation($profileName, 1, "Manuell", "", self::Yellow);
                 IPS_SetVariableProfileAssociation($profileName, 2, "", "", self::Transparent);//Leerer Name und Icon löschen den Werteeintrag 
             }
             else {
                 IPS_SetVariableProfileValues($profileName, 0, 2, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
-                IPS_SetVariableProfileAssociation($profileName, 1, "Hand", "", self::Yellow);
+                IPS_SetVariableProfileAssociation($profileName, 1, "Manuell", "", self::Yellow);
                 IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", self::Green);
             }
 
