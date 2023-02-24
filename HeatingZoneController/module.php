@@ -52,7 +52,7 @@ class HeatingZoneController extends IPSModule
          $this->RegisterAttributeString('LinkList', "IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
          $this->RegisterAttributeString('SendList', "IdOpModeSend,IdAdaptRoomTemperatureSend");
          $this->RegisterAttributeString('ExpertListHide',"OpModeActive");
-         $this->RegisterAttributeString('ExpertListLock',"OpMode");
+         $this->RegisterAttributeString('ExpertListLock',"");
 
          $this->RegisterAttributeBoolean('RecurseFlag',false);
 
