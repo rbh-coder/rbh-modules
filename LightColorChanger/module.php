@@ -20,6 +20,7 @@ class LightColorChanger extends IPSModule
     private const SwitchOff = 3;
 
     private const ProfileList = 'Switch,OpMode,ColorChangeTime,ColorFadeTime,ManualColorSelection,ActiveColors,CleaningMode,AutomaticRelease';
+    private const RegisterList = 'AutomaticRelease,CleaningMode';
 
     public function Create()
     {
@@ -131,8 +132,7 @@ class LightColorChanger extends IPSModule
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Cleaning Modus'),$profileName, 50);
         $this->EnableAction($variable);
-        $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
-
+       
          //Position 60
         $variable = 'AutomaticRelease';
         $profileName = $this->CreateProfileName($variable);
@@ -144,8 +144,11 @@ class LightColorChanger extends IPSModule
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'),$profileName, 60);
         $this->EnableAction($variable);
-        $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
-       
+      
+        //Benötige Anmeldudngen für MessageSing durchführen
+        foreach ( $this->GetArrayFromString(self::RegisterList) as $item) {
+              $this->RegisterMessage($this->GetIDForIdent($item),VM_UPDATE);
+        }
         //-------------------------------------------------------------------------------------------------------------
 
         //Timer--------------------------------------------------------------------------------------------------------
@@ -476,6 +479,9 @@ class LightColorChanger extends IPSModule
         $itemsString = $this->ReadAttributeString('StatusList');
         foreach ( $this->GetArrayFromString($this->ReadAttributeString('StatusList')) as $item) {
             $this->RegisterStatusUpdate($item);
+        }
+        foreach ( $this->GetArrayFromString(self::RegisterList) as $item) {
+              $this->RegisterMessage($this->GetIDForIdent($item),VM_UPDATE);
         }
 
         $this->RegisterStatusUpdate('ExpertModeID');

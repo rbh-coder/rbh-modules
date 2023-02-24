@@ -24,6 +24,7 @@ class HeatingZoneController extends IPSModule
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
     private const ProfileList = 'WeekTimerStatus,OpMode,OpModeActive,AdaptRoomTemperature';
+    private const RegisterList = 'WeekTimerStatus';
 
     private const Aus = 0;
     private const Manuell = 1;
@@ -100,9 +101,6 @@ class HeatingZoneController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, 2, "Heizen", "", self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Week Timer Status'), $profileName, 30);
-        //$this->EnableAction($variable);
-        //Variable für Änderungen registrieren
-        $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
 
         //Adapt Room Temperatur
         $variable = 'AdaptRoomTemperature';
@@ -129,6 +127,14 @@ class HeatingZoneController extends IPSModule
         $this->RegisterPropertyBoolean('UseWeekTimer',0);
        
         $this->RegisterAttributeInteger('WeekTimer', 0);
+        
+        //Benötige Anmeldudngen für MessageSing durchführen
+        foreach ( $this->GetArrayFromString(self::RegisterList) as $item) {
+              $this->RegisterMessage($this->GetIDForIdent($item),VM_UPDATE);
+        }
+        
+        
+        
         ########## Timer
     }
 
@@ -222,9 +228,6 @@ class HeatingZoneController extends IPSModule
                 IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
                 IPS_SetEventScheduleAction($id,2,"Ein",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             }
-
-            $this->RegisterMessage($this->GetIDForIdent('WeekTimerStatus'),VM_UPDATE);
-            
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
@@ -239,6 +242,11 @@ class HeatingZoneController extends IPSModule
        
         $this->RegisterStatusUpdate('ExpertModeID');
         $this->RegisterStatusUpdate('IdControlAlive');
+
+        //Benötige Anmeldudngen für MessageSing durchführen
+        foreach ( $this->GetArrayFromString(self::RegisterList) as $item) {
+              $this->RegisterMessage($this->GetIDForIdent($item),VM_UPDATE);
+        }
 
         ########## Links
 
