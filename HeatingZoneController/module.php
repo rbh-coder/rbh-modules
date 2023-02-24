@@ -378,7 +378,7 @@ class HeatingZoneController extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Der Wochenplan Status hat sich auf ' . $Data[0] . ' geändert.', 0);
                
                 //Wochenplan Status
-                if ($SenderID == $this->ReadPropertyInteger('WeekTimerStatus')) {   
+                if ($SenderID == $this->GetIDForIdent('WeekTimerStatus') {   
                     $this->SetWeekTimerStatus($Data[0]);
                 }
                 else if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
