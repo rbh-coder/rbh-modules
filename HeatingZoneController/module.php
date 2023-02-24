@@ -23,7 +23,7 @@ class HeatingZoneController extends IPSModule
     private const MODULE_VERSION = '1.0, 14.02.2023';
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
-    private const ProfileList = 'WeekTimerStatus,OpMode,OpModeActive,AdaptRoomTemperature';
+    private const ProfileList = 'WeekTimerStatus,OpMode,OpModeActive,AdaptRoomTemperature,IgnoreThermostat';
     private const RegisterList = 'WeekTimerStatus';
 
     private const Aus = 0;
@@ -115,6 +115,18 @@ class HeatingZoneController extends IPSModule
         }
         $this->RegisterVariableFloat($variable, $this->Translate('Adapt Room Temperature'), $profileName, 60);
         $this->EnableAction($variable);
+
+        $variable = 'IgnoreThermostat';
+        $profileName = $this->CreateProfileName($variable);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Ok");
+            IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Red);
+        }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Ignore Thermostat'),$profileName, 65);
+        $this->EnableAction($variable);
+
 
         $this->RegisterVariableIds($this->ReadAttributeString('LinkList'));
         //Attribute mit Ids von Links anlegen
@@ -427,6 +439,13 @@ class HeatingZoneController extends IPSModule
         }
     }
 
+   private function OperateIgnoreThermostat(bool $value) : void
+   {
+       $id = $this->ReadAttributeInteger('IdRoomThermostat');
+       if ($id==0) return;
+       $this->HideItemById($value);
+   }
+
    public function WeekTimerAction (int $action) : void
    {
        if (!$this->ReadPropertyBoolean('UseWeekTimer')) return;
@@ -465,6 +484,10 @@ class HeatingZoneController extends IPSModule
                 return self::Aus;
             case self::HeatOn:
             case self::HeatUndef:
+                if (($this->ReadAttributeInteger('IdRoomThermostat')>0) && $this->GetValue('IgnoreThermostat'))
+                {
+                     return self::Manuell;
+                }
                 return self::Automatik;
        }
        return $value;
@@ -533,6 +556,10 @@ class HeatingZoneController extends IPSModule
                  $this->SetValue($Ident, $Value);
                  $this->SendAdaptRoomTemperature($Value);
                 break;
+            case "IgnoreThermostat":
+                $this->SetValue($Ident, $Value);
+                $this->OperateIgnoreThermostat($Value);
+                break;
         }
     }
 
@@ -566,17 +593,19 @@ class HeatingZoneController extends IPSModule
         $hide=true;
 
          switch($opmode) {
-            case self::Aus: //Aus 
-            case self::Manuell: //Handbetrieb
+            case self::Aus:         //Aus 
+            case self::Manuell:     //Handbetrieb
                  $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),true);
+                 $this->HideItemById ( $this->GetIDForIdent('IgnoreThermostat'),true);
                  $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
                  $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
                 break;
-            case self::Automatik: //Automatikbetrieb
+            case self::Automatik:   //Automatikbetrieb
                 $hide= !$this->ReadPropertyBoolean('UseWeekTimer');
                 $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),$hide);
                 $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
                 $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),false);
+                $this->HideItemById ($this->GetIDForIdent('IgnoreThermostat'),$this->ReadAttributeInteger('IdRoomThermostat')==0);
                 $this->TriggerAction(); 
                 $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
                 break;
