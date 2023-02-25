@@ -5,8 +5,6 @@ Bevor das Modul installiert wird, sollte unbedingt ein Backup von IP-Symcon durc
 Der Entwickler haftet nicht für eventuell auftretende Datenverluste oder sonstige Schäden.
 Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklich zu.
 
-Die Verwendung dieses Moduls ist ausschließlich für Privatpersonen gedacht. Ein Support ist nicht zu erwarten.
-
 Das Modul ist primär zur Parametrierung bzw. Visualisierung einer Mehrzonen-Mischerkreisregelung (realisiert in WAGO-SPS mit Codesys)
 gedacht. Die Kommunikation erfolgt aktuell über Modbus-TCP. Dies ist jedoch für die Funktion des Moduls nicht von Bedeutung. 
 
