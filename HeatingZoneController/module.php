@@ -124,7 +124,7 @@ class HeatingZoneController extends IPSModule
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Ok");
             IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Red);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Yellow);
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Ignore Thermostat'),$profileName, 65);
         $this->EnableAction($variable);
