@@ -67,45 +67,7 @@ trait RBH_ModuleFunctions
         }
     }
 
-    private function DeleteProfileList (string $list) :void
-    {
-          if (IsValidStringList($list))
-          {
-              foreach ($this->GetArrayFromString($list) as $item) 
-              {
-                    if (is_string($item)) 
-                    {
-                         $cleanedItem = trim($item);
-                         if (strlen($cleanedItem) > 0)
-                         {
-                            $this->DeleteProfile($cleanedItem);
-                         }
-                    }
-              }
-          }
-    }
-
-    private function DeleteProfile(string $profileName) : void
-    {
-        if (empty($profileName)) return;
-         $profile =  $this->CreateProfileName($profileName);
-         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
-         if (@IPS_VariableProfileExists($profile)) {
-                IPS_DeleteVariableProfile($profile);
-         }
-    }
-
-    private function GetArrayFromString (string $itemsString)
-    {
-        return explode(',', $itemsString);
-    }
-
-    private function CreateProfileName (string $profileName) : string
-    {
-         return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
-    }
-
-
+ 
    private function HandleExpertSwitch(int $id, string $hideList, string $lockList )
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -150,13 +112,15 @@ trait RBH_ModuleFunctions
         return $result;
     }
 
-    private function DetermineAction(int $weekTimerId): int
+
+    private function GetWeekTimerAction(int $weekTimerId): int
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $actionID = 0;
-        if (($weekTimerId==0) || !@IPS_ObjectExists($weeklySchedule)) return $actionID;
-      
-        $event = IPS_GetEvent($this->ReadAttributeInteger('WeekTimer'));
+        if (($weekTimerId==0) || !@IPS_ObjectExists($weekTimerId)) return $actionID;
+
+
+        $event = IPS_GetEvent($weekTimerId);
         if (!$event['EventActive']) return 0;
         $timestamp = time();
         $searchTime = date('H', $timestamp) * 3600 + date('i', $timestamp) * 60 + date('s', $timestamp);
