@@ -13,9 +13,11 @@
 
 declare(strict_types=1);
 
+include_once __DIR__ . './libs/RBH_ModuleFunctions.php';
+
 class HeatingZoneController extends IPSModule
 {
-  
+    use RBH_ModuleFunctions
     //Constants
     private const LIBRARY_GUID = '{016A5116-600D-1C0B-9CA8-20F59140AD40}';
     private const MODULE_NAME = 'HeatingZoneController';
@@ -153,7 +155,7 @@ class HeatingZoneController extends IPSModule
         ########## Timer
     }
 
-    private function RegisterVariableIds(string $itemsString) : void
+    private function _RegisterVariableIds(string $itemsString) : void
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
