@@ -15,15 +15,6 @@ declare(strict_types=1);
 
 trait RBH_ModuleFunctions
 {
-    private const  Transparent = 0xffffff00;
-    private const  Red = 0xFF0000;
-    private const  Yellow = 0xFFFF00;
-    private const  Green=0x00FF00;
-    private const  Blue=0x0000FF;
-    private const  DarkGreen = 0x24F065;
-    private const  DarkBlue  = 0x0D0FE4;
- 
-
     public static function RegisterVariableIds(string $itemsString) : void
     {
         foreach (explode(',', $itemsString) as $item) {
