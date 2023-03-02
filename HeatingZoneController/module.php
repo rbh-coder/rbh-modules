@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-include_once __DIR__ . './libs/RBH_ModuleFunctions.php';
+include_once __DIR__ . '../libs/RBH_ModuleFunctions.php';
 
 class HeatingZoneController extends IPSModule
 {
