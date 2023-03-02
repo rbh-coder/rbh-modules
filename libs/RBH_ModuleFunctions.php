@@ -90,8 +90,8 @@ trait RBH_ModuleFunctions
 
    private function IsValidStringList(string $list): bool
    {
-       if (!is_string($listist)) return false;
-       if (strlen($lockList) == 0) return false;
+       if (!is_string($list)) return false;
+       if (strlen($list) == 0) return false;
        return true;
    }
 
