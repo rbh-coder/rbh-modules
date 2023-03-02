@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 trait RBH_ModuleFunctions
 {
-    public static function RegisterVariableIds(string $itemsString) : void
+    public function RegisterVariableIds(string $itemsString) : void
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
