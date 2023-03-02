@@ -72,14 +72,14 @@ trait RBH_ModuleFunctions
        $status = !GetValueBoolean($id);
        if ($id==0)  $status = false;
 
-       if (IsValidStringList($hideList))
+       if ($this->IsValidStringList($hideList))
        {
            foreach (explode(',', $hideList) as $item)
            {
                $this->HideItem($item,$status);
            }
        }
-       if (IsValidStringList($lockList))
+       if ($this->IsValidStringList($lockList))
        {
            foreach (explode(',',$lockList) as $item)
            {
@@ -138,7 +138,7 @@ trait RBH_ModuleFunctions
    private function DeleteProfileList (string $list) :void
    {
 
-         if (!IsValidStringList($list)) return;
+         if (!$this->IsValidStringList($list)) return;
          foreach ($this->GetArrayFromString($list) as $item) {
                if (is_string($item)) {
                     $cleanedItem = trim($item);
