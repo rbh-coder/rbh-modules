@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @project       
+ * @project
  * @file          RBH_ModuleFunctions.php
  * @author        Alfred Schorn
  * @copyright     2023 Alfred Schorn
@@ -28,7 +28,6 @@ trait RBH_ModuleFunctions
             $this->RegisterAttributeInteger($item, 0);
         }
     }
-
 
     private function CreateLink (int $targetID,string $name,string $iconName, int $position) :int
     {
@@ -67,85 +66,79 @@ trait RBH_ModuleFunctions
         }
     }
 
- 
    private function HandleExpertSwitch(int $id, string $hideList, string $lockList )
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $status = !GetValueBoolean($id);
-        if ($id==0)  $status = false;
-       
-        if (IsValidStringList($hideList))
-        {
-            foreach (explode(',', $hideList) as $item)
-            {
-                $this->HideItem($item,$status);
-            }
-        }
-        if (IsValidStringList($lockList))
-        {
-            foreach (explode(',',$lockList) as $item)
-            {
-                $this->LockItem($item,$status);
-            }
-        }
-    }
+   {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $status = !GetValueBoolean($id);
+       if ($id==0)  $status = false;
 
-    private function IsValidStringList(string $list): bool
-    {
-        if (!is_string($listist)) return false;
-        if (strlen($lockList) == 0) return false;
-        return true;
-    }
+       if (IsValidStringList($hideList))
+       {
+           foreach (explode(',', $hideList) as $item)
+           {
+               $this->HideItem($item,$status);
+           }
+       }
+       if (IsValidStringList($lockList))
+       {
+           foreach (explode(',',$lockList) as $item)
+           {
+               $this->LockItem($item,$status);
+           }
+       }
+   }
 
+   private function IsValidStringList(string $list): bool
+   {
+       if (!is_string($listist)) return false;
+       if (strlen($lockList) == 0) return false;
+       return true;
+   }
 
-    private function ValidateEventPlan(int $weekTimerId): bool
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $result = false;
-        if (($weekTimerId==0) || !@IPS_ObjectExists($weeklySchedule)) return $result;
-     
-        $event = IPS_GetEvent($weekTimerId);
-        if ($event['EventActive'] == 1) {
-            $result = true;
-        }
-        
-        return $result;
-    }
+   private function ValidateEventPlan(int $weekTimerId): bool
+   {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $result = false;
+       if (($weekTimerId==0) || !@IPS_ObjectExists($weeklySchedule)) return $result;
 
+       $event = IPS_GetEvent($weekTimerId);
+       if ($event['EventActive'] == 1) {
+           $result = true;
+       }
 
-    private function GetWeekTimerAction(int $weekTimerId): int
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $actionID = 0;
-        if (($weekTimerId==0) || !@IPS_ObjectExists($weekTimerId)) return $actionID;
+       return $result;
+   }
 
+   private function GetWeekTimerAction(int $weekTimerId): int
+   {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $actionID = 0;
+       if (($weekTimerId==0) || !@IPS_ObjectExists($weekTimerId)) return $actionID;
 
-        $event = IPS_GetEvent($weekTimerId);
-        if (!$event['EventActive']) return 0;
-        $timestamp = time();
-        $searchTime = date('H', $timestamp) * 3600 + date('i', $timestamp) * 60 + date('s', $timestamp);
-        $weekDay = date('N', $timestamp);
-        foreach ($event['ScheduleGroups'] as $group) {
-            if (($group['Days'] & pow(2, $weekDay - 1)) > 0) {
-                $points = $group['Points'];
-                foreach ($points as $point) {
-                    $startTime = $point['Start']['Hour'] * 3600 + $point['Start']['Minute'] * 60 + $point['Start']['Second'];
-                    if ($startTime <= $searchTime) {
-                        $actionID = $point['ActionID'];
-                    }
-                }
-            }
-        }
-       
-        return $actionID;
-    }
+       $event = IPS_GetEvent($weekTimerId);
+       if (!$event['EventActive']) return 0;
+       $timestamp = time();
+       $searchTime = date('H', $timestamp) * 3600 + date('i', $timestamp) * 60 + date('s', $timestamp);
+       $weekDay = date('N', $timestamp);
+       foreach ($event['ScheduleGroups'] as $group) {
+           if (($group['Days'] & pow(2, $weekDay - 1)) > 0) {
+               $points = $group['Points'];
+               foreach ($points as $point) {
+                   $startTime = $point['Start']['Hour'] * 3600 + $point['Start']['Minute'] * 60 + $point['Start']['Second'];
+                   if ($startTime <= $searchTime) {
+                       $actionID = $point['ActionID'];
+                   }
+               }
+           }
+       }
+
+       return $actionID;
+   }
 
    private function DeleteProfileList (string $list) :void
    {
-         if (!is_string($list)) return;
-         $list = trim($list);
-         if  (strlen($list) == 0) return;
 
+         if (!IsValidStringList($list)) return;
          foreach ($this->GetArrayFromString($list) as $item) {
                if (is_string($item)) {
                     $cleanedItem = trim($item);
@@ -157,16 +150,25 @@ trait RBH_ModuleFunctions
          }
    }
 
-   private function DeleteProfile(string $profileName) : void
-   {
-       if (empty($profileName)) return;
-        $profile =  $this->CreateProfileName($profileName);
-        IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
-        if (@IPS_VariableProfileExists($profile)) {
-               IPS_DeleteVariableProfile($profile);
-        }
-   }
+    private function DeleteProfile(string $profileName) : void
+    {
+        if (empty($profileName)) return;
+         $profile =  $this->CreateProfileName($profileName);
+         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
+         if (@IPS_VariableProfileExists($profile)) {
+                IPS_DeleteVariableProfile($profile);
+         }
+    }
 
+    private function GetArrayFromString (string $itemsString)
+    {
+        return explode(',', $itemsString);
+    }
+
+    private function CreateProfileName (string $profileName) : string
+    {
+         return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
+    }
 
     private function HideItemById (int $id, bool $hide )
     {
