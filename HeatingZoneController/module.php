@@ -17,7 +17,9 @@ include_once __DIR__ . './libs/RBH_ModuleFunctions.php';
 
 class HeatingZoneController extends IPSModule
 {
-    use RBH_ModuleFunctions
+    use RBH_ModuleFunctions;
+
+
     //Constants
     private const LIBRARY_GUID = '{016A5116-600D-1C0B-9CA8-20F59140AD40}';
     private const MODULE_NAME = 'HeatingZoneController';
