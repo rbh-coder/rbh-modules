@@ -140,6 +140,34 @@ trait RBH_ModuleFunctions
         return $actionID;
     }
 
+   private function DeleteProfileList (string $list) :void
+   {
+         if (!is_string($list)) return;
+         $list = trim($list);
+         if  (strlen($list) == 0) return;
+
+         foreach ($this->GetArrayFromString($list) as $item) {
+               if (is_string($item)) {
+                    $cleanedItem = trim($item);
+                    if (strlen($cleanedItem) > 0)
+                    {
+                       $this->DeleteProfile($cleanedItem);
+                    }
+               }
+         }
+   }
+
+   private function DeleteProfile(string $profileName) : void
+   {
+       if (empty($profileName)) return;
+        $profile =  $this->CreateProfileName($profileName);
+        IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
+        if (@IPS_VariableProfileExists($profile)) {
+               IPS_DeleteVariableProfile($profile);
+        }
+   }
+
+
     private function HideItemById (int $id, bool $hide )
     {
         if ($id==0) return;
