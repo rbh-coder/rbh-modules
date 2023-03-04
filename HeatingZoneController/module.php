@@ -228,9 +228,9 @@ class HeatingZoneController extends IPSModule
                         break;
                 }
             }
-            IPS_SetEventScheduleAction($id,self::HeatOff,$this->GetHeatingStatusText(1),self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,self::HeatOff);");
-            IPS_SetEventScheduleAction($id,self::HeatOn,$this->GetHeatingStatusText(2),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,self::HeatOn);");
-            IPS_SetEventScheduleAction($id,self::HeatOnReduced,$this->GetHeatingStatusText(3),self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,self::HeatOnReduced);");
+            IPS_SetEventScheduleAction($id,self::HeatOff,$this->GetHeatingStatusText(1),self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
+            IPS_SetEventScheduleAction($id,self::HeatOn,$this->GetHeatingStatusText(2),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+            IPS_SetEventScheduleAction($id,self::HeatOnReduced,$this->GetHeatingStatusText(3),self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
             
             $variable = 'WeekTimerStatus';
             $profileName = $this->CreateProfileName($variable);
