@@ -22,14 +22,14 @@ trait RBH_ModuleFunctions
         }
     }
 
-     private function RegisterLinkIds(string $itemsString) :void
+     private function RegisterLinkIds(string $itemsString) : void
     {
         foreach (explode(',', $itemsString) as $item) {
             $this->RegisterAttributeInteger($item, 0);
         }
     }
 
-    private function CreateLink (int $targetID,string $name,string $iconName, int $position) :int
+    private function CreateLink (int $targetID,string $name,string $iconName, int $position) : int
     {
         $linkID = @IPS_GetLinkIDByName($name, $this->InstanceID);
         if ($targetID != 0 && @IPS_ObjectExists($targetID)) {
@@ -58,7 +58,7 @@ trait RBH_ModuleFunctions
     }
 
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
-    private function RegisterStatusUpdate(string $statusName)
+    private function RegisterStatusUpdate(string $statusName) : void
     {
         $id= $this->ReadPropertyInteger($statusName);
         if ($id>0) {
@@ -66,7 +66,7 @@ trait RBH_ModuleFunctions
         }
     }
 
-   private function HandleExpertSwitch(int $id, string $hideList, string $lockList )
+   private function HandleExpertSwitch(int $id, string $hideList, string $lockList ) : void
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $status = !GetValueBoolean($id);
@@ -88,14 +88,14 @@ trait RBH_ModuleFunctions
        }
    }
 
-   private function IsValidStringList(string $list): bool
+   private function IsValidStringList(string $list) : bool
    {
        if (!is_string($list)) return false;
        if (strlen($list) == 0) return false;
        return true;
    }
 
-   private function ValidateEventPlan(int $weekTimerId): bool
+   private function ValidateEventPlan(int $weekTimerId) : bool
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $result = false;
@@ -109,7 +109,7 @@ trait RBH_ModuleFunctions
        return $result;
    }
 
-   private function GetWeekTimerAction(int $weekTimerId): int
+   private function GetWeekTimerAction(int $weekTimerId) : int
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $actionID = 0;
@@ -135,7 +135,7 @@ trait RBH_ModuleFunctions
        return $actionID;
    }
 
-   private function DeleteProfileList (string $list) :void
+   private function DeleteProfileList (string $list) : void
    {
 
          if (!$this->IsValidStringList($list)) return;
@@ -160,7 +160,7 @@ trait RBH_ModuleFunctions
          }
     }
 
-    private function GetArrayFromString (string $itemsString)
+    private function GetArrayFromString (string $itemsString) : array
     {
         return explode(',', $itemsString);
     }
@@ -170,18 +170,18 @@ trait RBH_ModuleFunctions
          return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
 
-    private function HideItemById (int $id, bool $hide )
+    private function HideItemById (int $id, bool $hide ) : void
     {
         if ($id==0) return;
         IPS_SetHidden($id,$hide);
     }
 
-    private function LockItem(string $item,bool $status)
+    private function LockItem(string $item,bool $status) : void
     {
         $id = $this->GetIDForIdent($item);
         IPS_SetDisabled($id, $status);
     }
-     private function HideItem(string $item,bool $status) :void
+     private function HideItem(string $item,bool $status) : void
     {
         if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
@@ -190,7 +190,7 @@ trait RBH_ModuleFunctions
 
     #################### Private
 
-    private function KernelReady(): void
+    private function KernelReady() : void
     {
         $this->ApplyChanges();
     }
