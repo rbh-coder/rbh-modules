@@ -231,7 +231,7 @@ class HeatingZoneController extends IPSModule
             }
             IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
             IPS_SetEventScheduleAction($id,2,"Heizen 21°C",self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-            IPS_SetEventScheduleAction($id,3,"Absenken " . 21+$this->ReadPropertyFloat('OffsetTemperature')."°C",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
+            IPS_SetEventScheduleAction($id,3,"Absenken " . (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
