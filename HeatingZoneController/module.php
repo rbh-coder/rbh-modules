@@ -273,13 +273,13 @@ class HeatingZoneController extends IPSModule
             if (!$this->ReadPropertyBoolean('UseWeekTimer') && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
-                IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
+                IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Red);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Manuell", "", self::Yellow);
                 IPS_SetVariableProfileAssociation($profileName, 2, "", "", self::Transparent);//Leerer Name und Icon löschen den Werteeintrag 
             }
             else {
                 IPS_SetVariableProfileValues($profileName, 0, 2, 0);
-                IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Transparent);
+                IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Red);
                 IPS_SetVariableProfileAssociation($profileName, 1, "Manuell", "", self::Yellow);
                 IPS_SetVariableProfileAssociation($profileName, 2, "Automatik", "", self::Green);
             }
