@@ -63,6 +63,11 @@ class HeatingZoneController extends IPSModule
 
         $this->DeleteProfileList (self::ProfileList);
        
+        $this->RegisterPropertyInteger('ExpertModeID', 0);
+        $this->RegisterPropertyInteger('IdControlAlive',0);
+        $this->RegisterPropertyInteger('WeekTimerGroups',0);
+        $this->RegisterPropertyBoolean('UseWeekTimer',0);
+        $this->RegisterPropertyFloat('OffsetTemperature',0);
         ########## Variables
 
        //Variablen --------------------------------------------------------------------------------------------------------
@@ -101,10 +106,10 @@ class HeatingZoneController extends IPSModule
         if (!IPS_VariableProfileExists($profileName)) {
            IPS_CreateVariableProfile($profileName, 1);
            IPS_SetVariableProfileIcon($profileName, "Ok");
-           IPS_SetVariableProfileAssociation($profileName, 0, "Inaktiv", "", self::Transparent);
-           IPS_SetVariableProfileAssociation($profileName, 1, "Nicht Heizen", "", self::Yellow);
-           IPS_SetVariableProfileAssociation($profileName, 2, "Heizen", "", self::Green);
-           IPS_SetVariableProfileAssociation($profileName, 3, "Absenken", "", self::Blue);
+           IPS_SetVariableProfileAssociation($profileName, self::HeatUndef, $this->GetHeatingStatusText(self::HeatUndef), "", self::Transparent);
+           IPS_SetVariableProfileAssociation($profileName, self::HeatOff, $this->GetHeatingStatusText(self::HeatOff), "", self::Yellow);
+           IPS_SetVariableProfileAssociation($profileName, self::HeatOn,  $this->GetHeatingStatusText(self::HeatOn), "", self::Green);
+           IPS_SetVariableProfileAssociation($profileName, self::HeatOnReduced,  $this->GetHeatingStatusText(self::HeatOnReduced), "", self::Blue);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Week Timer Status'), $profileName, 30);
 
@@ -139,12 +144,6 @@ class HeatingZoneController extends IPSModule
         $this->RegisterLinkIds($this->ReadAttributeString('LinkList'));
 
         $this->RegisterVariableIds($this->ReadAttributeString('SendList'));
-        $this->RegisterPropertyInteger('ExpertModeID', 0);
-        $this->RegisterPropertyInteger('IdControlAlive',0);
-        $this->RegisterPropertyInteger('WeekTimerGroups',0);
-        $this->RegisterPropertyBoolean('UseWeekTimer',0);
-        $this->RegisterPropertyFloat('OffsetTemperature',0);
-       
         $this->RegisterAttributeInteger('WeekTimer', 0);
         
         //Benötige Anmeldudngen für MessageSing durchführen
@@ -229,9 +228,9 @@ class HeatingZoneController extends IPSModule
                         break;
                 }
             }
-            IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
-            IPS_SetEventScheduleAction($id,2,"Heizen 21°C",self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-            IPS_SetEventScheduleAction($id,3,"Absenken " . (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
+            IPS_SetEventScheduleAction($id,self::HeatOff,$this->GetHeatingStatusText(1),self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,self::HeatOff);");
+            IPS_SetEventScheduleAction($id,self::HeatOn,$this->GetHeatingStatusText(2),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,self::HeatOn);");
+            IPS_SetEventScheduleAction($id,self::HeatOnReduced,$this->GetHeatingStatusText(3),self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,self::HeatOnReduced);");
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
@@ -286,6 +285,21 @@ class HeatingZoneController extends IPSModule
 
         }
         $this->HandleOpMode ($this->GetValue('OpMode'));
+    }
+
+    private function GetHeatingStatusText(int $status) : string
+    {
+       switch ($status)
+       {
+            case self::HeatOff:
+                return "Nicht Heizen";
+            case self::HeatOn:
+                return "Heizen 21°C";
+            case self::HeatOnReduced:
+                return "Absenken ". (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C";
+            case default:
+                return "Inaktiv";
+       }
     }
 
 
