@@ -339,7 +339,7 @@ class HeatingZoneController extends IPSModule
 
                 //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
                 if ($Data[1]==0) return;
-                $this->SendDebug(__FUNCTION__, 'Wert sich auf ' . $Data[0] . ' geändert.', 0);
+                $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
                
                 //Wochenplan Status
                 if ($this->GetIDForIdent('WeekTimerStatus') == $SenderID ) {   
@@ -427,6 +427,10 @@ class HeatingZoneController extends IPSModule
                 if (($this->ReadAttributeInteger('IdRoomThermostat')>0) && $this->GetValue('IgnoreThermostat'))
                 {
                      return self::Manuell;
+                }
+                else if ($this->ReadAttributeInteger('IdRoomThermostat')==0)
+                {
+                    return self::Manuell;
                 }
                 return self::Automatik;
        }
