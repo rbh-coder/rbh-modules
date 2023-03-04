@@ -230,8 +230,8 @@ class HeatingZoneController extends IPSModule
                 }
             }
             IPS_SetEventScheduleAction($id,1,"Aus",self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
-            IPS_SetEventScheduleAction($id,2,"Normal",self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-            IPS_SetEventScheduleAction($id,3,"Absenken",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
+            IPS_SetEventScheduleAction($id,2,"Heizen 21°C",self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+            IPS_SetEventScheduleAction($id,3,"Absenken " . 21+$this->ReadPropertyFloat('OffsetTemperature')."°C",self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
             $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
@@ -424,25 +424,23 @@ class HeatingZoneController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id= $this->ReadPropertyInteger('IdAdaptRoomTemperatureSend');
 
-        $actValue = $value;
+        $reduction = 0.0;
         switch ($this->GetValue('OpMode'))
            {
                case self::Aus:
                case self::Manuell:
-                    $actValue = 0.0;
                     break;
                case self::Automatik:
-                    $actValue = 0.0;
                     switch ($this->GetValue('WeekTimerStatus'))
                     {
                         case self::HeatOnReduced:
-                            $actValue = $this->ReadPropertyFloat('OffsetTemperature');
+                            $reduction = $this->ReadPropertyFloat('OffsetTemperature');
                             break;
                     }
                     break;
            }
 
-        if ($id>0) RequestAction($id, $value);
+        if ($id>0) RequestAction($id, $value+$reduction);
         
    }
 
