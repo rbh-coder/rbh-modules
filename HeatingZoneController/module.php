@@ -518,6 +518,7 @@ class HeatingZoneController extends IPSModule
            default:
         }
         $this->SendOpMode($opmode);
+        $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
    }
 }
 
