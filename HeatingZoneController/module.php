@@ -520,3 +520,4 @@ class HeatingZoneController extends IPSModule
         $this->SendOpMode($opmode);
    }
 }
+
