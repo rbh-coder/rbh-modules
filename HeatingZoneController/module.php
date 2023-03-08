@@ -344,6 +344,7 @@ class HeatingZoneController extends IPSModule
                 //Wochenplan Status
                 if ($this->GetIDForIdent('WeekTimerStatus') == $SenderID ) {   
                     $this->SetWeekTimerStatus($Data[0]);
+                    $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
                 }
                 else if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
                 {
