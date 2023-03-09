@@ -359,6 +359,7 @@ class HeatingZoneController extends IPSModule
          $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
          $variable = 'WeekTimerStatus';
          $profileName = $this->CreateProfileName($variable);
+
          IPS_SetVariableProfileAssociation($profileName, self::HeatUndef, $this->GetHeatingStatusTextDyn(self::HeatUndef), "", self::Transparent);
          IPS_SetVariableProfileAssociation($profileName, self::HeatOff, $this->GetHeatingStatusTextDyn(self::HeatOff), "", self::Yellow);
          IPS_SetVariableProfileAssociation($profileName, self::HeatOn,  $this->GetHeatingStatusTextDyn(self::HeatOn), "", self::Green);
@@ -490,6 +491,10 @@ class HeatingZoneController extends IPSModule
     private function OperateRoomThermostat(bool $value) : void
     {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       if ($value)
+       {
+            $this->SetValue("BoostMode",false);
+       }
        $this->SetHeatingStatusProfile ();
        $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
     }
