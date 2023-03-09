@@ -524,17 +524,17 @@ class HeatingZoneController extends IPSModule
                 $this->SetValue('BoostMode',false);
                 break;
             case self::Manuell:
-                $offset = $this->GetBoostTemperatur ();
+                $offset = $this->GetBoostTemperature ();
                 break;
             case self::Automatik:
-                 $offset = $this->GetBoostTemperatur ();
+                 $offset = $this->GetBoostTemperature ();
                  switch ($this->GetValue('WeekTimerStatus'))
                  {
                      case self::HeatOnReduced:
                          $offset = $this->ReadPropertyFloat('OffsetTemperature');
                          break;
                      case self::HeatOnBoost: 
-                         $offset = $this->GetBoostTemperatur ();
+                         $offset = $this->GetBoostTemperature ();
                          break;
                  }
                  break;
