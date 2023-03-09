@@ -637,6 +637,7 @@ class HeatingZoneController extends IPSModule
            case "BoostMode":
                 $this->SetValue($Ident,$Value);
                 $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
+                 $this->SetHeatingStatusProfile();
                break;
            case "AdaptRoomTemperature":
                 $this->SetValue($Ident, $Value);
