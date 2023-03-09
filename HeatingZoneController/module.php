@@ -581,7 +581,7 @@ class HeatingZoneController extends IPSModule
         switch($opmode) {
            case self::Aus:         //Aus 
            case self::Manuell:     //Handbetrieb
-                $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),true);
+                $this->HideItemById ( $this->ReadPropertyInteger('IdRoomThermostat'),true);
                 $this->HideItemById ( $this->GetIDForIdent('IgnoreThermostat'),true);
                 $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
                 $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
@@ -590,8 +590,8 @@ class HeatingZoneController extends IPSModule
                $hide= !$this->ReadPropertyBoolean('UseWeekTimer');
                $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),$hide);
                $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
-               $this->HideItemById ($this->GetIDForIdent('IgnoreThermostat'),$this->ReadAttributeInteger('IdRoomThermostat')==0);
-               $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),$this->GetValue('IgnoreThermostat'));
+               $this->HideItemById ($this->GetIDForIdent('IgnoreThermostat'),$this->ReadPropertyInteger('IdRoomThermostat')==0);
+               $this->HideItemById ($this->ReadPropertyInteger('IdRoomThermostat'),$this->GetValue('IgnoreThermostat'));
                $this->TriggerAction(); 
                $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
                break;
