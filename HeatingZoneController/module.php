@@ -505,6 +505,8 @@ class HeatingZoneController extends IPSModule
        $id = $this->ReadAttributeInteger('IdRoomThermostat');
        if (!$this->IsValidId($id)) return;
        $this->HideItemById($id,$value);
+       $this->SetHeatingStatusProfile ();
+       $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
        $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
        $this->SendOpMode($opmode);
    }
