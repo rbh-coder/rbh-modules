@@ -236,13 +236,7 @@ class HeatingZoneController extends IPSModule
             IPS_SetEventScheduleAction($id,self::HeatOnReduced,$this->GetHeatingStatusText(3),self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
             IPS_SetEventScheduleAction($id,self::HeatOnBoost,$this->GetHeatingStatusText(4),self::Red,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,4);");
             
-            $variable = 'WeekTimerStatus';
-            $profileName = $this->CreateProfileName($variable);
-            IPS_SetVariableProfileAssociation($profileName, self::HeatUndef, $this->GetHeatingStatusText(self::HeatUndef), "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, self::HeatOff, $this->GetHeatingStatusText(self::HeatOff), "", self::Yellow);
-            IPS_SetVariableProfileAssociation($profileName, self::HeatOn,  $this->GetHeatingStatusText(self::HeatOn), "", self::Green);
-            IPS_SetVariableProfileAssociation($profileName, self::HeatOnReduced,  $this->GetHeatingStatusText(self::HeatOnReduced), "", self::Blue);
-            IPS_SetVariableProfileAssociation($profileName, self::HeatOnBoost,  $this->GetHeatingStatusText(self::HeatOnBoost), "", self::Red);
+            $this->SetHeatingStatusProfile();
             
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
@@ -312,10 +306,59 @@ class HeatingZoneController extends IPSModule
             case self::HeatOnReduced:
                 return "Absenken ". (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C";
             case self::HeatOnBoost:
-                return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
+                return "Heizen ". (21.0+$this->ReadPropertyFloat('BoostTemperature')."°C";
             case self::HeatUndef:
                 return "Inaktiv";
        }
+    }
+
+     private function GetHeatingStatusTextDyn(int $status) : string
+    {
+       switch ($status)
+       {
+            case self::HeatOff:
+                return "Nicht Heizen";
+            case self::HeatOn:
+                if ($this->GetValue('BoostMode'))
+                {
+                   return "Heizen ". (21.0+$this->GetBoostTemperature()."°C";
+                }
+                else 
+                {
+                     return "Heizen 21°C";
+                }
+            case self::HeatOnReduced:
+                if ($this->GetValue('BoostMode'))
+                {
+                   return "Heizen ". (21.0+$this->GetBoostTemperature()."°C";
+                }
+                else 
+                {
+                     return "Absenken ". (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C";
+                }
+            case self::HeatOnBoost:
+                if ($this->GetValue('BoostMode'))
+                {
+                   return "Heizen ". (21.0+$this->GetBoostTemperature()."°C";
+                }
+                else 
+                {
+                     return "Heizen 21°C";
+                }
+            case self::HeatUndef:
+                return "Inaktiv";
+       }
+    }
+
+    private function SetHeatingStatusProfile () : void
+    {
+         $variable = 'WeekTimerStatus';
+         $profileName = $this->CreateProfileName($variable);
+         IPS_SetVariableProfileAssociation($profileName, self::HeatUndef, $this->GetHeatingStatusTextDyn(self::HeatUndef), "", self::Transparent);
+         IPS_SetVariableProfileAssociation($profileName, self::HeatOff, $this->GetHeatingStatusTextDyn(self::HeatOff), "", self::Yellow);
+         IPS_SetVariableProfileAssociation($profileName, self::HeatOn,  $this->GetHeatingStatusTextDyn(self::HeatOn), "", self::Green);
+         IPS_SetVariableProfileAssociation($profileName, self::HeatOnReduced,  $this->GetHeatingStatusTextDyn(self::HeatOnReduced), "", self::Blue);
+         IPS_SetVariableProfileAssociation($profileName, self::HeatOnBoost,  $this->GetHeatingStatusTextDyn(self::HeatOnBoost), "", self::Red);
     }
 
 
