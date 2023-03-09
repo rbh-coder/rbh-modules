@@ -617,7 +617,6 @@ class HeatingZoneController extends IPSModule
         switch ($this->GetValue('OpMode'))
         {
             case self::Aus:
-                $this->SetValue('BoostMode',false);
                 break;
             case self::Manuell:
                 $offset = $this->GetBoostTemperature ();
@@ -678,10 +677,18 @@ class HeatingZoneController extends IPSModule
 
         switch($opmode) {
            case self::Aus:         //Aus 
+                $this->SetValue('BoostMode',false);
+                $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),true);
+                $this->HideItemById ( $this->GetIDForIdent('IgnoreThermostat'),true);
+                $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
+                $this->HideItemById ( $this->GetIDForIdent('BoostMode'),true);
+                $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
+               break;
            case self::Manuell:     //Handbetrieb
                 $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),true);
                 $this->HideItemById ( $this->GetIDForIdent('IgnoreThermostat'),true);
                 $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
+                $this->HideItemById ( $this->GetIDForIdent('BoostMode'),false);
                 $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
                break;
            case self::Automatik:   //Automatikbetrieb
@@ -689,6 +696,7 @@ class HeatingZoneController extends IPSModule
                $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),$hide);
                $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
                $this->HideItemById ($this->GetIDForIdent('IgnoreThermostat'),$this->ReadPropertyInteger('IdRoomThermostat')==0);
+                $this->HideItemById ( $this->GetIDForIdent('BoostMode'),false);
                $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),$this->GetValue('IgnoreThermostat'));
                $this->TriggerAction(); 
                $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
