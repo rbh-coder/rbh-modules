@@ -312,7 +312,7 @@ class HeatingZoneController extends IPSModule
             case self::HeatOnReduced:
                 return "Absenken ". (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C";
             case self::HeatOnBoost:
-                return "Heizen ". (21.0+$this->ReadPropertyFloat('BoostTemperature'))."°C";
+                return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
             case self::HeatUndef:
                 return "Inaktiv";
        }
