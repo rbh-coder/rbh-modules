@@ -605,6 +605,7 @@ class HeatingZoneController extends IPSModule
 
    private function HandleOpMode (int $opmode)
    {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $hide=true;
 
         switch($opmode) {
