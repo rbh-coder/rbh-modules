@@ -240,7 +240,7 @@ class HeatingZoneController extends IPSModule
             }
             else
             {
-                  IPS_SetEventScheduleAction($id,self::HeatOnBoost,$this->GetHeatingStatusText(self::HeatOn),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+                  IPS_SetEventScheduleAction($id,self::HeatOnBoost,$this->GetHeatingStatusText(self::HeatOn),self::Red,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             }
             
             $this->SetHeatingStatusProfile();
