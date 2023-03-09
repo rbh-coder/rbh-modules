@@ -384,7 +384,6 @@ class HeatingZoneController extends IPSModule
                 $this->TriggerAction();
              
                 break;
-          
         }
     }
 
