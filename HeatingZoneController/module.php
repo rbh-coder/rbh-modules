@@ -396,22 +396,22 @@ class HeatingZoneController extends IPSModule
                
                 if ($this->SelectWeekTimerStatus($SenderID))
                 {
-                    $this->OperateWeekTimerStatus($SenderID);
+                    $this->OperateWeekTimerStatus($Data[0]);
                     return; 
                 }
                 if ($this->SelectExpertSwitch($SenderID))
                 {
-                    $this->OperateExpertSwitch($SenderID,$Data[0]);
+                    $this->OperateExpertSwitch($Data[0]);
                     return;
                 }
                 if ($this->SelectControlAlive($SenderID))
                 {
-                    $this->OperatControlAlive($SenderID);
+                    $this->OperatControlAlive($Data[0]);
                     return; 
                 }
                 if ($this->SelectRoomThermostat($SenderID))
                 {
-                    $this->OperateRoomThermostat($SenderID);
+                    $this->OperateRoomThermostat($Data[0]);
                     return; 
                 }
                 break;
