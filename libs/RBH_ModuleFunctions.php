@@ -114,6 +114,8 @@ trait RBH_ModuleFunctions
 
    private function IsValidId(int $id) : bool
    {
+       $this->SendDebug(__FUNCTION__, 'ID:'.$id.' Exists: '. @IPS_ObjectExists($id), 0);
+      
        return (($id>0) && @IPS_ObjectExists($id));
    }
 
@@ -193,8 +195,7 @@ trait RBH_ModuleFunctions
 
     private function HideItemById (int $id, bool $hide ) : void
     {
-        if ($id==0) return;
-        if (!@IPS_ObjectExists($id))
+        if (!$this->IsValidId($id)) return;
         IPS_SetHidden($id,$hide);
     }
 
