@@ -114,7 +114,7 @@ trait RBH_ModuleFunctions
 
    private function IsValidId(int $id) : bool
    {
-       $this->SendDebug(__FUNCTION__, 'ID:'.$id.' Exists: '. @IPS_ObjectExists($id), 0);
+      // $this->SendDebug(__FUNCTION__, 'ID:'.$id.' Exists: '. @IPS_ObjectExists($id), 0);
       
        return (($id>0) && @IPS_ObjectExists($id));
    }

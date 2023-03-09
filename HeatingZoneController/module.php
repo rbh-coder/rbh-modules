@@ -306,7 +306,7 @@ class HeatingZoneController extends IPSModule
             case self::HeatOnReduced:
                 return "Absenken ". (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C";
             case self::HeatOnBoost:
-                return "Heizen ". (21.0+$this->ReadPropertyFloat('BoostTemperature')."°C";
+                return "Heizen ". (21.0+$this->ReadPropertyFloat('BoostTemperature'))."°C";
             case self::HeatUndef:
                 return "Inaktiv";
        }
@@ -321,7 +321,7 @@ class HeatingZoneController extends IPSModule
             case self::HeatOn:
                 if ($this->GetValue('BoostMode'))
                 {
-                   return "Heizen ". (21.0+$this->GetBoostTemperature()."°C";
+                   return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
                 }
                 else 
                 {
@@ -330,7 +330,7 @@ class HeatingZoneController extends IPSModule
             case self::HeatOnReduced:
                 if ($this->GetValue('BoostMode'))
                 {
-                   return "Heizen ". (21.0+$this->GetBoostTemperature()."°C";
+                   return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
                 }
                 else 
                 {
@@ -339,7 +339,7 @@ class HeatingZoneController extends IPSModule
             case self::HeatOnBoost:
                 if ($this->GetValue('BoostMode'))
                 {
-                   return "Heizen ". (21.0+$this->GetBoostTemperature()."°C";
+                   return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
                 }
                 else 
                 {
