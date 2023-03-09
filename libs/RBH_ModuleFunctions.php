@@ -15,24 +15,41 @@ declare(strict_types=1);
 
 trait RBH_ModuleFunctions
 {
-    public function RegisterVariableIds(string $itemsString) : void
+    private function RegisterVariableIds(string $itemsString) : void
     {
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
         }
     }
 
-     private function RegisterLinkIds(string $itemsString) : void
+    private function RegisterLinkIds(string $itemsString) : void
     {
         foreach (explode(',', $itemsString) as $item) {
             $this->RegisterAttributeInteger($item, 0);
         }
     }
 
+    private function RegisterPropertiesUpdateList(string $itemsString) : void
+    {
+        foreach (explode(',', $itemsString) as $item) {
+            $this->RegisterStatusUpdate($item);
+        }
+    }
+
+    private function RegisterVariablesUpdateList(string $itemsString) : void
+    {
+        foreach (explode(',', $itemsString) as $item) {
+            $id = $this->GetIDForIdent($item);
+            if ($this->IsValidId($id)) {
+                $this->RegisterMessage($id,VM_UPDATE);
+                }
+        }
+    }
+
     private function CreateLink (int $targetID,string $name,string $iconName, int $position) : int
     {
         $linkID = @IPS_GetLinkIDByName($name, $this->InstanceID);
-        if ($targetID != 0 && @IPS_ObjectExists($targetID)) {
+        if ($this->IsValidId($targetID)) {
             //Check for existing link
             if (!is_int($linkID) && !$linkID) {
                 $linkID = IPS_CreateLink();
@@ -57,11 +74,11 @@ trait RBH_ModuleFunctions
          return 0;
     }
 
-    //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
-    private function RegisterStatusUpdate(string $statusName) : void
+    //Methode Registriert Variable für die MessageSink, soferne diese in der Modul-Form aktiviert ist
+    private function RegisterStatusUpdate(string $variableName) : void
     {
-        $id= $this->ReadPropertyInteger($statusName);
-        if ($id>0) {
+        $id= $this->ReadPropertyInteger($variableName);
+        if ($this->IsValidId($id)) {
             $this->RegisterMessage($id,VM_UPDATE);
         }
     }
@@ -95,11 +112,16 @@ trait RBH_ModuleFunctions
        return true;
    }
 
+   private function IsValidId(int $id) : bool
+   {
+       return (($id>0) && @IPS_ObjectExists($id));
+   }
+
    private function ValidateEventPlan(int $weekTimerId) : bool
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $result = false;
-       if (($weekTimerId==0) || !@IPS_ObjectExists($weeklySchedule)) return $result;
+       if (!$this->IsValidId($weekTimerId)) return $result;
 
        $event = IPS_GetEvent($weekTimerId);
        if ($event['EventActive'] == 1) {
@@ -113,7 +135,7 @@ trait RBH_ModuleFunctions
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $actionID = 0;
-       if (($weekTimerId==0) || !@IPS_ObjectExists($weekTimerId)) return $actionID;
+       if (!$this->IsValidId($weekTimerId)) return $actionID;
 
        $event = IPS_GetEvent($weekTimerId);
        if (!$event['EventActive']) return 0;
@@ -137,7 +159,6 @@ trait RBH_ModuleFunctions
 
    private function DeleteProfileList (string $list) : void
    {
-
          if (!$this->IsValidStringList($list)) return;
          foreach ($this->GetArrayFromString($list) as $item) {
                if (is_string($item)) {
@@ -153,11 +174,11 @@ trait RBH_ModuleFunctions
     private function DeleteProfile(string $profileName) : void
     {
         if (empty($profileName)) return;
-         $profile =  $this->CreateProfileName($profileName);
-         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
-         if (@IPS_VariableProfileExists($profile)) {
-                IPS_DeleteVariableProfile($profile);
-         }
+        $profile =  $this->CreateProfileName($profileName);
+        IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
+        if (@IPS_VariableProfileExists($profile)) {
+               IPS_DeleteVariableProfile($profile);
+        }
     }
 
     private function GetArrayFromString (string $itemsString) : array
@@ -173,18 +194,21 @@ trait RBH_ModuleFunctions
     private function HideItemById (int $id, bool $hide ) : void
     {
         if ($id==0) return;
+        if (!@IPS_ObjectExists($id))
         IPS_SetHidden($id,$hide);
     }
 
     private function LockItem(string $item,bool $status) : void
     {
         $id = $this->GetIDForIdent($item);
+        if (!$this->IsValidId($id)) return;
         IPS_SetDisabled($id, $status);
     }
      private function HideItem(string $item,bool $status) : void
     {
         if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
+        if (!$this->IsValidId($id)) return;
         IPS_SetHidden($id, $status);
     }
 
