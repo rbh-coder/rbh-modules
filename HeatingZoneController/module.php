@@ -27,9 +27,13 @@ class HeatingZoneController extends IPSModule
     private const MODULE_VERSION = '1.0, 14.02.2023';
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
-    private const ProfileList = 'WeekTimerStatus,OpMode,OpModeActive,AdaptRoomTemperature,IgnoreThermostat';
-    private const RegisterList = 'WeekTimerStatus';
-
+    private const ProfileList =                     'WeekTimerStatus,OpMode,OpModeActive,AdaptRoomTemperature,IgnoreThermostat,BoostMode';
+    private const RegisterVariablesUpdateList =     'WeekTimerStatus';
+    private const RegisterReferenciesUpdateList =   'ExpertModeID,IdControlAlive,IdRoomThermostat';
+    private const ReferenciesList =                 'IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat,IdOpModeSend,IdAdaptRoomTemperatureSend';
+    private const ExpertLockList =                  '';
+    private const ExpertHideList =                  'OpModeActive';
+   
     private const Aus = 0;
     private const Manuell = 1;
     private const Automatik = 2;
@@ -38,6 +42,7 @@ class HeatingZoneController extends IPSModule
     private const HeatOff = 1;
     private const HeatOn = 2;
     private const HeatOnReduced = 3;
+    private const HeatOnBoost = 4;
 
     private const  Transparent = 0xffffff00;
     private const  Red = 0xFF0000;
@@ -54,13 +59,6 @@ class HeatingZoneController extends IPSModule
         parent::Create();
 
         ########## Properties
-         $this->RegisterAttributeString('LinkList', "IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat");
-         $this->RegisterAttributeString('SendList', "IdOpModeSend,IdAdaptRoomTemperatureSend");
-         $this->RegisterAttributeString('ExpertListHide',"OpModeActive");
-         $this->RegisterAttributeString('ExpertListLock',"");
-
-         $this->RegisterAttributeBoolean('RecurseFlag',false);
-
         $this->DeleteProfileList (self::ProfileList);
        
         $this->RegisterPropertyInteger('ExpertModeID', 0);
@@ -68,6 +66,8 @@ class HeatingZoneController extends IPSModule
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyBoolean('UseWeekTimer',0);
         $this->RegisterPropertyFloat('OffsetTemperature',0);
+        $this->RegisterPropertyFloat('BoostTemperature',0);
+        $this->RegisterPropertyBoolean('UseBoostMode',0);
         ########## Variables
 
        //Variablen --------------------------------------------------------------------------------------------------------
@@ -110,6 +110,7 @@ class HeatingZoneController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, self::HeatOff, $this->GetHeatingStatusText(self::HeatOff), "", self::Yellow);
            IPS_SetVariableProfileAssociation($profileName, self::HeatOn,  $this->GetHeatingStatusText(self::HeatOn), "", self::Green);
            IPS_SetVariableProfileAssociation($profileName, self::HeatOnReduced,  $this->GetHeatingStatusText(self::HeatOnReduced), "", self::Blue);
+           IPS_SetVariableProfileAssociation($profileName, self::HeatOnBoost,  $this->GetHeatingStatusText(self::HeatOnBoost), "", self::Red);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Week Timer Status'), $profileName, 30);
 
@@ -139,17 +140,21 @@ class HeatingZoneController extends IPSModule
         $this->EnableAction($variable);
 
 
-        $this->RegisterVariableIds($this->ReadAttributeString('LinkList'));
-        //Attribute mit Ids von Links anlegen
-        $this->RegisterLinkIds($this->ReadAttributeString('LinkList'));
-
-        $this->RegisterVariableIds($this->ReadAttributeString('SendList'));
-        $this->RegisterAttributeInteger('WeekTimer', 0);
-        
-        //Benötige Anmeldudngen für MessageSing durchführen
-        foreach ( $this->GetArrayFromString(self::RegisterList) as $item) {
-              $this->RegisterMessage($this->GetIDForIdent($item),VM_UPDATE);
+        $variable = 'BoostMode';
+        $profileName = $this->CreateProfileName($variable);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Ok");
+            IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Yellow);
         }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Boost Mode'),$profileName, 70);
+        $this->EnableAction($variable);
+     
+        //Alle in der "form.json" definierten Variablenreferenzen registrieren
+        $this->RegisterVariableIds(self::ReferenciesList);
+        $this->RegisterAttributeInteger('WeekTimer', 0);
+       
         ########## Timer
     }
 
@@ -192,10 +197,7 @@ class HeatingZoneController extends IPSModule
         
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         
-
-         $this->WriteAttributeString('ExpertListHide',"OpModeActive");
-         $this->WriteAttributeString('ExpertListLock',"");
-
+        //------------------------------------------------------------------------------------------
         //Weekly schedule
         $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
         if ($this->ReadPropertyBoolean('UseWeekTimer'))
@@ -231,6 +233,7 @@ class HeatingZoneController extends IPSModule
             IPS_SetEventScheduleAction($id,self::HeatOff,$this->GetHeatingStatusText(1),self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
             IPS_SetEventScheduleAction($id,self::HeatOn,$this->GetHeatingStatusText(2),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             IPS_SetEventScheduleAction($id,self::HeatOnReduced,$this->GetHeatingStatusText(3),self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
+            IPS_SetEventScheduleAction($id,self::HeatOnBoost,$this->GetHeatingStatusText(4),self::Red,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,4);");
             
             $variable = 'WeekTimerStatus';
             $profileName = $this->CreateProfileName($variable);
@@ -238,6 +241,7 @@ class HeatingZoneController extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, self::HeatOff, $this->GetHeatingStatusText(self::HeatOff), "", self::Yellow);
             IPS_SetVariableProfileAssociation($profileName, self::HeatOn,  $this->GetHeatingStatusText(self::HeatOn), "", self::Green);
             IPS_SetVariableProfileAssociation($profileName, self::HeatOnReduced,  $this->GetHeatingStatusText(self::HeatOnReduced), "", self::Blue);
+            IPS_SetVariableProfileAssociation($profileName, self::HeatOnBoost,  $this->GetHeatingStatusText(self::HeatOnBoost), "", self::Red);
             
             $this->RegisterReference($id);
             $this->RegisterMessage($id, EM_CHANGEACTIVE);
@@ -249,35 +253,33 @@ class HeatingZoneController extends IPSModule
         {
              if (is_int($id)) $this->HideItemById ($id,true);
         }
+        //Aktuell ermittelte Id des Weektimers merken
         $this->WriteAttributeInteger('WeekTimer', $id);
-       
-        $this->RegisterStatusUpdate('ExpertModeID');
-        $this->RegisterStatusUpdate('IdControlAlive');
-
-        //Benötige Anmeldudngen für MessageSing durchführen
-        foreach ( $this->GetArrayFromString(self::RegisterList) as $item) {
-              $this->RegisterMessage($this->GetIDForIdent($item),VM_UPDATE);
-        }
+         //------------------------------------------------------------------------------------------
 
         ########## Links
 
-        $this->WriteAttributeInteger('IdRoomThermostat',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Raumthermostat','Flame', 100));
-        $this->WriteAttributeInteger('IdRoomTemperature',$this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumtemperatur','Temperature', 110));
-        $this->WriteAttributeInteger('IdHeatingPump',$this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120));
-        $this->WriteAttributeInteger('IdMixerPosition',$this->CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140));
-        $this->WriteAttributeInteger('IdSetHeat',$this->CreateLink ( $this->ReadPropertyInteger('IdSetHeat'),'Vorlauftemperatur Sollwert','Temperature',160));
-        $this->WriteAttributeInteger('IdActHeat',$this->CreateLink ( $this->ReadPropertyInteger('IdActHeat'),'Vorlauftemperatur Istwert','Temperature',180));
+        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomThermostat'),'Raumthermostat','Flame', 100);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdRoomTemperature'),'Raumtemperatur','Temperature', 110);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdHeatingPump'),'Heizungspumpe','TurnRight', 120);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdMixerPosition'),'Mischerposition','Intensity', 140);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdSetHeat'),'Vorlauftemperatur Sollwert','Temperature',160);
+        $this->CreateLink ( $this->ReadPropertyInteger('IdActHeat'),'Vorlauftemperatur Istwert','Temperature',180);
 
+        //Alle benötigten aktiven Referenzen für die Messagesink anmelden
+        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
+        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
+        
         ########## Timer
 
       
 
-        ########## Misc
+        ########## Profile
         $this->SendDebug(__FUNCTION__, 'Profile werden angepasst.', 0);
         $profileName =  $this->CreateProfileName('OpMode');
       
         if (IPS_VariableProfileExists($profileName)) {
-            if (!$this->ReadPropertyBoolean('UseWeekTimer') && ($this->ReadAttributeInteger('IdRoomThermostat')==0))
+            if (!$this->ReadPropertyBoolean('UseWeekTimer') && ($this->ReadPropertyInteger('IdRoomThermostat')==0))
             {
                 $status = IPS_SetVariableProfileValues($profileName, 0, 1, 0);
                 IPS_SetVariableProfileAssociation($profileName, 0, "Aus", "", self::Red);
@@ -292,6 +294,9 @@ class HeatingZoneController extends IPSModule
             }
 
         }
+
+        ########## Misc
+        $this->HideItemById ($this->GetIDForIdent('BoostMode'),!$this->ReadPropertyBoolean('UseBoostMode'));
         $this->HandleOpMode ($this->GetValue('OpMode'));
     }
 
@@ -305,6 +310,8 @@ class HeatingZoneController extends IPSModule
                 return "Heizen 21°C";
             case self::HeatOnReduced:
                 return "Absenken ". (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C";
+            case self::HeatOnBoost:
+                return "Heizen ". (21.0+$this->ReadPropertyFloat('BoostTemperature'))."°C";
             case self::HeatUndef:
                 return "Inaktiv";
        }
@@ -341,21 +348,10 @@ class HeatingZoneController extends IPSModule
                 if ($Data[1]==0) return;
                 $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
                
-                //Wochenplan Status
-                if ($this->GetIDForIdent('WeekTimerStatus') == $SenderID ) {   
-                    $this->SetWeekTimerStatus($Data[0]);
-                    $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
-                }
-                else if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
-                {
-                    $this->HandleExpertSwitch($SenderID,$this->ReadAttributeString('ExpertListHide'),$this->ReadAttributeString('ExpertListLock'));
-                }
-                else if ($this->ReadPropertyInteger('IdControlAlive') == $SenderID)
-                {
-                   if (!$Data[0]) return;
-                    $this->SendOpMode($this->GetValue('OpModeActive'));
-                    $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
-                }
+                if ($this->OperateWeetTimerStatus($SenderID,$Data[0])) return; 
+                if ($this->OperateExpertSwitch($SenderID,$Data[0])) return; 
+                if ($this->OperatControlAlive($SenderID,$Data[0])) return; 
+                if ($this->OperateRoomThermostat($SenderID,$Data[0])) return; 
                 break;
 
             //case EM_UPDATE:
@@ -376,10 +372,52 @@ class HeatingZoneController extends IPSModule
         }
     }
 
+
+    private function OperateWeetTimerStatus(int $sender,int $value) : bool
+    {
+        $id = $this->GetIDForIdent('WeekTimerStatus');
+        if (!$this->IsValidId($id)) return false;
+        if ($id != $sender) return false;
+        $this->SetWeekTimerStatus($value);
+        $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
+        return true;
+    }
+
+    private function OperateExpertSwitch(int $sender,bool $value) : bool
+    {
+        $id = $this->ReadPropertyInteger('ExpertModeID');
+        if (!$this->IsValidId($id)) return false;
+        if ($id != $sender) return false;
+        $this->HandleExpertSwitch($sender,self::ExpertHideList,self::ExpertLockList);
+        return true;
+    }
+
+    private function OperatControlAlive(int $sender,bool $value) : bool
+    {
+        $id = $this->ReadPropertyInteger('IdControlAlive');
+        if (!$this->IsValidId($id)) return false;
+        if ($id != $sender) return false;
+        if ($value)
+        {
+            $this->SendOpMode($this->GetValue('OpModeActive'));
+            $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
+        }
+        return true;
+    }
+
+    private function OperateRoomThermostat(int $sender,bool $value) : bool
+    {
+       $id = $this->ReadPropertyInteger('IdRoomThermostat');
+       if (!$this->IsValidId($id)) return false;
+       if ($id != $sender) return false;
+       $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
+       return true;
+    }
+
    private function OperateIgnoreThermostat(bool $value) : void
    {
-       $id = $this->ReadAttributeInteger('IdRoomThermostat');
-       if ($id==0) return;
+       $id = $this->ReadPropertyInteger('IdRoomThermostat');
+       if (!$this->IsValidId($id)) return;
        $this->HideItemById($id,$value);
        $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
        $this->SendOpMode($opmode);
@@ -412,8 +450,25 @@ class HeatingZoneController extends IPSModule
            case self::Manuell:
                 return;
        }
-     
+       $this->SetBoostMode($value);
        $this->SendOpMode($this->GetControlOpMode($value));
+   }
+
+   private function SetBoostMode(int $value) : void
+   {
+       switch ($value)
+       {
+            case self::HeatOff:
+            case self::HeatOn:
+            case self::HeatOnReduced:
+            case self::HeatUndef:
+                $this->SetValue('BoostMode',false);
+                break;
+            case self::HeatOnBoost:
+                $this->SetValue('BoostMode',!$this->IsTemperatureOk());
+                break;
+
+       }
    }
 
    private function GetControlOpMode(int $value) : int
@@ -424,18 +479,29 @@ class HeatingZoneController extends IPSModule
                 return self::Aus;
             case self::HeatOn:
             case self::HeatOnReduced:
+            case self::HeatOnBoost:
             case self::HeatUndef:
-                if (($this->ReadAttributeInteger('IdRoomThermostat')>0) && $this->GetValue('IgnoreThermostat'))
+                if (($this->ReadPropertyInteger('IdRoomThermostat')>0) && $this->GetValue('IgnoreThermostat'))
                 {
                      return self::Manuell;
                 }
-                else if ($this->ReadAttributeInteger('IdRoomThermostat')==0)
+                else if ($this->ReadPropertyInteger('IdRoomThermostat')==0)
                 {
                     return self::Manuell;
                 }
                 return self::Automatik;
        }
        return $value;
+   }
+
+   private function IsTemperatureOk () : bool
+   {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $id = $this->ReadPropertyInteger('IdRoomThermostat');
+       if (!$this->IsValidId($id)) return false;
+       if ($this->GetValue('IgnoreThermostat')) return false;
+       return GetValueBoolean($id);
+       
    }
 
    private function SendOpMode(int $value): void
@@ -451,24 +517,37 @@ class HeatingZoneController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id= $this->ReadPropertyInteger('IdAdaptRoomTemperatureSend');
 
-        $reduction = 0.0;
+        $offset = 0.0;
         switch ($this->GetValue('OpMode'))
-           {
-               case self::Aus:
-               case self::Manuell:
-                    break;
-               case self::Automatik:
-                    switch ($this->GetValue('WeekTimerStatus'))
-                    {
-                        case self::HeatOnReduced:
-                            $reduction = $this->ReadPropertyFloat('OffsetTemperature');
-                            break;
-                    }
-                    break;
-           }
+        {
+            case self::Aus:
+                $this->SetValue('BoostMode',false);
+                break;
+            case self::Manuell:
+                $offset = $this->GetBoostTemperatur ();
+                break;
+            case self::Automatik:
+                 $offset = $this->GetBoostTemperatur ();
+                 switch ($this->GetValue('WeekTimerStatus'))
+                 {
+                     case self::HeatOnReduced:
+                         $offset = $this->ReadPropertyFloat('OffsetTemperature');
+                         break;
+                     case self::HeatOnBoost: 
+                         $offset = $this->GetBoostTemperatur ();
+                         break;
+                 }
+                 break;
+        }
 
-        if ($id>0) RequestAction($id, $value+$reduction);
-        
+        if ($id>0) RequestAction($id, $value+$offset);
+   }
+
+   private function GetBoostTemperature () : float
+   {
+      if (!$this->GetValue('BoostMode')) return 0.0;
+      if ($this->IsTemperatureOk()) return 0.0;
+      return $this->ReadPropertyFloat('BoostTemperature');
    }
 
     #################### Request action
@@ -480,8 +559,9 @@ class HeatingZoneController extends IPSModule
                $this->SetValue($Ident, $Value);
                $this->HandleOpMode ($Value);
                break;
-           case "WeekTimerStatus":
-                $this->SetValue($Ident, $Value);
+           case "BoostMode":
+                $this->SetValue($Ident,$Value);
+                $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
                break;
            case "AdaptRoomTemperature":
                 $this->SetValue($Ident, $Value);

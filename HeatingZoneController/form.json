@@ -114,6 +114,17 @@
           "type": "NumberSpinner",
           "caption": "Reduzierte Temperatur",
           "suffix": "°C"
+        },
+        {
+          "name": "UseBoostMode",
+          "type": "CheckBox",
+          "caption": "Boost Modus verwenden"
+        },
+        {
+          "name": "BoostTemperature",
+          "type": "NumberSpinner",
+          "caption": "Boost Temperatur",
+          "suffix": "°C"
         }
       ]
     }
