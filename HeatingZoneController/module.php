@@ -487,6 +487,7 @@ class HeatingZoneController extends IPSModule
     private function OperateRoomThermostat(bool $value) : void
     {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $this->SetHeatingStatusProfile ();
        $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
     }
 
@@ -533,6 +534,7 @@ class HeatingZoneController extends IPSModule
 
    private function SetBoostMode(int $value) : void
    {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        switch ($value)
        {
             case self::HeatOff:
@@ -611,7 +613,6 @@ class HeatingZoneController extends IPSModule
                          $offset = $this->ReadPropertyFloat('OffsetTemperature');
                          break;
                      case self::HeatOnBoost: 
-                         $offset = $this->GetBoostTemperature ();
                          break;
                  }
                  break;
