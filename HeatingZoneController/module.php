@@ -348,10 +348,26 @@ class HeatingZoneController extends IPSModule
                 if ($Data[1]==0) return;
                 $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
                
-                if ($this->OperateWeetTimerStatus($SenderID,$Data[0])) return; 
-                if ($this->OperateExpertSwitch($SenderID,$Data[0])) return; 
-                if ($this->OperatControlAlive($SenderID,$Data[0])) return; 
-                if ($this->OperateRoomThermostat($SenderID,$Data[0])) return; 
+                if ($this->SelectWeekTimerStatus($SenderID))
+                {
+                    $this->OperateWeekTimerStatus($SenderID);
+                    return; 
+                }
+                if ($this->SelectExpertSwitch($SenderID))
+                {
+                    $this->OperateExpertSwitch($SenderID,$Data[0]);
+                    return;
+                }
+                if ($this->SelectControlAlive($SenderID))
+                {
+                    $this->OperatControlAlive($SenderID);
+                    return; 
+                }
+                if ($this->SelectRoomThermostat($SenderID))
+                {
+                    $this->OperateRoomThermostat($SenderID);
+                    return; 
+                }
                 break;
 
             //case EM_UPDATE:
@@ -372,46 +388,60 @@ class HeatingZoneController extends IPSModule
         }
     }
 
-
-    private function OperateWeetTimerStatus(int $sender,int $value) : bool
+     private function SelectWeekTimerStatus(int $sender) : bool
     {
         $id = $this->GetIDForIdent('WeekTimerStatus');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
-        $this->SetWeekTimerStatus($value);
-        $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
         return true;
     }
-
-    private function OperateExpertSwitch(int $sender,bool $value) : bool
+     private function SelectExpertSwitch(int $sender) : bool
     {
         $id = $this->ReadPropertyInteger('ExpertModeID');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
-        $this->HandleExpertSwitch($sender,self::ExpertHideList,self::ExpertLockList);
         return true;
     }
 
-    private function OperatControlAlive(int $sender,bool $value) : bool
+    private function SelectControlAlive(int $sender) : bool
     {
         $id = $this->ReadPropertyInteger('IdControlAlive');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
+        return true;
+    }
+
+    private function SelectRoomThermostat(int $sender) : bool
+    {
+       $id = $this->ReadPropertyInteger('IdRoomThermostat');
+       if (!$this->IsValidId($id)) return false;
+       if ($id != $sender) return false;
+       return true;
+    }
+
+    private function OperateWeekTimerStatus(int $value) : void
+    {
+        $this->SetWeekTimerStatus($value);
+        $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
+    }
+
+    private function OperateExpertSwitch(bool $value) : void
+    {
+        $this->HandleExpertSwitch($sender,self::ExpertHideList,self::ExpertLockList);
+    }
+
+    private function OperatControlAlive(bool $value) : void
+    {
         if ($value)
         {
             $this->SendOpMode($this->GetValue('OpModeActive'));
             $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
         }
-        return true;
     }
 
-    private function OperateRoomThermostat(int $sender,bool $value) : bool
+    private function OperateRoomThermostat(bool $value) : void
     {
-       $id = $this->ReadPropertyInteger('IdRoomThermostat');
-       if (!$this->IsValidId($id)) return false;
-       if ($id != $sender) return false;
        $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
-       return true;
     }
 
    private function OperateIgnoreThermostat(bool $value) : void
