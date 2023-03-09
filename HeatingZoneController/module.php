@@ -315,32 +315,35 @@ class HeatingZoneController extends IPSModule
     private function GetHeatingStatusTextDyn(int $status) : string
     {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $boostMode = $this->GetValue('BoostMode');
+       $boostTemperature = $this->GetBoostTemperature();
+       $this->SendDebug(__FUNCTION__, 'BoostMode:'.$boostMode. 'BoostTemp:'.$boostTemperature, 0);
        switch ($status)
        {
             case self::HeatOff:
                 return "Nicht Heizen";
             case self::HeatOn:
-                if ($this->GetValue('BoostMode'))
+                if ($boostMode)
                 {
-                   return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
+                   return "Heizen ". (21.0+$boostTemperature)."°C";
                 }
                 else 
                 {
                      return "Heizen 21°C";
                 }
             case self::HeatOnReduced:
-                if ($this->GetValue('BoostMode'))
+                if ($boostMode)
                 {
-                   return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
+                   return "Heizen ". (21.0+$boostTemperature)."°C";
                 }
                 else 
                 {
                      return "Absenken ". (21.0+$this->ReadPropertyFloat('OffsetTemperature'))."°C";
                 }
             case self::HeatOnBoost:
-                if ($this->GetValue('BoostMode'))
+                if ($boostMode)
                 {
-                   return "Heizen ". (21.0+$this->GetBoostTemperature())."°C";
+                   return "Heizen ". (21.0+$boostTemperature)."°C";
                 }
                 else 
                 {
