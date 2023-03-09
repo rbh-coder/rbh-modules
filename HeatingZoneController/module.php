@@ -502,7 +502,7 @@ class HeatingZoneController extends IPSModule
    private function OperateIgnoreThermostat(bool $value) : void
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-       $id = $this->ReadPropertyInteger('IdRoomThermostat');
+       $id = $this->ReadAttributeInteger('IdRoomThermostat');
        if (!$this->IsValidId($id)) return;
        $this->HideItemById($id,$value);
        $opmode = $this->GetControlOpMode($this->GetValue('WeekTimerStatus'));
