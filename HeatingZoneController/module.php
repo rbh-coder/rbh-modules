@@ -312,8 +312,9 @@ class HeatingZoneController extends IPSModule
        }
     }
 
-     private function GetHeatingStatusTextDyn(int $status) : string
+    private function GetHeatingStatusTextDyn(int $status) : string
     {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        switch ($status)
        {
             case self::HeatOff:
@@ -352,6 +353,7 @@ class HeatingZoneController extends IPSModule
 
     private function SetHeatingStatusProfile () : void
     {
+         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
          $variable = 'WeekTimerStatus';
          $profileName = $this->CreateProfileName($variable);
          IPS_SetVariableProfileAssociation($profileName, self::HeatUndef, $this->GetHeatingStatusTextDyn(self::HeatUndef), "", self::Transparent);
@@ -637,7 +639,7 @@ class HeatingZoneController extends IPSModule
            case "BoostMode":
                 $this->SetValue($Ident,$Value);
                 $this->SendAdaptRoomTemperature ($this->GetValue('AdaptRoomTemperature'));
-                 $this->SetHeatingStatusProfile();
+                $this->SetHeatingStatusProfileDyn();
                break;
            case "AdaptRoomTemperature":
                 $this->SetValue($Ident, $Value);
