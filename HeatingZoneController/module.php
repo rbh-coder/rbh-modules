@@ -231,16 +231,16 @@ class HeatingZoneController extends IPSModule
                         break;
                 }
             }
-            IPS_SetEventScheduleAction($id,self::HeatOff,$this->GetHeatingStatusText(1),self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
-            IPS_SetEventScheduleAction($id,self::HeatOn,$this->GetHeatingStatusText(2),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-            IPS_SetEventScheduleAction($id,self::HeatOnReduced,$this->GetHeatingStatusText(3),self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
+            IPS_SetEventScheduleAction($id,self::HeatOff,$this->GetHeatingStatusText(self::HeatOff),self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
+            IPS_SetEventScheduleAction($id,self::HeatOn,$this->GetHeatingStatusText(self::HeatOn),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
+            IPS_SetEventScheduleAction($id,self::HeatOnReduced,$this->GetHeatingStatusText(self::HeatOnReduced),self::DarkGreen,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,3);");
             if ($this->ReadPropertyBoolean('UseBoostMode'))
             {
-                IPS_SetEventScheduleAction($id,self::HeatOnBoost,$this->GetHeatingStatusText(4),self::Red,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,4);");
+                IPS_SetEventScheduleAction($id,self::HeatOnBoost,$this->GetHeatingStatusText(self::HeatOnBoost),self::Red,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,4);");
             }
             else
             {
-                 IPS_SetEventScheduleAction($id,self::HeatOnBoost,"",0,"");
+                  IPS_SetEventScheduleAction($id,self::HeatOnBoost,$this->GetHeatingStatusText(self::HeatOn),self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
             }
             
             $this->SetHeatingStatusProfile();
