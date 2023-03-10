@@ -650,7 +650,7 @@ class HeatingZoneController extends IPSModule
    private function GetOffsetTemperature (int $mode) : float
    {
 
-       switch (int $mode)
+       switch ($mode)
        {
            case self::HeatModeNormal:
                 return 0.0;
