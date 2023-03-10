@@ -592,7 +592,7 @@ class HeatingZoneController extends IPSModule
        $id = $this->ReadPropertyInteger('IdRoomThermostat');
        if (!$this->IsValidId($id)) return false;
        if ($this->GetValue('IgnoreThermostat')) return false;
-       return GetValueBoolean($id);
+       return !GetValueBoolean($id);
        
    }
 
@@ -678,7 +678,7 @@ class HeatingZoneController extends IPSModule
                break;
             case "HeatingMode":
                 //Wenn Temperatur schon ok, dann gar nicht auf Boost schalten lassen 
-                if ($this->IsTemperatureOk() && $Value==self::HeatModeBoost) return;
+                if ($this->IsTemperatureOk() && ($Value==self::HeatModeBoost)) return;
                 //Die Variable schalten
                 $this->SetValue($Ident,$Value);
                 $this->OperateHeatingStatus ($Value);
