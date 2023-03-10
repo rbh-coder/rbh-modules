@@ -154,29 +154,6 @@ class HeatingZoneController extends IPSModule
         }
         $this->RegisterVariableBoolean($variable, $this->Translate('Ignore Thermostat'),$profileName, 65);
         $this->EnableAction($variable);
-
-
-        $variable = 'BoostMode';
-        $profileName = $this->CreateProfileName($variable);
-        if (!IPS_VariableProfileExists($profileName)) {
-            IPS_CreateVariableProfile($profileName, 0);
-            IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Yellow);
-        }
-        $this->RegisterVariableBoolean($variable, $this->Translate('Boost Mode'),$profileName, 70);
-        $this->EnableAction($variable);
-
-        $variable = 'ReducedMode';
-        $profileName = $this->CreateProfileName($variable);
-        if (!IPS_VariableProfileExists($profileName)) {
-            IPS_CreateVariableProfile($profileName, 0);
-            IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Yellow);
-        }
-        $this->RegisterVariableBoolean($variable, $this->Translate('Reduced Mode'),$profileName, 70);
-        $this->EnableAction($variable);
      
         //Alle in der "form.json" definierten Variablenreferenzen registrieren
         $this->RegisterVariableIds(self::ReferenciesList);
@@ -511,7 +488,10 @@ class HeatingZoneController extends IPSModule
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        if ($value)
        {
-            $this->SetValue("BoostMode",false);
+           if ($this->GetValue("HeatingMode") == self::HeatModeBoost)
+           {
+                $this->SetValue("HeatingMode", self::HeatModeNormal);
+           }
        }
        //$this->SetHeatingStatusProfile ();
        $this->OperateHeatingStatus($this->GetValue('HeatingMode'));
