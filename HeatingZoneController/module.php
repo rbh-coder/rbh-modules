@@ -640,6 +640,7 @@ class HeatingZoneController extends IPSModule
        if ($this->IsValidId($id))
        {
             $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+            $this->SendDebug(__FUNCTION__, 'Send:'.$value. ' to '.$id , 0);
             RequestAction($id,$value);
        }
    }
