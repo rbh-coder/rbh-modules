@@ -544,19 +544,19 @@ class HeatingZoneController extends IPSModule
             case self::HeatOff:
             case self::HeatOn:
             case self::HeatUndef:
-                $this->SetValue('HeatingMode',self::HeatModeNormal;
+                $this->SetValue('HeatingMode',self::HeatModeNormal);
                 break;
             case self::HeatOnSetBack:
-                $this->SetValue('HeatingMode',self::HeatModeSetBack;
+                $this->SetValue('HeatingMode',self::HeatModeSetBack);
               break;
             case self::HeatOnBoost:
                 if (!$this->IsTemperatureOk())
                 {
-                    $this->SetValue('HeatingMode',self::HeatModeBoost;
+                    $this->SetValue('HeatingMode',self::HeatModeBoost);
                 }
                 else
                 {
-                    $this->SetValue('HeatingMode',self::HeatModeNormal;
+                    $this->SetValue('HeatingMode',self::HeatModeNormal);
                 }
                 break;
        }
