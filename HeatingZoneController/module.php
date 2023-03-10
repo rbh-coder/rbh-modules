@@ -607,6 +607,7 @@ class HeatingZoneController extends IPSModule
    private function OperateHeatingStatus (int $mode) : void
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       $this->SendDebug(__FUNCTION__, 'Modus:'.$mode, 0);
        switch ($mode)
        {
            case self::HeatModeNormal:
