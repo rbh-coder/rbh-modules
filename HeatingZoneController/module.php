@@ -637,7 +637,11 @@ class HeatingZoneController extends IPSModule
    private function SendTempCorrection(float $value)
    {
        $id= $this->ReadPropertyInteger('IdAdaptRoomTemperatureSend');
-       if ($this->IsValidId($id)) RequestAction($id,$value);
+       if ($this->IsValidId($id))
+       {
+            $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+            RequestAction($id,$value);
+       }
    }
   
    //Muss public sein, wird von Timer getartet
