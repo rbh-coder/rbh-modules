@@ -471,7 +471,7 @@ class HeatingZoneController extends IPSModule
 
     private function OperateExpertSwitch(bool $value) : void
     {
-        $this->HandleExpertSwitch($sender,self::ExpertHideList,self::ExpertLockList);
+        $this->HandleExpertSwitch($value,self::ExpertHideList,self::ExpertLockList);
     }
 
     private function OperatControlAlive(bool $value) : void
