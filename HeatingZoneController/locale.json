@@ -9,7 +9,10 @@
         "Expert Mode": "Expertenmodus",
         "Use Week Timer": "Wochenschaltuhr verwenden",
         "Ignore Thermostat": "Raumthermostat ignorieren",
-        "Boost Mode": "Boost Modus"
+        "Boost Mode": "Boost Betrieb",
+        "Reduced Mode": "Absenk Betrieb",
+        "Boost Mode": "Boost Betrieb",
+        "Heating Mode": "Heizstatus"
       }
     }
 }

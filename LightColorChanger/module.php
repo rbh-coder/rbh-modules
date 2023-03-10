@@ -569,7 +569,7 @@ class LightColorChanger extends IPSModule
                 $fadeTime =  $this->GetValue("ColorFadeTime") * 1000;
                 $setInterval =  $this->GetValue("ColorChangeTime") * 1000 *60;
                 $actColor =  $this->ReadAttributeInteger("ActColor");
-                //Falls Haupfarbe aktiv ist, dann normale Wechselzeit starten
+                //Falls Hauptfarbe aktiv ist, dann normale Wechselzeit starten
                 if (in_array($actColor, $mainColorNumbers, true)) {
                     $this->SetTimerInterval('LCC_Timer', $setInterval);
                 }

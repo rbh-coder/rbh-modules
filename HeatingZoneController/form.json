@@ -110,21 +110,27 @@
           "caption": " "
         },
         {
-          "name": "OffsetTemperature",
+          "name": "ReducedTemperature",
           "type": "NumberSpinner",
-          "caption": "Reduzierte Temperatur",
+          "caption": "Temperatur absenken",
           "suffix": "°C"
         },
         {
-          "name": "UseBoostMode",
-          "type": "CheckBox",
-          "caption": "Boost Modus verwenden"
+          "name": "IdSetBackSignal",
+          "type": "SelectVariable",
+          "caption": "ID Absenkvariable"
         },
         {
           "name": "BoostTemperature",
           "type": "NumberSpinner",
-          "caption": "Boost Temperatur",
+          "caption": "Temperatur anheben",
           "suffix": "°C"
+        },
+        {
+          "name": "BoostTime",
+          "type": "NumberSpinner",
+          "caption": "Boost Zeit",
+          "suffix": "minutes"
         }
       ]
     }
