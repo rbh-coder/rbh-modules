@@ -654,9 +654,9 @@ class HeatingZoneController extends IPSModule
        {
            case self::HeatModeNormal:
                 return 0.0;
-           case self:HeatModeBoost:
+           case self::HeatModeBoost:
                 return $this->ReadPropertyFloat('BoostTemperature');
-           case self:HeatModeSetBack:
+           case self::HeatModeSetBack:
                 return $this->ReadPropertyFloat('SetBackTemperature');
        }
    }
