@@ -109,7 +109,7 @@ class HeatingZoneController extends IPSModule
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
-            IPS_SetVariableProfileAssociation($profileName, 0, "Normal", "", self:::Green);
+            IPS_SetVariableProfileAssociation($profileName, 0, "Normal", "", self::Green);
             IPS_SetVariableProfileAssociation($profileName, 1, "Absenken", "", self::Blue);
             IPS_SetVariableProfileAssociation($profileName, 2, "Boost", "", self::Yellow);
         }
