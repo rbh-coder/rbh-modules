@@ -398,7 +398,7 @@ class HeatingZoneController extends IPSModule
                 }
                 if ($this->SelectExpertSwitch($SenderID))
                 {
-                    $this->OperateExpertSwitch($Data[0]);
+                    $this->OperateExpertSwitch($SenderID);
                     return;
                 }
                 if ($this->SelectControlAlive($SenderID))
@@ -469,9 +469,9 @@ class HeatingZoneController extends IPSModule
         $this->OperateHeatingStatus($this->GetValue('HeatingMode'));
     }
 
-    private function OperateExpertSwitch(bool $value) : void
+    private function OperateExpertSwitch(int $id) : void
     {
-        $this->HandleExpertSwitch($value,self::ExpertHideList,self::ExpertLockList);
+        $this->HandleExpertSwitch($id,self::ExpertHideList,self::ExpertLockList);
     }
 
     private function OperatControlAlive(bool $value) : void
