@@ -614,7 +614,7 @@ class HeatingZoneController extends IPSModule
                 $this->SetBackSignal(false);
                 break;
            case self::HeatModeBoost:
-                $this->SetTimerInterval('HZCTRL_BoostTimer', $this->GetValue("BoostTime") * 1000 *60);
+                $this->SetTimerInterval('HZCTRL_BoostTimer', $this->ReadPropertyInteger("BoostTime") * 1000 *60);
                 $this->SetBackSignal(false);
                 break;
            case self::HeatModeSetBack:
