@@ -625,7 +625,7 @@ class HeatingZoneController extends IPSModule
       
        $offsetTemp = $this->GetOffsetTemperature ($mode);
        $value = $this->GetValue('AdaptRoomTemperature');
-       $this->SendTempCorrection($value+$offset)
+       $this->SendTempCorrection($value+$offset);
    }
 
    private function SetBackSignal(bool $status)
