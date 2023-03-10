@@ -110,7 +110,7 @@
           "caption": " "
         },
         {
-          "name": "ReducedTemperature",
+          "name": "SetBackTemperature",
           "type": "NumberSpinner",
           "caption": "Temperatur absenken",
           "suffix": "°C"
