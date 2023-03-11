@@ -1,18 +1,19 @@
 {
-    "translations": {
-      "de": {
-        "Operation Mode": "Betriebsart",
-        "Active Operation Mode": "Aktive Betriebsart",
-        "Week Timer Status": "Wochenplan Status",
-        "Adapt Room Temperature": "Raumtemperatur anpassen",
-        "Scheduled Switch": "Schaltuhr",
-        "Expert Mode": "Expertenmodus",
-        "Use Week Timer": "Wochenschaltuhr verwenden",
-        "Ignore Thermostat": "Raumthermostat ignorieren",
-        "Boost Mode": "Boost Betrieb",
-        "Reduced Mode": "Absenk Betrieb",
-        "Boost Mode": "Boost Betrieb",
-        "Heating Mode": "Heizmodus"
-      }
+  "translations": {
+    "de": {
+      "Operation Mode": "Betriebsart",
+      "Active Operation Mode": "Aktive Betriebsart",
+      "Week Timer Status": "Wochenplan Status",
+      "Adapt Room Temperature": "Raumtemperatur anpassen",
+      "Scheduled Switch": "Schaltuhr",
+      "Expert Mode": "Expertenmodus",
+      "Use Week Timer": "Wochenschaltuhr verwenden",
+      "Ignore Thermostat": "Raumthermostat ignorieren",
+      "Boost Mode": "Boost Betrieb",
+      "Reduced Mode": "Absenk Betrieb",
+      "Boost Mode": "Boost Betrieb",
+      "Heating Mode": "Heizmodus"
     }
+  }
 }
+
