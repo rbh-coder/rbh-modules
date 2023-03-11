@@ -1,0 +1,281 @@
+{
+    "elements": [
+        {
+            "type": "ExpansionPanel",
+            "caption": "Info",
+            "items": []
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Funktionen",
+            "items": [
+                {
+                    "type": "Label",
+                    "caption": " "
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "EnableWeeklySchedule",
+                    "caption": "Wochenplan"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "EnableThermostat",
+                    "caption": "Thermostat"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "EnableBoostMode",
+                    "caption": "Boost-Modus"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "EnableRoomTemperature",
+                    "caption": "Raum-Temperatur"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "EnableDoorWindowState",
+                    "caption": "Tür- / Fensterstatus"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "EnableBoostModeTimer",
+                    "caption": "Boost-Modus Timer"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "EnableDoorWindowStateTimer",
+                    "caption": "Tür- / Fensterstatus Timer"
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Temperaturen",
+            "items": [
+                {
+                    "type": "Label",
+                    "caption": "Bitte geben Sie die Temperatur für den Absenkmodus an:"
+                },
+                {
+                    "type": "NumberSpinner",
+                    "name": "SetBackTemperature",
+                    "caption": "Absenkmodus",
+                    "digits": 1,
+                    "suffix": "°C"
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                },
+                {
+                    "type": "Label",
+                    "caption": "Bitte geben Sie die Temperatur für den Vorwärmmodus an:"
+                },
+                {
+                    "type": "Label",
+                    "caption": "Bitte geben Sie die Temperatur für den Heizmodus an:"
+                },
+                {
+                    "type": "NumberSpinner",
+                    "name": "HeatingTemperature",
+                    "caption": "Heizmodus",
+                    "digits": 1,
+                    "suffix": "°C"
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                },
+                {
+                    "type": "Label",
+                    "caption": "Bitte geben Sie die Temperatur für den Boostmodus an:"
+                },
+                {
+                    "type": "NumberSpinner",
+                    "name": "BoostTemperature",
+                    "caption": "Boostmodus",
+                    "digits": 1,
+                    "suffix": "°C"
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Boost-Modus",
+            "items": [
+                {
+                    "type": "Label",
+                    "caption": "Bitte geben Sie die Dauer für den Boost-Modus an:"
+                },
+                {
+                    "type": "NumberSpinner",
+                    "name": "BoostDuration",
+                    "caption": "Boost-Modus",
+                    "suffix": "Minute(n)"
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Wochenplan",
+            "items": [
+                {
+                    "type": "Label",
+                    "caption": "Bitte wählen Sie den Wochenplan aus:"
+                },
+                {
+                    "type": "SelectEvent",
+                    "name": "WeeklySchedule",
+                    "caption": "Wochenplan",
+                    "width": "600px"
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
+            "caption": "Tür- / Fensterüberwachung",
+            "items": [
+                {
+                    "type": "Label",
+                    "caption": "Bitte fügen Sie die Tür- und Fenstersensoren hinzu:"
+                },
+                {
+                    "type": "List",
+                    "name": "DoorWindowSensors",
+                    "caption": "Tür- / Fenstersensoren",
+                    "rowCount": 5,
+                    "add": true,
+                    "delete": true,
+                    "sort": {
+                        "column": "ID",
+                        "direction": "ascending"
+                    },
+                    "columns": [
+                        {
+                            "name": "UseSensor",
+                            "caption": "Aktiviert",
+                            "width": "100px",
+                            "add": true,
+                            "edit": {
+                                "type": "CheckBox"
+                            }
+                        },
+                        {
+                            "name": "ID",
+                            "caption": "Variable",
+                            "width": "auto",
+                            "add": 0,
+                            "edit": {
+                                "type": "SelectVariable"
+                            }
+                        },
+                        {
+                            "name": "Description",
+                            "caption": "Bezeichnung",
+                            "add": "",
+                            "width": "350px",
+                            "edit": {
+                                "type": "ValidationTextBox"
+                            }
+                        },
+                        {
+                            "name": "TriggerValue",
+                            "caption": "Auslösender Wert",
+                            "add": 1,
+                            "width": "160px",
+                            "edit": {
+                                "type": "Select",
+                                "options": [
+                                    {
+                                        "caption": "0 - false",
+                                        "value": 0
+                                    },
+                                    {
+                                        "caption": "1 - true",
+                                        "value": 1
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                },
+                {
+                    "type": "Label",
+                    "caption": "Bitte geben Sie den Zeitraum (0 = deaktiviert) für eine erneute Überprüfung an:"
+                },
+                {
+                    "type": "NumberSpinner",
+                    "name": "ReviewDelay",
+                    "caption": "Erneute Überprüfung",
+                    "suffix": "Sekunde(n)"
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                },
+                {
+                    "type": "Label",
+                    "caption": "Bitte wählen Sie aus, ob bei geöffnetem Tür- / Fensterstatus die Temperatur abgesenkt werden soll:"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "ReduceTemperature",
+                    "caption": "Temperatur absenken"
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                },
+                {
+                    "type": "Label",
+                    "caption": "Bitte geben Sie die Absenktemperatur an:"
+                },
+                {
+                    "type": "NumberSpinner",
+                    "name": "OpenDoorWindowTemperature",
+                    "caption": "Absenktemperatur",
+                    "digits": 1,
+                    "suffix": "°C"
+                },
+                {
+                    "type": "Label",
+                    "caption": " "
+                },
+                {
+                    "type": "Label",
+                    "caption": "Bitte wählen Sie aus, ob bei wieder geschlossenem Tür- / Fensterstatus der Boost-Modus erneut verwendet werden soll:"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "ReactivateBoostMode",
+                    "caption": "Boost-Modus verwenden"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "type": "ExpansionPanel",
+            "caption": "Testbereich",
+            "items": [
+                {
+                    "type": "TestCenter"
+                }
+            ]
+        }
+    ]
+}
