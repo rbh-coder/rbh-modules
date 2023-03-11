@@ -72,6 +72,7 @@ class HeatingZoneController extends IPSModule
         $this->RegisterPropertyFloat('SetBackTemperature',0);
         $this->RegisterPropertyFloat('BoostTemperature',0);
         $this->RegisterPropertyInteger('BoostTime', 60);
+        $this->RegisterPropertyBoolean('EnableIgnoreThermostat',true);
         ########## Variables
 
        //Variablen --------------------------------------------------------------------------------------------------------
@@ -300,6 +301,11 @@ class HeatingZoneController extends IPSModule
         }
 
         ########## Misc
+        if (!$this->ReadPropertyBoolean('EnableIgnoreThermostat'))
+        {
+            $this->SetValue('IgnoreThermostat',false);
+            $this->HideItemById ($this->GetIDForIdent('IgnoreThermostat'),true);
+        }
         $this->HandleOpMode ($this->GetValue('OpMode'));
     }
 
@@ -704,14 +710,14 @@ class HeatingZoneController extends IPSModule
            case self::Aus:         //Aus 
                 $this->SetValue('HeatingMode',0);
                 $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),true);
-                $this->HideItemById ( $this->GetIDForIdent('IgnoreThermostat'),true);
+                $this->HideIgnoreThermostat(true);
                 $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
                 $this->HideItemById ( $this->GetIDForIdent('HeatingMode'),true);
                 $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
                break;
            case self::Manuell:     //Handbetrieb
                 $this->HideItemById ( $this->ReadAttributeInteger('IdRoomThermostat'),true);
-                $this->HideItemById ( $this->GetIDForIdent('IgnoreThermostat'),true);
+                $this->HideIgnoreThermostat(true);
                 $this->HideItemById ( $this->GetIDForIdent('WeekTimerStatus'),true);
                 $this->HideItemById ( $this->GetIDForIdent('HeatingMode'),false);
                 $this->HideItemById ( $this->ReadAttributeInteger('WeekTimer'),true);
@@ -720,7 +726,7 @@ class HeatingZoneController extends IPSModule
                $hide= !$this->ReadPropertyBoolean('UseWeekTimer');
                $this->HideItemById ($this->ReadAttributeInteger('WeekTimer'),$hide);
                $this->HideItemById ($this->GetIDForIdent('WeekTimerStatus'),$hide);
-               $this->HideItemById ($this->GetIDForIdent('IgnoreThermostat'),$this->ReadPropertyInteger('IdRoomThermostat')==0);
+               $this->HideIgnoreThermostat($this->ReadPropertyInteger('IdRoomThermostat')==0);
                $this->HideItemById ( $this->GetIDForIdent('HeatingMode'),false);
                $this->HideItemById ($this->ReadAttributeInteger('IdRoomThermostat'),$this->GetValue('IgnoreThermostat'));
                $this->TriggerAction(); 
@@ -730,6 +736,12 @@ class HeatingZoneController extends IPSModule
         }
         $this->SendOpMode($opmode);
         $this->OperateHeatingStatus($this->GetValue('HeatingMode'));
+   }
+
+   private function HideIgnoreThermostat($state) : void
+   {
+       if (!$this->ReadPropertyBoolean('EnableIgnoreThermostat')) return;
+       $this->HideItemById ( $this->GetIDForIdent('IgnoreThermostat'),$state);
    }
 }
 

@@ -84,7 +84,7 @@
         {
           "name": "UseWeekTimer",
           "type": "CheckBox",
-          "caption": "Use Week Timer"
+          "caption": "Schaltuhr einblenden"
         },
         {
           "type": "Select",
@@ -131,6 +131,11 @@
           "type": "NumberSpinner",
           "caption": "Boost Zeit",
           "suffix": "minutes"
+        },
+        {
+          "name": "EnableIgnoreThermostat",
+          "type": "CheckBox",
+          "caption": "Thermostat ignorieren einblenden"
         }
       ]
     }
