@@ -5,6 +5,8 @@ include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
 
 class FlapControl extends IPSModule
 {
+    use RBH_ModuleFunctions;
+
     private const MODULE_PREFIX = 'FLP';
     private const MODULE_NAME = 'FlapControl';
 

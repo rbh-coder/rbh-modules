@@ -5,6 +5,8 @@ include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
 
 class ShellyPlug extends IPSModule
 {
+    use RBH_ModuleFunctions;
+
     private const MODULE_PREFIX = 'SPL';
     private const MODULE_NAME = 'ShellyPlug';
     private const ProfileList = 'Status';

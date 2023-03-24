@@ -5,6 +5,8 @@ include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
 
 class LightColorChanger extends IPSModule
 {
+    use RBH_ModuleFunctions;
+
     private const MODULE_PREFIX = 'LCC';
     private const MODULE_NAME = 'LightColorChanger';
 

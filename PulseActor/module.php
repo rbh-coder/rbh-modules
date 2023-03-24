@@ -5,6 +5,8 @@ include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
 
 class PulseActor extends IPSModule
 {
+    use RBH_ModuleFunctions;
+
     private const Aus = 0;
     private const Manuell = 1;
     private const Automatik = 2;
@@ -21,6 +23,7 @@ class PulseActor extends IPSModule
     private const MODULE_NAME = 'PulseActor';
 
     private const ProfileList = 'AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus';
+    
     public function Create()
     {
         //Never delete this line!
@@ -36,7 +39,7 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeString('StatusList', "StatusActorID");
         $this->RegisterAttributeString('ExpertListHide',"");
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
-
+      
         $this->DeleteProfileList (self::ProfileList);
 
         //Variablen --------------------------------------------------------------------------------------------------------
@@ -564,7 +567,7 @@ class PulseActor extends IPSModule
     {
         $pulseTime =  $this->GetPulseTime();
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SendDebug(__FUNCTION__, 'PulseTime: '.$pulseTime, 0);
+        this->SendDebug(__FUNCTION__, 'PulseTime: '.$pulseTime, 0);
         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
         return $pulseTime > 0;
     }
