@@ -69,7 +69,7 @@ class FlapControl extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 0, "Stop", "", self::$Transparent);
             IPS_SetVariableProfileAssociation($profileName, 1, "Ganz zu", "",  self::$Green);
             IPS_SetVariableProfileAssociation($profileName, 2, "Ganz auf", "",  self::$Green);
-            IPS_SetVariableProfileAssociation($profileName, 3, "Auto auf", "",  self::$Green;
+            IPS_SetVariableProfileAssociation($profileName, 3, "Auto auf", "",  self::$Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Flap Action'),$profileName, 10);
         $this->EnableAction($variable);
