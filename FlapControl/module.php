@@ -66,10 +66,10 @@ class FlapControl extends IPSModule
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
-            IPS_SetVariableProfileAssociation($profileName, 0, "Stop", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Ganz zu", "",  self::$Green);
-            IPS_SetVariableProfileAssociation($profileName, 2, "Ganz auf", "",  self::$Green);
-            IPS_SetVariableProfileAssociation($profileName, 3, "Auto auf", "",  self::$Green);
+            IPS_SetVariableProfileAssociation($profileName, 0, "Stop", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Ganz zu", "",  self::Green);
+            IPS_SetVariableProfileAssociation($profileName, 2, "Ganz auf", "",  self::Green);
+            IPS_SetVariableProfileAssociation($profileName, 3, "Auto auf", "",  self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Flap Action'),$profileName, 10);
         $this->EnableAction($variable);
@@ -80,18 +80,18 @@ class FlapControl extends IPSModule
             IPS_CreateVariableProfile($profileName,1);
             IPS_SetVariableProfileValues($profileName, 0, 11, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
-            IPS_SetVariableProfileAssociation($profileName, 0, "Zwischenstellung", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Geschlossen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 2, "Schließen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 3, "Schließen Stop", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 4, "Offen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 5, "Öffnen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 6, "Ganz Offen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 7, "Ganz Öffnen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 8, "Stop Öffnen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 9, "Stop ganz Öffnen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 10, "Schließen dann Öffnen", "", self::$Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 11, "Alles stoppen", "", self::$Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 0, "Zwischenstellung", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Geschlossen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 2, "Schließen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 3, "Schließen Stop", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 4, "Offen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 5, "Öffnen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 6, "Ganz Offen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 7, "Ganz Öffnen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 8, "Stop Öffnen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 9, "Stop ganz Öffnen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 10, "Schließen dann Öffnen", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 11, "Alles stoppen", "", self::Transparent);
         }
         $this->RegisterVariableInteger($variable , $this->Translate('Flap Status'), $profileName, 20);
 
