@@ -66,11 +66,6 @@
 			"caption": "Expert Mode"
 		},
 		{
-			"name": "Debug",
-			"type": "CheckBox",
-			"caption": "Debug Mode"
-		},
-		{
 			"name": "CheckActor",
 			"type": "CheckBox",
 			"caption": "Check Actor Status"

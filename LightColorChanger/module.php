@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
+
 class LightColorChanger extends IPSModule
 {
     private const MODULE_PREFIX = 'LCC';
@@ -174,14 +176,6 @@ class LightColorChanger extends IPSModule
 
     }
 
-
-    private function RegisterVariableIds(string $itemsString) : void
-    {
-        foreach (explode(',', $itemsString) as $item) {
-            $this->RegisterPropertyInteger($item, 0);
-        }
-    }
-
     private function CreateProfileAssociation(string $profileName, int $colorCode) : void
     {
        
@@ -281,11 +275,6 @@ class LightColorChanger extends IPSModule
 
         $colorNumber = $this->SetColorNumber ($this->GetValue('ActiveColors'),$idx,GetValueBoolean($senderID));
         $this->SetValue('ActiveColors', $colorNumber);
-    }
-
-    private function GetArrayFromString (string $itemsString)
-    {
-        return explode(',', $itemsString);
     }
 
     private function SetColorNumber (int $colorNumber, int $digit , bool $status ) : int
@@ -426,33 +415,6 @@ class LightColorChanger extends IPSModule
        IPS_LogMessage( $this->InstanceID,'Destroy Methode ausgeführt.');
     }
 
-    private function DeleteProfileList (string $list) :void
-    {
-          if (!is_string($list)) return;
-          $list = trim($list);
-          if  (strlen($list) == 0) return;
-
-          foreach ($this->GetArrayFromString($list) as $item) {
-                if (is_string($item)) {
-                     $cleanedItem = trim($item);
-                     if (strlen($cleanedItem) > 0)
-                     {
-                        $this->DeleteProfile($cleanedItem);
-                     }
-                }
-          }
-    }
-
-    private function DeleteProfile(string $profileName) : void
-    {
-        if (empty($profileName)) return;
-         $profile =  $this->CreateProfileName($profileName);
-         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
-         if (@IPS_VariableProfileExists($profile)) {
-                IPS_DeleteVariableProfile($profile);
-         }
-    }
-
     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.
     public function ApplyChanges()
     {
@@ -499,17 +461,6 @@ class LightColorChanger extends IPSModule
         {
             $this->HideItem('ColorFadeTime',false);
             $this->SetValue('ColorFadeTime',5);
-        }
-    }
-
-    //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
-    private function RegisterStatusUpdate(string $statusName) : void
-    {
-        $id= $this->ReadPropertyInteger($statusName);
-        //Register for change notification if a variable is defined
-        //IPS_LogMessage("ApplyChanges", 'id:'.$id.' name:'.$statusName);
-        if ($id>0) {
-            $this->RegisterMessage($id,VM_UPDATE);
         }
     }
 
@@ -723,23 +674,6 @@ class LightColorChanger extends IPSModule
             $this->LockItem($item,$status);
         }
         $this->HideItem('ColorFadeTime',$status || !$this->ReadPropertyBoolean('UseFading'));
-    }
-
-    private function HideItem(string $item,bool $status) : void
-    {
-        $id = $this->GetIDForIdent($item);
-        IPS_SetHidden($id, $status);
-    }
-
-    private function LockItem(string $item,bool $status) : void
-    {
-        $id = $this->GetIDForIdent($item);
-        IPS_SetDisabled($id, $status);
-    }
-
-    private function CreateProfileName (string $profileName) : string
-    {
-        return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
 
 }

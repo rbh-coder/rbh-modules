@@ -1,0 +1,12 @@
+{
+  "id": "{E78A9A08-C76F-EE03-A60C-E0BF33516027}",
+  "name": "FlapControl",
+  "type": 3,
+  "vendor": "",
+  "aliases": [],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "FLP",
+  "url": ""
+}

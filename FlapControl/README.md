@@ -13,6 +13,7 @@ Beschreibung des Moduls.
 
 ### 1. Funktionsumfang
 
+
 ### 2. Voraussetzungen
 
 - IP-Symcon ab Version 5.5
@@ -31,6 +32,7 @@ __Konfigurationsseite__:
 Name     | Beschreibung
 -------- | ------------------
  
+
 ### 5. Statusvariablen und Profile
 
 Die Statusvariablen/Kategorien werden automatisch angelegt. Das Löschen einzelner kann zu Fehlfunktionen führen.
@@ -55,8 +57,8 @@ Die Funktionalität, die das Modul im WebFront bietet.
 
 ### 7. PHP-Befehlsreferenz
 
-`boolean PAC_BeispielFunktion(integer $InstanzID);`
+`boolean FLP_BeispielFunktion(integer $InstanzID);`
 Erklärung der Funktion.
 
 Beispiel:
-`PAC_BeispielFunktion(12345);`
+`FLP_BeispielFunktion(12345);`

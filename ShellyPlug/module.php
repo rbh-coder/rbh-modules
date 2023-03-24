@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
+
 class ShellyPlug extends IPSModule
 {
     private const MODULE_PREFIX = 'SPL';
@@ -187,43 +189,6 @@ class ShellyPlug extends IPSModule
 
         $this-> DeleteProfileList (self::ProfileList);
       
-    }
-    
-    private function DeleteProfileList (string $list) :void
-    {
-          if (!is_string($list)) return;
-          $list = trim($list);
-          if  (strlen($list) == 0) return;
-
-          foreach ($this->GetArrayFromString($list) as $item) {
-                if (is_string($item)) {
-                     $cleanedItem = trim($item);
-                     if (strlen($cleanedItem) > 0)
-                     {
-                        $this->DeleteProfile($cleanedItem);
-                     }
-                }
-          }
-    }
-
-    private function DeleteProfile(string $profileName) : void
-    {
-        if (empty($profileName)) return;
-         $profile =  $this->CreateProfileName($profileName);
-         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
-         if (@IPS_VariableProfileExists($profile)) {
-                IPS_DeleteVariableProfile($profile);
-         }
-    }
-
-    private function GetArrayFromString (string $itemsString)
-    {
-        return explode(',', $itemsString);
-    }
-
-    private function CreateProfileName (string $profileName) : string
-    {
-         return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
     }
 
     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.

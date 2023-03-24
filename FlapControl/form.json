@@ -1,0 +1,80 @@
+{
+	"elements": [
+		{
+			"type": "ExpansionPanel",
+			"caption": "Klappen Laufzeiten",
+			"items": [
+				{
+					"type": "Label",
+					"caption": " "
+				},
+				{
+					"name": "MaxClosingTime",
+					"type": "NumberSpinner",
+					"caption": "Maximum Closing Time",
+					"suffix": "Sekonds"
+				},
+				{
+					"name": "MaxOpeningTime",
+					"type": "NumberSpinner",
+					"caption": "Maximum Opening Time",
+					"suffix": "Seconds"
+				},
+				{
+					"name": "OpeningTime",
+					"type": "NumberSpinner",
+					"caption": "Opening Time",
+					"suffix": "Sekonds"
+				}
+			]
+		},
+
+		{
+			"type": "ExpansionPanel",
+			"caption": "Sende-Variablen Instanzen",
+			"items": [
+				{
+					"type": "Label",
+					"caption": " "
+				},
+				{
+					"name": "FlapOpenActorID",
+					"type": "SelectVariable",
+					"caption": "Flap Open Actor ID"
+				},
+				{
+					"name": "FlapCloseActorID",
+					"type": "SelectVariable",
+					"caption": "Flap Close Actor ID"
+				}
+			]
+		},
+
+		{
+			"type": "ExpansionPanel",
+			"caption": "Variablen Referenzen",
+			"items": [
+				{
+					"type": "Label",
+					"caption": " "
+				},
+				{
+					"name": "ExpertModeID",
+					"type": "SelectVariable",
+					"caption": "Expert Mode"
+				}
+			]
+		}
+	],
+	"actions": [
+		{
+			"type": "ExpansionPanel",
+			"caption": "Testbereich",
+			"items": [
+				{
+					"type": "TestCenter"
+				}
+			]
+		}
+	]
+}

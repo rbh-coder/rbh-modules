@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
+
 class PulseActor extends IPSModule
 {
     private const Aus = 0;
@@ -122,7 +124,6 @@ class PulseActor extends IPSModule
         $this->RegisterPropertyInteger('MaxPauseTime', 60);
         $this->RegisterPropertyInteger('PulseTimeUnit',0);
         $this->RegisterPropertyInteger('PauseTimeUnit',0);
-        $this->RegisterPropertyBoolean('Debug', false);
         $this->RegisterPropertyBoolean('CheckActor', false);
 
         $this->RegisterAttributeInteger('PulseTimeFactor',0);
@@ -197,11 +198,6 @@ class PulseActor extends IPSModule
         }
     }
 
-    private function GetArrayFromString (string $itemsString)
-    {
-        return explode(',', $itemsString);
-    }
-
     public function HandleOpMode(int $opmode)
     {
         switch($opmode) {
@@ -234,10 +230,8 @@ class PulseActor extends IPSModule
         //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
         if ($Data[1]==0) return;
 
-        //$this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true), 0);
-        if ($this->ReadPropertyBoolean('Debug')) {
-            IPS_LogMessage("MessageSink", 'id:'.$SenderID.' message:'.$Message.' data:'.print_r($Data, true));
-        }
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, 'id:'.$SenderID.' message:'.$Message.' data:'.print_r($Data, true), 0);
 
         if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
         {
@@ -245,9 +239,7 @@ class PulseActor extends IPSModule
         }
         else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
         {
-            if ($this->ReadPropertyBoolean('Debug')) {
-                IPS_LogMessage("MessageSink", 'id:'.$SenderID.' message:'.$Message);
-            }
+            $this->SendDebug(__FUNCTION__,'id:'.$SenderID.' message:'.$Message, 0);
             $this->AutomaticRelease();
         }
         //Die Statusänderung des Actors auswerten
@@ -259,13 +251,13 @@ class PulseActor extends IPSModule
 
     public function UpdatePulseTimer()
     {
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.UpdatePulseTimer","id: ".$this->InstanceID);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);;
         $this->PulseAction ();
     }
 
     public function UpdatePauseTimer()
     {
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.UpdatePauseTimer","id: ".$this->InstanceID);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->PulseAction ();
     }
 
@@ -302,38 +294,6 @@ class PulseActor extends IPSModule
         $this->DeleteProfileList (self::ProfileList);
     }
 
-   
-    private function DeleteProfileList (string $list) :void
-    {
-          if (!is_string($list)) return;
-          $list = trim($list);
-          if  (strlen($list) == 0) return;
-
-          foreach ($this->GetArrayFromString($list) as $item) {
-                if (is_string($item)) {
-                     $cleanedItem = trim($item);
-                     if (strlen($cleanedItem) > 0)
-                     {
-                        $this->DeleteProfile($cleanedItem);
-                     }
-                }
-          }
-    }
-
-    private function DeleteProfile(string $profileName) : void
-    {
-        if (empty($profileName)) return;
-         $profile =  $this->CreateProfileName($profileName);
-         IPS_LogMessage( $this->InstanceID,'Lösche Profil ' .$profile . '.');
-         if (@IPS_VariableProfileExists($profile)) {
-                IPS_DeleteVariableProfile($profile);
-         }
-    }
-
-    private function CreateProfileName (string $profileName)
-    {
-         return self::MODULE_PREFIX . '.' . $this->InstanceID . '.' . $profileName;
-    }
 
     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.
     public function ApplyChanges()
@@ -401,9 +361,10 @@ class PulseActor extends IPSModule
     //Methode setzt Variable, soferne dieser in der Modul-Form aktiviert ist
     public function SetDevice(string $switchName, bool $status)
     {
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.SetDevice","switchName: ".$switchName);
-        $id= $this->ReadPropertyInteger($switchName);
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.SetDevice","id: ".$id);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, "switchName: ".$switchName, 0);
+        $this->SendDebug(__FUNCTION__, "id: ".$id, 0);
+
         if ($id>1) {
             RequestAction($id, $status);
             $this->StartSignalChecker();
@@ -425,20 +386,6 @@ class PulseActor extends IPSModule
         {
             $this->LockItem($item,$status);
         }
-    }
-
-    private function HideItem(string $item,bool $status)
-    {
-        if (empty($item)) return;
-        $id = $this->GetIDForIdent($item);
-        IPS_SetHidden($id, $status);
-    }
-
-    private function LockItem(string $item,bool $status)
-    {
-        if (empty($item)) return;
-        $id = $this->GetIDForIdent($item);
-        IPS_SetDisabled($id, $status);
     }
 
     public function VerifySignal()
@@ -608,14 +555,16 @@ class PulseActor extends IPSModule
     private function StartPauseTime ()
     {
         $pauseTime =   $this->GetPauseTime ();
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.StartPauseTime",'PauseTime: '.$pauseTime);
+        this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        this->SendDebug(__FUNCTION__, 'PauseTime: '.$pauseTime, 0);
         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
         return $pauseTime > 0;
     }
     private function StartPulseTime ()
     {
         $pulseTime =  $this->GetPulseTime();
-        if ($this->ReadPropertyBoolean('Debug')) IPS_LogMessage("PulsActor.StartPulseTime",'PulseTime: '.$pulseTime);
+        this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        this->SendDebug(__FUNCTION__, 'PulseTime: '.$pulseTime, 0);
         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
         return $pulseTime > 0;
     }
