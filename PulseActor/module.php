@@ -567,7 +567,7 @@ class PulseActor extends IPSModule
     {
         $pulseTime =  $this->GetPulseTime();
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        this->SendDebug(__FUNCTION__, 'PulseTime: '.$pulseTime, 0);
+        $this->SendDebug(__FUNCTION__, 'PulseTime: '.$pulseTime, 0);
         $this->SetTimerInterval('PAC_PulseTimer', $pulseTime );
         return $pulseTime > 0;
     }
