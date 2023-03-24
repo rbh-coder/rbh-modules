@@ -170,7 +170,7 @@ class FlapControl extends IPSModule
         switch ($value)
         {
             case  self::Stop:
-                if ()$this->DoStopAction ($flapStatus))
+                if ($this->DoStopAction ($flapStatus))
                 {
                      $actAction = $this-> SetAction(self::Flap_StopAll);
                 }
