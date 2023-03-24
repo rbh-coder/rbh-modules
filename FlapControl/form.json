@@ -12,7 +12,7 @@
 					"name": "MaxClosingTime",
 					"type": "NumberSpinner",
 					"caption": "Maximum Closing Time",
-					"suffix": "Sekonds"
+					"suffix": "Seconds"
 				},
 				{
 					"name": "MaxOpeningTime",
@@ -24,7 +24,7 @@
 					"name": "OpeningTime",
 					"type": "NumberSpinner",
 					"caption": "Opening Time",
-					"suffix": "Sekonds"
+					"suffix": "Seconds"
 				}
 			]
 		},
