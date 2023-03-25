@@ -33,7 +33,7 @@ class FlapControl extends IPSModule
     private const RegisterVariablesUpdateList =     'FlapAction';
     private const RegisterReferenciesUpdateList =   'ExpertModeID';
     private const ReferenciesList =                 'FlapOpenActorID,FlapCloseActorID';
-    private const ExpertLockList =                  '';
+    private const ExpertLockList =                  'FlapAction';
     private const ExpertHideList =                  '';
     
 
