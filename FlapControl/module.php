@@ -219,12 +219,15 @@ class FlapControl extends IPSModule
         {
             case  self::Flap_Close:
                 $actAction = $this-> SetAction(self::Flap_StopClose);
+                $this->SetValue('FlapAction',self::Stop);
                 break;
             case  self::Flap_Open:
                 $actAction = $this-> SetAction(self::Flap_StopOpen);
+                $this->SetValue('FlapAction',self::Stop);
                 break;
              case  self::Flap_FullOpen:
                 $actAction = $this-> SetAction(self::Flap_StopFullOpen);
+                $this->SetValue('FlapAction',self::Stop);
                 break;
             case  self::Flap_CloseOpen:
                 $this-> SetAction(self::Flap_StopClose);
