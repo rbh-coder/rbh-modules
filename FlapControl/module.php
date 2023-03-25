@@ -273,6 +273,8 @@ class FlapControl extends IPSModule
 
     private function SetAction (int $action) : int
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, 'action = '. $action, 0);
 	    $actAction = $action;
         switch ($actAction)
         {
@@ -351,21 +353,25 @@ class FlapControl extends IPSModule
 
     private function StartOpenTime () : void
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetTimerInterval('FLP_FlapTimer',$this->ReadPropertyInteger('OpeningTime')*1000);
     }
 
     private function StartFullOpenTime () : void
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetTimerInterval('FLP_FlapTimer', $this->ReadPropertyInteger('MaxOpeningTime')*1000);
     }
 
     private function StartCloseTime () : void
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetTimerInterval('FLP_FlapTimer', $this->ReadPropertyInteger('MaxClosingTime')*1000);
     }
 
     private function Stoptimer ()
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetTimerInterval('FLP_FlapTimer', 0);
     }
 
