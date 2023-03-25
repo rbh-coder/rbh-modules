@@ -2,8 +2,8 @@
     "translations": {
 			"de": {
 				"Maximum Closing Time": "Maximale Schließzeit",
-				"Maximum Openingg Time": "Maximale Öffnungszeit",
-				"Openingg Time": "Öffnungszeit",
+				"Maximum Opening Time": "Maximale Öffnungszeit",
+				"Opening Time": "Öffnungszeit",
 				"Expert Mode": "Expertenmodus",
 				"Flap Open Actor ID": "Aktor Klappe Öffnen ID",
 				"Flap Close Actor ID": "Aktor Klappe Schließen ID",
