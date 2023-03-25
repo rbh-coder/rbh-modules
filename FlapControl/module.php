@@ -340,12 +340,12 @@ class FlapControl extends IPSModule
     }
 
      //Methode setzt Variable, soferne dieser in der Modul-Form aktiviert ist
-    public function SetDevice(string $switchName, bool $status)
+    public function SetDevice (string $switchName, bool $status)
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SendDebug(__FUNCTION__, "switchName: ".$switchName, 0);
         $this->SendDebug(__FUNCTION__, "status: ".$status, 0);
-
+        $id = $this->ReadPropertyInteger($switchName);
         if ($id>1) {
             RequestAction($id, $status);
         }
