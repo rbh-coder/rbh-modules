@@ -203,7 +203,7 @@ class FlapControl extends IPSModule
                 }
                 break;
             case self::AutoOpen:
-                if (($flapStatus != self::Flap_Opened) && ($flapStatus != self::Flap_FullOpened))
+                if ($flapStatus != self::Flap_Opened)
                 {
                     $actAction = $this-> SetAction(self::Flap_CloseOpen);
                 }
