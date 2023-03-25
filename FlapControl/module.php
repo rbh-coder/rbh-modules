@@ -213,9 +213,9 @@ class FlapControl extends IPSModule
     public function UpdateFlapTimer() : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $action =  $this->GetValue('FlapStatus');
+        $action = $this->GetValue('FlapStatus');
         $actAction = $action;
-        switch ($status)
+        switch ($action)
         {
             case  self::Flap_Close:
                 $actAction = $this-> SetAction(self::Flap_StopClose);
