@@ -196,7 +196,7 @@ class FlapControl extends IPSModule
                 }
                 break;
             case self::AutoOpen:
-                if (($flapStatus != self::Flap_Opened) && ($flapStatus != self::Flap_Opened))
+                if (($flapStatus != self::Flap_Opened) && ($flapStatus != self::Flap_FullOpened))
                 {
                     $actAction = $this-> SetAction(self::Flap_CloseOpen);
                 }
@@ -218,17 +218,17 @@ class FlapControl extends IPSModule
         switch ($status)
         {
             case  self::Flap_Close:
-                $actAction = $this-> SetAction(self::StopClose);
+                $actAction = $this-> SetAction(self::Flap_StopClose);
                 break;
             case  self::Flap_Open:
-                $actAction = $this-> SetAction(self::StopOpen);
+                $actAction = $this-> SetAction(self::Flap_StopOpen);
                 break;
              case  self::Flap_FullOpen:
-                $actAction = $this-> SetAction(self::StopFullOpen);
+                $actAction = $this-> SetAction(self::Flap_StopFullOpen);
                 break;
             case  self::Flap_CloseOpen:
-                $this-> SetAction(self::StopClose);
-                $actAction = $this-> SetAction(self::Open);
+                $this-> SetAction(self::Flap_StopClose);
+                $actAction = $this-> SetAction(self::Flap_Open);
                 break;
         }
         $this->SetValue('FlapStatus',$actAction);
@@ -287,13 +287,13 @@ class FlapControl extends IPSModule
                 break;
             case self::Flap_CloseOpen:
                 $this->SwitchClose ();
-                $this->StartClosingTime (); 
+                $this->StartCloseTime (); 
                 break;
             case self::Flap_Closed:
                 break;
             case self::Flap_Close:
                 $this->SwitchClose ();
-                $this->StartClosingTime (); 
+                $this->StartCloseTime (); 
                 break;
              case self::Flap_StopClose:
                 $this->Stoptimer();
