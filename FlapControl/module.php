@@ -101,9 +101,6 @@ class FlapControl extends IPSModule
         //------------------------------------------------------------------------------------------------------------------
 
         $this->RegisterVariableIds(self::ReferenciesList);
-        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
-        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
-        
     }
 
 
@@ -261,8 +258,37 @@ class FlapControl extends IPSModule
     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.
     public function ApplyChanges()
     {
+         //Wait until IP-Symcon is started
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         //Never delete this line!
         parent::ApplyChanges();
+
+         //Check runlevel
+        if (IPS_GetKernelRunlevel() != KR_READY) {
+            return;
+        }
+     
+        //Delete all references
+        foreach ($this->GetReferenceList() as $referenceID) {
+            $this->UnregisterReference($referenceID);
+        }
+
+        //Delete all message registrations
+       
+        foreach ($this->GetMessageList() as $senderID => $messages) {
+            foreach ($messages as $message) {
+                if ($message == EM_UPDATE) {
+                    $this->UnregisterMessage($senderID, EM_UPDATE);
+                }
+                if ($message == VM_UPDATE) {
+                    $this->UnregisterMessage($senderID, VM_UPDATE);
+                }
+            }
+        }
+
+        //Alle benötigten aktiven Referenzen für die Messagesink anmelden
+        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
+        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
 
     }
 
