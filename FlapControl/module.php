@@ -187,18 +187,29 @@ class FlapControl extends IPSModule
                 {
                     $actAction = $this-> SetAction(self::Flap_Close);
                 }
-
+                else 
+                {
+	                $this->SetValue('FlapAction',self::Stop);
+                }
                 break;
             case self::FullOpen:
                 if ($flapStatus != self::Flap_FullOpened)
                 {
                     $actAction = $this-> SetAction(self::Flap_FullOpen);
                 }
+                else 
+                {
+	                $this->SetValue('FlapAction',self::Stop);
+                }
                 break;
             case self::AutoOpen:
                 if (($flapStatus != self::Flap_Opened) && ($flapStatus != self::Flap_FullOpened))
                 {
                     $actAction = $this-> SetAction(self::Flap_CloseOpen);
+                }
+                else 
+                {
+	                $this->SetValue('FlapAction',self::Stop);
                 }
                 break;
         }
@@ -331,11 +342,13 @@ class FlapControl extends IPSModule
 
     private function DoStopAction (int $action) : bool
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         switch ($action)
         {
             case self::Flap_Closed:
             case  self::Flap_Opened:
             case  self::Flap_FullOpened:
+                $this->SendDebug(__FUNCTION__, 'Klappe bereits in Endlage.' , 0);
                 return false;
 
         }
