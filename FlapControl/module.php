@@ -67,9 +67,9 @@ class FlapControl extends IPSModule
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
             IPS_SetVariableProfileAssociation($profileName, 0, "Stop", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Ganz zu", "",  self::Green);
-            IPS_SetVariableProfileAssociation($profileName, 2, "Ganz auf", "",  self::Green);
-            IPS_SetVariableProfileAssociation($profileName, 3, "Auto auf", "",  self::Green);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Schließen", "",  self::Green);
+            IPS_SetVariableProfileAssociation($profileName, 2, "Öffnen", "",  self::Green);
+            IPS_SetVariableProfileAssociation($profileName, 3, "Arbeitsstellung", "",  self::Green);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Flap Action'),$profileName, 10);
         $this->EnableAction($variable);
@@ -101,6 +101,9 @@ class FlapControl extends IPSModule
         //------------------------------------------------------------------------------------------------------------------
 
         $this->RegisterVariableIds(self::ReferenciesList);
+        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
+        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
+        
     }
 
 
@@ -149,6 +152,8 @@ class FlapControl extends IPSModule
 
     private function SelectFlapAction(int $sender) : bool
     {
+        
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id = $this->GetIDForIdent('FlapAction');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
@@ -157,6 +162,7 @@ class FlapControl extends IPSModule
 
     private function SelectExpertSwitch(int $sender) : bool
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id = $this->ReadPropertyInteger('ExpertModeID');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
@@ -165,6 +171,7 @@ class FlapControl extends IPSModule
 
     private function OperateFlapAction(int $value) : void
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $flapStatus =  $this->GetValue('FlapStatus');
         $actAction =  $flapStatus;
         switch ($value)
@@ -319,8 +326,7 @@ class FlapControl extends IPSModule
 
     private function DoStopAction (int $action) : bool
     {
-	    $actAction = $action;
-        switch ($actAction)
+        switch ($action)
         {
             case self::Flap_Closed:
             case  self::Flap_Opened:
