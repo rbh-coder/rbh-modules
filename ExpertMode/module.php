@@ -40,7 +40,7 @@ class ExpertMode extends IPSModule
         $this->RegisterPropertyString('ShowInstanciesL2',"[]");
         $this->RegisterPropertyString('EnableInstanciesL2',"[]");
 
-        $this->RegisterAttribute('ExpertLevel',0);
+        $this->RegisterAttributeInteger('ExpertLevel',0);
        
         $this->DeleteProfileList (self::ProfileList);
 
