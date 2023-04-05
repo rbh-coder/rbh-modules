@@ -1,0 +1,12 @@
+{
+  "id": "{47810624-3185-A726-F632-0A4C00B6B13E}",
+  "name": "ExpertMode",
+  "type": 3,
+  "vendor": "",
+  "aliases": [],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "EXPRT",
+  "url": ""
+}
