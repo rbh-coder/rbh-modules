@@ -204,6 +204,11 @@ trait RBH_ModuleFunctions
         if (!$this->IsValidId($id)) return;
         IPS_SetHidden($id,$hide);
     }
+    private function LockItemById (int $id, bool $hide ) : void
+    {
+        if (!$this->IsValidId($id)) return;
+        IPS_SetDisabled($id,$hide);
+    }
 
     private function LockItem(string $item,bool $status) : void
     {

@@ -204,7 +204,7 @@ class ExpertMode extends IPSModule
         $variables = json_decode($list, $status);
         foreach ($variables as $variable) 
         {
-                $this->HideItem($variable['ObjectID'],$status);
+                $this->HideItemById($variable['ObjectID'],$status);
         }
     }
     private function OperateLockList (string $list, bool $status) : void 
@@ -214,7 +214,7 @@ class ExpertMode extends IPSModule
         $variables = json_decode($list,$status);
         foreach ($variables as $variable) 
         {
-                $this->LockItem($variable['ObjectID'],$status);
+                $this->LockItemById($variable['ObjectID'],$status);
         }
     }
 
