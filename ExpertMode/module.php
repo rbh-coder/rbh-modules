@@ -199,7 +199,7 @@ class ExpertMode extends IPSModule
 
     private function OperateHideList (string $list, bool $status) : void 
     {
-        if ()!$this->IsValidStringList($list)) return;
+        if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $variables = json_decode($list, $status);
         foreach ($variables as $variable) 
@@ -209,7 +209,7 @@ class ExpertMode extends IPSModule
     }
     private function OperateLockList (string $list,, bool $status) : void 
     {
-        if ()!$this->IsValidStringList($list)) return;
+        if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $variables = json_decode($list,$status);
         foreach ($variables as $variable) 
