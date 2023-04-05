@@ -56,9 +56,6 @@ class ExpertMode extends IPSModule
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
-            IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
-            IPS_SetVariableProfileAssociation($profileName, 2, "Level 2", "",  self::Red);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Expert Level'),$profileName, 20);
         $this->EnableAction($variable);
@@ -78,14 +75,15 @@ class ExpertMode extends IPSModule
     public function RequestAction($Ident,$Value)
     {
         switch($Ident) {
-              case "PasswordL1":
+              case "Password":
                    $this->SetValue($Ident, $Value);
+                   $level = $this->CheckPassword($value);
+                   $this->WriteAttributeInteger('ExpertLevel',$level);
+                   $this->SetLevelProfile($level);
                    break;
-              case "PasswordL2":
+              case "ExpertLevel":
                    $this->SetValue($Ident, $Value);
-                   break;
-              case "'ExpertLevel":
-                   if (($Value==0) || ($this->ReadAttributeInteger('ExpertLevel')>0)) $this->SetValue($Ident, $Value);
+                   $this->OperateExpertSwitch($Value);
                    break;
         }
     }
@@ -106,124 +104,126 @@ class ExpertMode extends IPSModule
         if ($Data[1]==0) return;
 
          $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
-
-         /*
-        if ($this->SelectFlapAction($SenderID))
-        {
-            $this->OperateFlapAction($Data[0]);
-            return; 
-        }
-
-        if ($this->SelectExpertSwitch($SenderID))
-        {
-            $this->OperateExpertSwitch($SenderID);
-            return;
-        }
-        */
     }
 
-    /*
-    private function SelectFlapAction(int $sender) : bool
+  
+    private function CheckPassword(string $value) : int
     {
-        
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $id = $this->GetIDForIdent('FlapAction');
-        if (!$this->IsValidId($id)) return false;
-        if ($id != $sender) return false;
-        return true;
+        $level = 2;
+        if (!$this->IsValidStringPair($this->ReadPropertyString('Password_L2'),$value))
+        {
+             $level = 1;
+             if (!$this->IsValidStringPair($this->ReadPropertyString('Password_L1'),$value))
+             {
+                  $level = 0;
+             }
+        }
+       return $level;
     }
 
-    private function SelectExpertSwitch(int $sender) : bool
+    private function IsValidStringPair(string $value1,string $value2 )
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $id = $this->ReadPropertyInteger('ExpertModeID');
-        if (!$this->IsValidId($id)) return false;
-        if ($id != $sender) return false;
-        return true;
+       if (!$this->IsValidString($value1)) return false;
+       if (!$this->IsValidString($value2)) return false;
+       return $value1==$value2;
     }
-    */
+
+    private function IsValidString(string $value)
+    {
+       if (!is_string($value)) return false;
+       if (strlen($value) == 0) return false;
+    }
 
     private function ExpertAction(int $value) : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $expertLevel =  $this->GetValue('ExpertMode');
-        /*
-        $actAction =  $flapStatus;
-        switch ($value)
-        {
-            case  self::Stop:
-                if ($this->DoStopAction ($flapStatus))
-                {
-                     $actAction = $this-> SetAction(self::Flap_StopAll);
-                }
-                break;
-            case self::FullClose: 
-                if ($flapStatus != self::Flap_Closed)
-                {
-                    $actAction = $this-> SetAction(self::Flap_Close);
-                }
-                else 
-                {
-	                $this->SetValue('FlapAction',self::Stop);
-                }
-                break;
-            case self::FullOpen:
-                if ($flapStatus != self::Flap_FullOpened)
-                {
-                    $actAction = $this-> SetAction(self::Flap_FullOpen);
-                }
-                else 
-                {
-	                $this->SetValue('FlapAction',self::Stop);
-                }
-                break;
-            case self::AutoOpen:
-                if ($flapStatus != self::Flap_Opened)
-                {
-                    $actAction = $this-> SetAction(self::Flap_CloseOpen);
-                }
-                else 
-                {
-	                $this->SetValue('FlapAction',self::Stop);
-                }
-                break;
-        }
-        $this->SetValue('FlapStatus',$actAction);
-        */
+        $expertLevel =  $this->GetValue('ExpertLevel');
+       
     }
 
-    private function OperateExpertSwitch(int $id) : void
+    private function SetLevelProfile(int $level) : void
     {
-        $this->HandleExpertSwitch($id,self::ExpertHideList,self::ExpertLockList);
+        $variable = 'ExpertLevel';
+        $profileName =  $this->CreateProfileName($variable);
+        if (IPS_VariableProfileExists($profileName)) {
+            IPS_SetVariableProfileValues($profileName, 0, $level, 0);
+            switch (int $level)
+            {
+                case 0:
+                    IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
+                    IPS_SetVariableProfileAssociation($profileName, 1, "", "", 0);
+                    IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
+                    break;
+                case 1:
+                    IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
+                    IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
+                    IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
+                    break;
+                case 2:
+                    IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
+                    IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
+                    IPS_SetVariableProfileAssociation($profileName, 2, "Level 2", "",  self::Red);
+                    break;
+            }
+        }
+    }
+
+    private function OperateExpertSwitch(int $level) : void
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        switch ($level)
+        {
+            case 0:
+                $this->StopTimer();
+                $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),true);
+                $this-> OperateHideList ($this->ReadPropertyString('EnableInstanciesL1'),true);
+                $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),true);
+                $this-> OperateHideList ($this->ReadPropertyString('EnableInstanciesL2'),true);
+                break;
+            case 1:
+                $this->StartTimer();
+                $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),false);
+                $this-> OperateHideList ($this->ReadPropertyString('EnableInstanciesL1'),false);
+                $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),true);
+                $this-> OperateHideList ($this->ReadPropertyString('EnableInstanciesL2'),true);
+                break;
+            case 2:
+                $this->StartTimer();
+                $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),false);
+                $this-> OperateHideList ($this->ReadPropertyString('EnableInstanciesL1'),false);
+                $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),false);
+                $this-> OperateHideList ($this->ReadPropertyString('EnableInstanciesL2'),false);
+                break;
+        }
+    }
+
+    private function OperateHideList (string $list, bool $status) : void 
+    {
+        if ()!$this->IsValidStringList($list)) return;
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $variables = json_decode($list, $status);
+        foreach ($variables as $variable) 
+        {
+                $this->HideItem($variable);
+        }
+    }
+    private function OperateLockList (string $list,, bool $status) : void 
+    {
+        if ()!$this->IsValidStringList($list)) return;
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $variables = json_decode($list,$status);
+        foreach ($variables as $variable) 
+        {
+                $this->LockItem($variable);
+        }
     }
 
     public function UpdateTimer() : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        /*
-        $action = $this->GetValue('FlapStatus');
-        $actAction = $action;
-        switch ($action)
-        {
-            case  self::Flap_Close:
-                $actAction = $this-> SetAction(self::Flap_StopClose);
-                $this->SetValue('FlapAction',self::Stop);
-                break;
-            case  self::Flap_Open:
-                $actAction = $this-> SetAction(self::Flap_StopOpen);
-                $this->SetValue('FlapAction',self::Stop);
-                break;
-             case  self::Flap_FullOpen:
-                $actAction = $this-> SetAction(self::Flap_StopFullOpen);
-                $this->SetValue('FlapAction',self::Stop);
-                break;
-            case  self::Flap_CloseOpen:
-                $this-> SetAction(self::Flap_StopClose);
-                $actAction = $this-> SetAction(self::Flap_Open);
-                break;
-        }
-        $this->SetValue('FlapStatus',$actAction);
-        */
+        $this->Stoptimer();
+        $this->SetValue('ExpertLevel',0);
+        $this->SetLevelProfile(0);
     }
 
     public function Destroy()
@@ -271,12 +271,14 @@ class ExpertMode extends IPSModule
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
 
+        $this->SetLevelProfile($this->GetValue('ExpertLevel'));
+
     }
 
     private function StartTimer () : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SetTimerInterval('EXPRT_Timer',$this->ReadPropertyInteger('ActiveTime')*1000);
+        $this->SetTimerInterval('EXPRT_Timer',$this->ReadPropertyInteger('ExpertLeaseTime')*1000*60);
     }
 
 
