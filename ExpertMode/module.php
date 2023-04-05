@@ -77,7 +77,7 @@ class ExpertMode extends IPSModule
         switch($Ident) {
               case "Password":
                    $this->SetValue($Ident, $Value);
-                   $level = $this->CheckPassword($value);
+                   $level = $this->CheckPassword($Value);
                    $this->WriteAttributeInteger('ExpertLevel',$level);
                    $this->SetLevelProfile($level);
                    break;
