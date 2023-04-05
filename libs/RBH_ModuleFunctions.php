@@ -17,6 +17,7 @@ trait RBH_ModuleFunctions
 {
     private function RegisterVariableIds(string $itemsString) : void
     {
+        if (!$this->IsValidStringList($itemsString)) return;
         foreach (explode(',', $itemsString) as $item) {
             if ($item != "") $this->RegisterPropertyInteger($item, 0);
         }
@@ -24,6 +25,7 @@ trait RBH_ModuleFunctions
 
     private function RegisterLinkIds(string $itemsString) : void
     {
+        if (!$this->IsValidStringList($itemsString)) return;
         foreach (explode(',', $itemsString) as $item) {
             $this->RegisterAttributeInteger($item, 0);
         }
@@ -31,6 +33,7 @@ trait RBH_ModuleFunctions
 
     private function RegisterPropertiesUpdateList(string $itemsString) : void
     {
+        if (!$this->IsValidStringList($itemsString)) return;
         foreach (explode(',', $itemsString) as $item) {
             $this->RegisterStatusUpdate($item);
         }
@@ -38,6 +41,7 @@ trait RBH_ModuleFunctions
 
     private function RegisterVariablesUpdateList(string $itemsString) : void
     {
+        if (!$this->IsValidStringList($itemsString)) return;
         foreach (explode(',', $itemsString) as $item) {
             $id = $this->GetIDForIdent($item);
             if ($this->IsValidId($id)) {
