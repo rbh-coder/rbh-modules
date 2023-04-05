@@ -151,13 +151,13 @@ class ExpertMode extends IPSModule
             {
                 case 0:
                     IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
-                    IPS_SetVariableProfileAssociation($profileName, 1, "", "", 0);
-                    IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
+                    @IPS_SetVariableProfileAssociation($profileName, 1, "", "", 0);
+                    @IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
                     break;
                 case 1:
                     IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
                     IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
-                    IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
+                    @IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
                     break;
                 case 2:
                     IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
