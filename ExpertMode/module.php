@@ -10,8 +10,8 @@ class ExpertMode extends IPSModule
     private const MODULE_PREFIX = 'EXPRT';
     private const MODULE_NAME = 'ExpertMode';
 
-    private const ProfileList =                     'ExpertMode,ExpertLevel';
-    private const RegisterVariablesUpdateList =     'ExpertLevel';
+    private const ProfileList =                     'ExpertLevel';
+    private const RegisterVariablesUpdateList =     '';
     private const RegisterReferenciesUpdateList =   '';
     private const ReferenciesList =                 '';
     private const ExpertLockList =                  '';
@@ -39,6 +39,8 @@ class ExpertMode extends IPSModule
         $this->RegisterPropertyString('EnableInstanciesL1',"[]");
         $this->RegisterPropertyString('ShowInstanciesL2',"[]");
         $this->RegisterPropertyString('EnableInstanciesL2',"[]");
+
+        $this->RegisterAttribute('ExpertLevel',0);
        
         $this->DeleteProfileList (self::ProfileList);
 
@@ -55,23 +57,11 @@ class ExpertMode extends IPSModule
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
             IPS_SetVariableProfileIcon($profileName, "Shutter");
             IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, 2, "Level 2", "",  self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
+            IPS_SetVariableProfileAssociation($profileName, 2, "Level 2", "",  self::Red);
         }
         $this->RegisterVariableInteger($variable, $this->Translate('Expert Level'),$profileName, 20);
-        //$this->EnableAction($variable);
-
-        $variable = 'ExpertMode';
-        $profileName = $this->CreateProfileName($variable);
-        if (!IPS_VariableProfileExists($profileName)) {
-            IPS_CreateVariableProfile($profileName, 0);
-            IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", self::Transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", self::Green);
-        }
-        $this->RegisterVariableBoolean($variable, $this->Translate('Expert Mode'), $profileName, 20);
         $this->EnableAction($variable);
-
         
         //------------------------------------------------------------------------------------------------------------------
         //Timer ------------------------------------------------------------------------------------------------------------
@@ -94,8 +84,8 @@ class ExpertMode extends IPSModule
               case "PasswordL2":
                    $this->SetValue($Ident, $Value);
                    break;
-              case "ExpertMode":
-                   if (!$Value) $this->SetValue($Ident, $Value);
+              case "'ExpertLevel":
+                   if (($Value==0) || ($this->ReadAttributeInteger('ExpertLevel')>0)) $this->SetValue($Ident, $Value);
                    break;
         }
     }
