@@ -3,7 +3,7 @@
 declare(strict_types=1);
 include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
 
-class FlapControl extends IPSModule
+class ExpertMode extends IPSModule
 {
     use RBH_ModuleFunctions;
 
