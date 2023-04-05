@@ -37,12 +37,8 @@
 			"caption": "Level 1 Instanzen",
 			"items": [
 				{
-					"type": "Label",
-					"caption": "Zeige Instanzen ab Level 1"
-				},
-				{
 					"type": "List",
-					"caption": "Show Instancies Level 1",
+					"caption": "Zeige Instanzen ab Level 1",
 					"name": "ShowInstanciesL1",
 					"add": true,
 					"delete": true,
@@ -59,12 +55,8 @@
 					]
 				},
 				{
-					"type": "Label",
-					"caption": "Enable Instanzen ab Level 1"
-				},
-				{
 					"type": "List",
-					"caption": "Enable Instancies Level 1",
+					"caption": "Enable Instanzen ab Level 1",
 					"name": "EnableInstanciesL1",
 					"add": true,
 					"delete": true,
@@ -87,12 +79,8 @@
 			"caption": "Level 2 Instanzen",
 			"items": [
 				{
-					"type": "Label",
-					"caption": "Zeige Instanzen ab Level 2"
-				},
-				{
 					"type": "List",
-					"caption": "Show Instancies Level 2",
+					"caption": "Zeige Instanzen ab Level 2",
 					"name": "ShowInstanciesL2",
 					"add": true,
 					"delete": true,
@@ -109,12 +97,8 @@
 					]
 				},
 				{
-					"type": "Label",
-					"caption": "Enable Instanzen ab Level 2"
-				},
-				{
 					"type": "List",
-					"caption": "Enable Instancies Level 2",
+					"caption": "Enable Instanzen ab Level 2",
 					"name": "EnableInstanciesL2",
 					"add": true,
 					"delete": true,
