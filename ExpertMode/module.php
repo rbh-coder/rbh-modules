@@ -34,6 +34,7 @@ class ExpertMode extends IPSModule
 
         $this->RegisterPropertyInteger('ExpertLeaseTime',60);
         $this->RegisterPropertyString('Password_L1',"");
+        $this->RegisterPropertyString('Password_L2',"");
         $this->RegisterPropertyString('ShowInstanciesL1',"[]");
         $this->RegisterPropertyString('EnableInstanciesL1',"[]");
         $this->RegisterPropertyString('ShowInstanciesL2',"[]");
