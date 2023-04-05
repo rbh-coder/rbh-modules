@@ -44,12 +44,12 @@
 					"delete": true,
 					"columns": [
 						{
-							"caption": "Instanz ID",
-							"name": "InctanceID",
+							"caption": "Objekt ID",
+							"name": "ObjectID",
 							"add": 0,
 							"width": "auto",
 							"edit": {
-								"type": "SelectInstance"
+								"type": "SelectObject"
 							}
 						}
 					]
@@ -62,12 +62,12 @@
 					"delete": true,
 					"columns": [
 						{
-							"caption": "Instanz ID",
-							"name": "InctanceID",
+							"caption": "Objekt ID",
+							"name": "ObjectID",
 							"add": 0,
 							"width": "auto",
 							"edit": {
-								"type": "SelectInstance"
+								"type": "SelectObject"
 							}
 						}
 					]
@@ -86,12 +86,12 @@
 					"delete": true,
 					"columns": [
 						{
-							"caption": "Instanz ID",
-							"name": "InctanceID",
+							"caption": "Objekt ID",
+							"name": "ObjectID",
 							"add": 0,
 							"width": "auto",
 							"edit": {
-								"type": "SelectInstance"
+								"type": "SelectObject"
 							}
 						}
 					]
@@ -104,12 +104,12 @@
 					"delete": true,
 					"columns": [
 						{
-							"caption": "Instanz ID",
-							"name": "InctanceID",
+							"caption": "Objekt ID",
+							"name": "ObjectID",
 							"add": 0,
 							"width": "auto",
 							"edit": {
-								"type": "SelectInstance"
+								"type": "SelectObject"
 							}
 						}
 					]
