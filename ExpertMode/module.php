@@ -207,7 +207,7 @@ class ExpertMode extends IPSModule
                 $this->HideItem($variable);
         }
     }
-    private function OperateLockList (string $list,, bool $status) : void 
+    private function OperateLockList (string $list, bool $status) : void 
     {
         if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
