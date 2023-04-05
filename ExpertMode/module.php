@@ -62,7 +62,7 @@ class ExpertMode extends IPSModule
         
         //------------------------------------------------------------------------------------------------------------------
         //Timer ------------------------------------------------------------------------------------------------------------
-        $this->RegisterTimer('EXPRT_FlapTimer', 0, 'EXPRT_UpdateTimer($_IPS[\'TARGET\']);');
+        $this->RegisterTimer('EXPRT_Timer', 0, 'EXPRT_UpdateTimer($_IPS[\'TARGET\']);');
         //------------------------------------------------------------------------------------------------------------------
 
         $this->RegisterVariableIds(self::ReferenciesList);
