@@ -147,7 +147,7 @@ class ExpertMode extends IPSModule
         $profileName =  $this->CreateProfileName($variable);
         if (IPS_VariableProfileExists($profileName)) {
             IPS_SetVariableProfileValues($profileName, 0, $level, 0);
-            switch (int $level)
+            switch ($level)
             {
                 case 0:
                     IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
