@@ -77,6 +77,8 @@ trait RBH_ModuleFunctions
     //Methode Registriert Variable für die MessageSink, soferne diese in der Modul-Form aktiviert ist
     private function RegisterStatusUpdate(string $variableName) : void
     {
+        if (!is_string($variableName)) return;
+        if (strlen($variableName) == 0) return;
         $id= $this->ReadPropertyInteger($variableName);
         if ($this->IsValidId($id)) {
             $this->RegisterMessage($id,VM_UPDATE);
