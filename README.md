@@ -10,5 +10,7 @@ Folgende Module beinhaltet das RBH Modules Repository:
 	Kurze Beschreibung des Moduls.
 - __HeatingZoneController__ ([Dokumentation](HeatingZoneController))  
 	Kurze Beschreibung des Moduls.
- __FlapControl__ ([Dokumentation](FlapControl))  
+- __FlapControl__ ([Dokumentation](FlapControl))  
+	Kurze Beschreibung des Moduls.
+- __ExpertMode__ ([Dokumentation](ExpertMode))  
 	Kurze Beschreibung des Moduls.
