@@ -203,7 +203,7 @@ class ExpertMode extends IPSModule
     public function UpdateTimer() : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->Stoptimer();
+        $this->StopTimer();
         $this->SetValue('ExpertLevel',0);
         $this->SetLevelProfile(0);
     }
@@ -264,7 +264,7 @@ class ExpertMode extends IPSModule
     }
 
 
-    private function Stoptimer ()
+    private function StopTimer ()
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetTimerInterval('EXPRT_Timer', 0);
