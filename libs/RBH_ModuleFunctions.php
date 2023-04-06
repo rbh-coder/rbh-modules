@@ -113,10 +113,15 @@ trait RBH_ModuleFunctions
 
    private function IsValidStringList(string $list) : bool
    {
-       if (!is_string($list)) return false;
-       if (strlen($list) == 0) return false;
-       return true;
+      return $this-> IsValidString($list);
    }
+
+   private function IsValidString(string $value) : bool
+    {
+       if (!is_string($value)) return false;
+       if (strlen($value) == 0) return false;
+       return true;
+    }
 
    private function IsValidId(int $id) : bool
    {

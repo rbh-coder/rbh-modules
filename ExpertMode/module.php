@@ -123,20 +123,6 @@ class ExpertMode extends IPSModule
        return (strcmp($value1,$value2) == 0);
     }
 
-    private function IsValidString(string $value) : bool
-    {
-       if (!is_string($value)) return false;
-       if (strlen($value) == 0) return false;
-       return true;
-    }
-
-    private function ExpertAction(int $value) : void
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $expertLevel =  $this->GetValue('ExpertLevel');
-       
-    }
-
     private function SetLevelProfile(int $level) : void
     {
         $variable = 'ExpertLevel';
