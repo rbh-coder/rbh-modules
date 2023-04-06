@@ -127,10 +127,11 @@ class ExpertMode extends IPSModule
        return (strcmp($value1,$value2) == 0);
     }
 
-    private function IsValidString(string $value)
+    private function IsValidString(string $value) : bool
     {
        if (!is_string($value)) return false;
        if (strlen($value) == 0) return false;
+       return true;
     }
 
     private function ExpertAction(int $value) : void
