@@ -132,16 +132,19 @@ class ExpertMode extends IPSModule
             switch ($level)
             {
                 case 0:
+                    $this->StopTimer();
                     IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
                     @IPS_SetVariableProfileAssociation($profileName, 1, "", "", 0);
                     @IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
                     break;
                 case 1:
+                    $this->StartTimer();
                     IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
                     IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
                     @IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
                     break;
                 case 2:
+                    $this->StartTimer();
                     IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
                     IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
                     IPS_SetVariableProfileAssociation($profileName, 2, "Level 2", "",  self::Red);
@@ -156,21 +159,18 @@ class ExpertMode extends IPSModule
         switch ($level)
         {
             case 0:
-                $this->StopTimer();
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),true);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL1'),true);
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),true);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL2'),true);
                 break;
             case 1:
-                $this->StartTimer();
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),false);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL1'),false);
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),true);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL2'),true);
                 break;
             case 2:
-                $this->StartTimer();
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),false);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL1'),false);
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),false);
