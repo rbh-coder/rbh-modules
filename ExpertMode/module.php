@@ -113,8 +113,8 @@ class ExpertMode extends IPSModule
 
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SendDebug(__FUNCTION__, 'Password: '.$value, 0);
-        $this->SendDebug(__FUNCTION__, 'L1 Password: '.this->ReadPropertyString('Password_L1'), 0);
-        $this->SendDebug(__FUNCTION__, 'L2 Password: '.this->ReadPropertyString('Password_L2'), 0);
+        $this->SendDebug(__FUNCTION__, 'L1 Password: '.$this->ReadPropertyString('Password_L1'), 0);
+        $this->SendDebug(__FUNCTION__, 'L2 Password: '.$this->ReadPropertyString('Password_L2'), 0);
 
         $level = 2;
         if (!$this->IsValidStringPair($this->ReadPropertyString('Password_L2'),$value))
