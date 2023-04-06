@@ -206,6 +206,7 @@ class ExpertMode extends IPSModule
         $this->StopTimer();
         $this->SetValue('ExpertLevel',0);
         $this->SetLevelProfile(0);
+        $this->OperateExpertSwitch(0);
     }
 
     public function Destroy()
