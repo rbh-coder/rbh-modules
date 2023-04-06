@@ -112,10 +112,7 @@ class ExpertMode extends IPSModule
     {
 
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SendDebug(__FUNCTION__, 'Password: '.$value, 0);
-        $this->SendDebug(__FUNCTION__, 'L1 Password: '.$this->ReadPropertyString('Password_L1'), 0);
-        $this->SendDebug(__FUNCTION__, 'L2 Password: '.$this->ReadPropertyString('Password_L2'), 0);
-
+        
         $level = 2;
         if (!$this->IsValidStringPair($this->ReadPropertyString('Password_L2'),$value))
         {
@@ -128,8 +125,9 @@ class ExpertMode extends IPSModule
        return $level;
     }
 
-    private function IsValidStringPair(string $value1,string $value2 )
+    private function IsValidStringPair(string $value1,string $value2 ) :bool
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        if (!$this->IsValidString($value1)) return false;
        if (!$this->IsValidString($value2)) return false;
        return $value1==$value2;
