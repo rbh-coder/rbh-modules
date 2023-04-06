@@ -74,6 +74,7 @@ class ExpertMode extends IPSModule
     //regstriert wird
     public function RequestAction($Ident,$Value)
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         switch($Ident) {
               case "Password":
                    $this->SetValue($Ident, $Value);
