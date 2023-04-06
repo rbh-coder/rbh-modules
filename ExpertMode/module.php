@@ -199,7 +199,7 @@ class ExpertMode extends IPSModule
     {
         if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $variables = json_decode($list, $status);
+        $variables = json_decode($list,true);
         foreach ($variables as $variable) 
         {
                 $this->HideItemById($variable['ObjectID'],$status);
@@ -209,7 +209,7 @@ class ExpertMode extends IPSModule
     {
         if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $variables = json_decode($list,$status);
+        $variables = json_decode($list,true);
         foreach ($variables as $variable) 
         {
                 $this->LockItemById($variable['ObjectID'],$status);
