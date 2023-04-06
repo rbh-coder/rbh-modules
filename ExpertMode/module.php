@@ -110,6 +110,7 @@ class ExpertMode extends IPSModule
   
     private function CheckPassword(string $value) : int
     {
+
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SendDebug(__FUNCTION__, 'Password: '.$value, 0);
         $this->SendDebug(__FUNCTION__, 'L1 Password: '.this->ReadPropertyString('Password_L1'), 0);
