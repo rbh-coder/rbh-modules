@@ -39,8 +39,6 @@ class ExpertMode extends IPSModule
         $this->RegisterPropertyString('EnableInstanciesL1',"[]");
         $this->RegisterPropertyString('ShowInstanciesL2',"[]");
         $this->RegisterPropertyString('EnableInstanciesL2',"[]");
-
-        $this->RegisterAttributeInteger('ExpertLevel',0);
        
         $this->DeleteProfileList (self::ProfileList);
 
@@ -79,8 +77,8 @@ class ExpertMode extends IPSModule
               case "Password":
                    $this->SetValue($Ident, $Value);
                    $level = $this->CheckPassword($Value); 
-                   $this->WriteAttributeInteger('ExpertLevel',$level);
                    $this->SetLevelProfile($level);
+                   $this->SetValue($Ident,'');
                    break;
               case "ExpertLevel":
                    $this->SetValue($Ident, $Value);
