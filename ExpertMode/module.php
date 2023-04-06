@@ -130,7 +130,7 @@ class ExpertMode extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        if (!$this->IsValidString($value1)) return false;
        if (!$this->IsValidString($value2)) return false;
-       return $value1==$value2;
+       return (strcmp($value1,$value2) == 0);
     }
 
     private function IsValidString(string $value)
