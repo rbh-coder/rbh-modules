@@ -53,7 +53,7 @@ class ExpertMode extends IPSModule
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 1);
             IPS_SetVariableProfileValues($profileName, 0, 2, 0);
-            IPS_SetVariableProfileIcon($profileName, "Shutter");
+            IPS_SetVariableProfileIcon($profileName, "Key");
         }
         $this->RegisterVariableInteger($variable, $this->Translate('User Level'),$profileName, 20);
         $this->EnableAction($variable);
