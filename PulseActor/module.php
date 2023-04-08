@@ -339,7 +339,7 @@ class PulseActor extends IPSModule
 
         $this->RegisterReferenceVarIdList($this->ReadAttributeString('SwitchList'));
         $this->RegisterReferenceVarIdList($this->ReadAttributeString('StatusList'));
-        $this->RegisterReferenceVarId($this->ReadPropertyIntegerString('ExpertModeID'));
+        $this->RegisterReferenceVarId($this->ReadPropertyInteger('ExpertModeID'));
 
     }
 
