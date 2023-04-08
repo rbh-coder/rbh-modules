@@ -275,7 +275,6 @@ class HeatingZoneController extends IPSModule
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
-        $this->RegisterReferenceVarIdList(self::ReferenciesList);
         ########## Timer
 
       
