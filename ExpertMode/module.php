@@ -13,7 +13,7 @@ class ExpertMode extends IPSModule
     private const ProfileList =                     'ExpertLevel';
     private const RegisterVariablesUpdateList =     '';
     private const RegisterReferenciesUpdateList =   '';
-    private const ReferenciesList =                 'ExpertLevel';
+    private const ReferenciesList =                 '';
    
    
     private const Transparent = 0xffffff00;
@@ -198,7 +198,7 @@ class ExpertMode extends IPSModule
         }
     }
 
-    private function RegisterVarIdList (string $list) : void 
+    private function RegisterReferenceVarIdList (string $list) : void 
     {
         if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -264,10 +264,10 @@ class ExpertMode extends IPSModule
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
 
         $this->RegisterVariableIds(self::ReferenciesList);
-        $this-> RegisterVarIdList ($this->ReadPropertyString('ShowInstanciesL1'));
-        $this-> RegisterVarIdList ($this->ReadPropertyString('EnableInstanciesL1'));
-        $this-> RegisterVarIdList ($this->ReadPropertyString('ShowInstanciesL2'));
-        $this-> RegisterVarIdList ($this->ReadPropertyString('EnableInstanciesL2'));
+        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('ShowInstanciesL1'));
+        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('EnableInstanciesL1'));
+        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('ShowInstanciesL2'));
+        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('EnableInstanciesL2'));
         
         $this->SetLevelProfile($this->GetValue('ExpertLevel'));
 

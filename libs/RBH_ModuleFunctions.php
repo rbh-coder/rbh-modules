@@ -23,10 +23,18 @@ trait RBH_ModuleFunctions
         }
     }
 
-    private function RegisterVariableId(int $id) : void
+    private function RegisterReferenceVarId(int $id) : void
     {
         if (!$this->IsValidId($id)) return;
-        $this->RegisterPropertyInteger($item, 0); 
+        $this->RegisterReference($item); 
+    }
+
+    private function RegisterReferenceVarIdList(string $itemsString) : void
+    {
+        if (!$this->IsValidStringList($itemsString)) return;
+        foreach (explode(',', $itemsString) as $item) {
+            if ($item != 0) $this-> RegisterReferenceVarId($item);
+        }
     }
 
     private function RegisterLinkIds(string $itemsString) : void
