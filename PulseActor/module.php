@@ -353,6 +353,7 @@ class PulseActor extends IPSModule
         }
 
         $this->RegisterStatusUpdate('ExpertModeID');
+        $this->RegisterMessage($this->GetIDForIdent('AutomaticRelease'),VM_UPDATE);
 
         //TimeProfile aufdatieren
         $this->UpdateTimeProfile($this->CreateProfileName("PulseTime"), $this->ReadPropertyInteger('MaxPulseTime'),$this->GetSuffix($this->ReadPropertyInteger('PulseTimeUnit')));
