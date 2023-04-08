@@ -32,7 +32,7 @@ class FlapControl extends IPSModule
     private const ProfileList =                     'FlapAction,FlapStatus';
     private const RegisterVariablesUpdateList =     'FlapAction';
     private const RegisterReferenciesUpdateList =   'ExpertModeID';
-    private const ReferenciesList =                 'FlapOpenActorID,FlapCloseActorID';
+    private const ReferenciesList =                 'ExpertModeID,FlapOpenActorID,FlapCloseActorID';
     private const ExpertLockList =                  'FlapAction';
     private const ExpertHideList =                  '';
     
@@ -51,7 +51,6 @@ class FlapControl extends IPSModule
         //Never delete this line!
         parent::Create();
 
-        $this->RegisterPropertyInteger('ExpertModeID', 0);
         $this->RegisterPropertyInteger('MaxClosingTime', 20);
         $this->RegisterPropertyInteger('MaxOpeningTime', 20);
         $this->RegisterPropertyInteger('OpeningTime', 9);
@@ -289,7 +288,8 @@ class FlapControl extends IPSModule
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
-
+        $this->RegisterReferenceVarIdList(self::ReferenciesList);
+       
     }
 
 

@@ -337,6 +337,10 @@ class PulseActor extends IPSModule
         $this->WriteAttributeInteger('PulseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->WriteAttributeInteger('PauseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PauseTimeUnit')));
 
+        $this->RegisterReferenceVarIdList($this->ReadAttributeString('SwitchList'));
+        $this->RegisterReferenceVarIdList($this->ReadAttributeString('StatusList'));
+        $this->RegisterReferenceVarId($this->ReadPropertyIntegerString('ExpertModeID'));
+
     }
 
     //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist

@@ -30,7 +30,7 @@ class HeatingZoneController extends IPSModule
     private const ProfileList =                     'WeekTimerStatus,OpMode,OpModeActive,AdaptRoomTemperature,IgnoreThermostat,BoostMode';
     private const RegisterVariablesUpdateList =     'WeekTimerStatus';
     private const RegisterReferenciesUpdateList =   'ExpertModeID,IdControlAlive,IdRoomThermostat';
-    private const ReferenciesList =                 'IdRoomThermostat,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat,IdOpModeSend,IdAdaptRoomTemperatureSend,IdSetBackSignal';
+    private const ReferenciesList =                 'ExpertModeID,IdRoomThermostat,IdControlAlive,IdRoomTemperature,IdHeatingPump,IdMixerPosition,IdSetHeat,IdActHeat,IdOpModeSend,IdAdaptRoomTemperatureSend,IdSetBackSignal';
     private const ExpertLockList =                  '';
     private const ExpertHideList =                  'OpModeActive';
    
@@ -65,8 +65,8 @@ class HeatingZoneController extends IPSModule
         ########## Properties
         $this->DeleteProfileList (self::ProfileList);
        
-        $this->RegisterPropertyInteger('ExpertModeID', 0);
-        $this->RegisterPropertyInteger('IdControlAlive',0);
+        //$this->RegisterPropertyInteger('ExpertModeID', 0);
+        //$this->RegisterPropertyInteger('IdControlAlive',0);
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyBoolean('UseWeekTimer',0);
         $this->RegisterPropertyFloat('SetBackTemperature',0);
@@ -204,7 +204,8 @@ class HeatingZoneController extends IPSModule
 
 
         //Register references and messages
-        
+        $this->RegisterReferenceVarIdList(self::ReferenciesList);
+        $this->RegisterReferenceVarId($this->ReadPropertyInteger('ExpertModeID'));
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         
         //------------------------------------------------------------------------------------------
@@ -274,7 +275,7 @@ class HeatingZoneController extends IPSModule
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
-        
+        $this->RegisterReferenceVarIdList(self::ReferenciesList);
         ########## Timer
 
       

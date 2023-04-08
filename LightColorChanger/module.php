@@ -149,7 +149,7 @@ class LightColorChanger extends IPSModule
         $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'),$profileName, 60);
         $this->EnableAction($variable);
       
-        //Benötige Anmeldudngen für MessageSing durchführen
+        //Benötige Anmeldudngen für MessageSink durchführen
         foreach ( $this->GetArrayFromString(self::RegisterList) as $item) {
               $this->RegisterMessage($this->GetIDForIdent($item),VM_UPDATE);
         }
@@ -464,6 +464,11 @@ class LightColorChanger extends IPSModule
             $this->HideItem('ColorFadeTime',false);
             $this->SetValue('ColorFadeTime',5);
         }
+        $this->RegisterReferenceVarIdList(self::RegisterList);
+        $this->RegisterReferenceVarIdList($this->ReadAttributeString('SwitchList'));
+        $this->RegisterReferenceVarIdList($this->ReadAttributeString('StatusList'));
+        $this->RegisterReferenceVarId($this->ReadPropertyIntegerString('ExpertModeID'));
+
     }
 
     private function ChangeColor() : void
