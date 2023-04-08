@@ -82,6 +82,7 @@ trait RBH_ModuleFunctions
             IPS_SetName($linkID, $name);
             IPS_SetIcon($linkID,$iconName);
             IPS_SetLinkTargetID($linkID, $targetID);
+            $this->RegisterReferenceVarId($linkID);
             return $linkID;
 
         } else {
