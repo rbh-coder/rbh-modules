@@ -204,9 +204,9 @@ class HeatingZoneController extends IPSModule
 
 
         //Register references and messages
-        $this->RegisterReferenceVarIdList(self::ReferenciesList);
-        $this->RegisterReferenceVarId($this->ReadPropertyInteger('ExpertModeID'));
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
+        $this->RegisterReferenceVarIdList(self::ReferenciesList);
+       
         
         //------------------------------------------------------------------------------------------
         //Weekly schedule
