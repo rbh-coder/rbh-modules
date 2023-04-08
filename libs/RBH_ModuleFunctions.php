@@ -26,7 +26,7 @@ trait RBH_ModuleFunctions
     private function RegisterReferenceVarId(int $id) : void
     {
         if (!$this->IsValidId($id)) return;
-        $this->RegisterReference($item); 
+        $this->RegisterReference($id); 
     }
 
     private function RegisterReferenceVarIdList(string $itemsString) : void
