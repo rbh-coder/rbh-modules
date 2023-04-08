@@ -205,7 +205,7 @@ class ExpertMode extends IPSModule
         $variables = json_decode($list,true);
         foreach ($variables as $variable) 
         {
-            $this->RegisterVariableId($variable['ObjectID']);
+            $this->RegisterReferenceVarId($variable['ObjectID']);
         }
     }
 
