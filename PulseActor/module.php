@@ -376,19 +376,7 @@ class PulseActor extends IPSModule
 
     private function HandleExpertSwitch(int $id)
     {
-        $status = !GetValueBoolean($id);
-        if ($id==0)  $status = false;
-        //IPS_LogMessage("HandleExpertSwitch", 'id:'.$id.' value:'.$status);
-        $itemString = $this->ReadAttributeString('ExpertListHide');
-        foreach (explode(',', $itemString) as $item)
-        {
-            $this->HideItem($item,$status);
-        }
-        $itemString = $this->ReadAttributeString('ExpertListLock');
-        foreach (explode(',', $itemString) as $item)
-        {
-            $this->LockItem($item,$status);
-        }
+        $this->HandleExpertSwitch($id,$this->ReadAttributeString('ExpertListHide'),$this->ReadAttributeString('ExpertListLock'));
     }
 
     public function VerifySignal()

@@ -89,10 +89,10 @@ trait RBH_ModuleFunctions
         }
     }
 
-   private function HandleExpertSwitch(int $id, string $hideList, string $lockList ) : void
+   private function HandleExpertSwitch(int $id, string $hideList, string $lockList ) : bool
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-       $status = !GetValueBoolean($id);
+       $status = GetValueInteger($id) == 0;
        if ($id==0)  $status = false;
 
        if ($this->IsValidStringList($hideList))
@@ -109,6 +109,7 @@ trait RBH_ModuleFunctions
                $this->LockItem($item,$status);
            }
        }
+       return $status;
    }
 
    private function IsValidStringList(string $list) : bool
