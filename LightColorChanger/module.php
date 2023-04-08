@@ -472,7 +472,6 @@ class LightColorChanger extends IPSModule
             $this->HideItem('ColorFadeTime',false);
             $this->SetValue('ColorFadeTime',5);
         }
-        $this->RegisterReferenceVarIdList(self::RegisterList);
         $this->RegisterReferenceVarIdList($this->ReadAttributeString('SwitchList'));
         $this->RegisterReferenceVarIdList($this->ReadAttributeString('StatusList'));
         $this->RegisterReferenceVarId($this->ReadPropertyInteger('ExpertModeID'));
