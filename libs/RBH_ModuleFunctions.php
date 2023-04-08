@@ -33,7 +33,7 @@ trait RBH_ModuleFunctions
     {
         if (!$this->IsValidStringList($itemsString)) return;
         foreach (explode(',', $itemsString) as $item) {
-            if ($item != 0) $this-> RegisterReferenceVarId($item);
+            if ($item != "") $this-> RegisterReferenceVarId($this->GetIDForIdent($item));
         }
     }
 
