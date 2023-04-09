@@ -22,6 +22,10 @@
 					"caption": "Password Level 1"
 				},
 				{
+					"type": "Label",
+					"caption": " "
+				},
+				{
 					"type": "List",
 					"caption": "Zeige Instanzen ab Level 1",
 					"name": "ShowInstanciesL1",
@@ -67,6 +71,10 @@
 					"type": "ValidationTextBox",
 					"name": "Password_L2",
 					"caption": "Password Level 2"
+				},
+				{
+					"type": "Label",
+					"caption": " "
 				},
 				{
 					"type": "List",
