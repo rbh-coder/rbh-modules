@@ -1,33 +1,13 @@
 {
 	"elements": [
 		{
-
-
 			"type": "ExpansionPanel",
-			"caption": "Passwörter",
+			"caption": "Gültigkeitsdauer",
 			"items": [
-				{
-					"type": "Label",
-					"caption": " "
-				},
-				{
-					"type": "ValidationTextBox",
-					"name": "Password_L1",
-					"caption": "Password Level 1"
-				},
-				{
-					"type": "ValidationTextBox",
-					"name": "Password_L2",
-					"caption": "Password Level 2"
-				},
-				{
-					"type": "Label",
-					"caption": " "
-				},
 				{
 					"name": "ExpertLeaseTime",
 					"type": "NumberSpinner",
-					"caption": "Experten Modus Gültigkeit",
+					"caption": "Gültigkeit User Level > 0",
 					"suffix": "Minuten"
 				}
 			]
@@ -36,6 +16,11 @@
 			"type": "ExpansionPanel",
 			"caption": "Level 1 Instanzen",
 			"items": [
+				{
+					"type": "ValidationTextBox",
+					"name": "Password_L1",
+					"caption": "Password Level 1"
+				},
 				{
 					"type": "List",
 					"caption": "Zeige Instanzen ab Level 1",
@@ -78,6 +63,11 @@
 			"type": "ExpansionPanel",
 			"caption": "Level 2 Instanzen",
 			"items": [
+				{
+					"type": "ValidationTextBox",
+					"name": "Password_L2",
+					"caption": "Password Level 2"
+				},
 				{
 					"type": "List",
 					"caption": "Zeige Instanzen ab Level 2",
