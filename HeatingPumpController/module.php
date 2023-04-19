@@ -236,11 +236,10 @@ class HeatingPumpController extends IPSModule
          //------------------------------------------------------------------------------------------
 
         ########## Links
-        $id = $this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Intensitiy', 100);
-        IPS_SetIcon($id,'Electricity');
+        $id = $this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Electricity', 100);
         $this->WriteAttributeInteger('PvPowerLink',$id);
-        $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Ok', 110);
-        IPS_SetIcon($id,'Lock');
+        $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Flame', 110);
+      
 
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
@@ -328,7 +327,7 @@ class HeatingPumpController extends IPSModule
    
     private function SelectExpertSwitch(int $sender) : bool
     {
-        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id = $this->ReadPropertyInteger('ExpertModeID');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
@@ -337,7 +336,7 @@ class HeatingPumpController extends IPSModule
 
     private function SelectControlAlive(int $sender) : bool
     {
-        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id = $this->ReadPropertyInteger('IdControlAlive');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
@@ -346,7 +345,7 @@ class HeatingPumpController extends IPSModule
 
     private function SelectPvPower(int $sender) : bool
     {
-        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $id = $this->ReadPropertyInteger('IdPvPower');
        if (!$this->IsValidId($id)) return false;
        if ($id != $sender) return false;
@@ -356,13 +355,13 @@ class HeatingPumpController extends IPSModule
     
     private function OperateExpertSwitch(int $id) : void
     {
-        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->HandleExpertSwitch($id,self::ExpertHideList,self::ExpertLockList);
     }
 
     private function OperateControlAlive(bool $value) : void
     {
-        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($value)
         {
             $this->SendOpMode($this->GetValue('OpMode'));
@@ -372,7 +371,7 @@ class HeatingPumpController extends IPSModule
 
     private function OperatePvPower(float $value) : void
     {
-        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetHeatPumpStatus();
     }
 
