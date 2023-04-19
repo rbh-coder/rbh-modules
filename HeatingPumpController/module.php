@@ -124,7 +124,7 @@ class HeatingPumpController extends IPSModule
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 2);
             IPS_SetVariableProfileIcon($profileName, "Electricity");
-            IPS_SetVariableProfileValues($profileName, 0, 500, 0);
+            IPS_SetVariableProfileValues($profileName, 0, 500, 10000);
             IPS_SetVariableProfileDigits($profileName, 1);
             IPS_SetVariableProfileText($profileName,"","W");
         }
