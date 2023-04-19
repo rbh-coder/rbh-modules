@@ -365,8 +365,8 @@ class HeatingPumpController extends IPSModule
     {
         if ($value)
         {
-            $this->SendOpMode($this->GetValue('OpModeActive'));
-            $this->OperateHeatingStatus($this->GetValue('HeatingMode'));
+            $this->SendOpMode($this->GetValue('OpMode'));
+            $this->SetHeatPumpStatus();
         }
     }
 
@@ -398,7 +398,7 @@ class HeatingPumpController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $weekTimerId = $this->ReadAttributeInteger('WeekTimerPv');
         if (!$this->ValidateEventPlan($weekTimerId )) $actionID = 0;
-        else $actionID = $this->GetWeekTimerAction($weekTimerId );
+        else $actionID = $this->GetWeekTimerAction($weekTimerId);
         $this->SetAttributeInteger('WeekTimerStatus',$actionID);
         $this->SetHeatPumpStatus();
    }
