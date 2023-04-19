@@ -227,7 +227,7 @@ class PulseActor extends IPSModule
         if ($Data[1]==0) return;
 
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SendDebug(__FUNCTION__, 'id:'.$SenderID.' message:'.$Message.' data:'.print_r($Data, true), 0);
+        //$this->SendDebug(__FUNCTION__, 'id:'.$SenderID.' message:'.$Message.' data:'.print_r($Data, true), 0);
 
         if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
         {
