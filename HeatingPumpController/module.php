@@ -189,7 +189,8 @@ class HeatingPumpController extends IPSModule
         
         //------------------------------------------------------------------------------------------
         //Weekly schedule
-        $id = @IPS_GetEventIDByName('Wochenplan',$this->InstanceID);
+        $weektimerName = 'Wochenplan Nachtsperre';
+        $id = @IPS_GetEventIDByName($weektimerName,$this->InstanceID);
        
        if (!$id || !@IPS_ObjectExists($id))
        {
@@ -197,7 +198,7 @@ class HeatingPumpController extends IPSModule
            $this->SendDebug(__FUNCTION__, 'Erstelle Wochenplan mit ID: '.$id, 0);
            IPS_SetParent($id, $this->InstanceID);
            IPS_SetPosition($id,20);
-           IPS_SetName($id,'Wochenplan');
+           IPS_SetName($id,$weektimerName);
            IPS_SetIcon($id,'Calendar');
            switch ( $this->ReadPropertyInteger('WeekTimerGroups'))
            {
@@ -236,8 +237,8 @@ class HeatingPumpController extends IPSModule
 
         ########## Links
         $this->WriteAttributeInteger('PvPowerLink',$this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Intensitiy', 100));
-        $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Ok', 110);
-      
+        $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Ok', 110);
+        IPS_SetIcon($id,'Electricity');
 
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
