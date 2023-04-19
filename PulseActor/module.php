@@ -381,11 +381,6 @@ class PulseActor extends IPSModule
         }
     }
 
-    private function HandleExpertSwitch(int $id) : void
-    {
-        $this->HandleExpertSwitch($id,$this->ReadAttributeString('ExpertListHide'),$this->ReadAttributeString('ExpertListLock'));
-    }
-
     public function VerifySignal() : void
     {
         if (!$this->ReadPropertyBoolean('CheckActor')) return;
