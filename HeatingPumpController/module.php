@@ -236,9 +236,11 @@ class HeatingPumpController extends IPSModule
          //------------------------------------------------------------------------------------------
 
         ########## Links
-        $this->WriteAttributeInteger('PvPowerLink',$this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Intensitiy', 100));
-        $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Ok', 110);
+        $id = $this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Intensitiy', 100);
         IPS_SetIcon($id,'Electricity');
+        $this->WriteAttributeInteger('PvPowerLink',$id);
+        $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Ok', 110);
+        IPS_SetIcon($id,'Lock');
 
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
@@ -336,6 +338,7 @@ class HeatingPumpController extends IPSModule
     }
     private function SelectExpertSwitch(int $sender) : bool
     {
+        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
         $id = $this->ReadPropertyInteger('ExpertModeID');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
@@ -361,6 +364,7 @@ class HeatingPumpController extends IPSModule
     
     private function OperateExpertSwitch(int $id) : void
     {
+        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
         $this->HandleExpertSwitch($id,self::ExpertHideList,self::ExpertLockList);
     }
 
