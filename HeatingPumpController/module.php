@@ -121,10 +121,10 @@ class HeatingPumpController extends IPSModule
         $profileName = $this->CreateProfileName($variable);
         if (!IPS_VariableProfileExists($profileName)) {
             IPS_CreateVariableProfile($profileName, 2);
-            IPS_SetVariableProfileIcon($profileName, "Intensity");
-            IPS_SetVariableProfileValues($profileName, 0, 10, 0.5);
+            IPS_SetVariableProfileIcon($profileName, "Electricity");
+            IPS_SetVariableProfileValues($profileName, 0, 500, 0);
             IPS_SetVariableProfileDigits($profileName, 1);
-            IPS_SetVariableProfileText($profileName,"","kW");
+            IPS_SetVariableProfileText($profileName,"","W");
         }
         $this->RegisterVariableFloat($variable, $this->Translate('Minimum PV Power'), $profileName, 40);
         $this->EnableAction($variable);
@@ -559,9 +559,8 @@ class HeatingPumpController extends IPSModule
 
         $this->HideItemById ($this->ReadAttributeInteger('WeekTimerPv'),$hide);
         $this->HideItemById ($this->ReadAttributeInteger('PvPowerLink'),$hide);
-        $this->HideItem ('HeatPumpReleasePower',$hide);
         $this->HideItem ('BoostMode',$hide);
-
+        $this->HideItem ('HeatPumpRequest',$hide);
         $this->SendOpMode($opmode);
        
    }
