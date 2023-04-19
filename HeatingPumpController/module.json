@@ -1,0 +1,12 @@
+{
+  "id": "{B56AF957-4693-C8FE-B78D-C4091976F4C9}",
+  "name": "Heating Pump Controller",
+  "type": 3,
+  "vendor": "",
+  "aliases": [],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "HPCTRL",
+  "url": ""
+}

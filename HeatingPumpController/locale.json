@@ -1,0 +1,16 @@
+{
+  "translations": {
+    "de": {
+      "Operation Mode": "Betriebsart",
+      "Active Operation Mode": "Aktive Betriebsart",
+      "Week Timer Status": "Wochenplan Status",
+      "Scheduled Switch": "Schaltuhr",
+      "Expert Mode": "Expertenmodus",
+      "Minimum PV Power": "Minimal PV Leistung",
+      "Hours": "Stunden",
+      "Minutes": "Minuten"
+    }
+  }
+}
+
+

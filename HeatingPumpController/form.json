@@ -1,0 +1,150 @@
+{
+  "elements": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Empfangs-Dateninstanzen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "name": "IdPvPower",
+          "type": "SelectVariable",
+          "caption": "ID PV Leistung"
+        },
+        {
+          "name": "ExpertModeID",
+          "type": "SelectVariable",
+          "caption": "Expert Mode"
+        },
+        {
+          "name": "IdHeatPumpReleaseStatus",
+          "type": "SelectVariable",
+          "caption": "ID Status Wärmepumpe"
+        },
+        {
+          "name": "IdControlAlive",
+          "type": "SelectVariable",
+          "caption": "ID Steuerung gestartet"
+        }
+      ]
+    },
+
+    {
+      "type": "ExpansionPanel",
+      "caption": "Sende-Dateninstanzen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "name": "IdOpModeSend",
+          "type": "SelectVariable",
+          "caption": "ID Betriebsart"
+        },
+        {
+          "name": "IdHeatPumpRelease",
+          "type": "SelectVariable",
+          "caption": "ID Wärmepumpe Freigabe"
+        },
+        {
+          "name": "IdHeatPumpNightLock",
+          "type": "SelectVariable",
+          "caption": "ID Wärmepumpe Nachsperre"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Externe Anforderungen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "List",
+          "caption": "Anforderungs Liste",
+          "name": "ExternalRequestList",
+          "add": true,
+          "delete": true,
+          "columns": [
+            {
+              "caption": "Variablen ID",
+              "name": "VariableID",
+              "add": 0,
+              "width": "auto",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Parameter",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "name": "BoostTime",
+          "type": "NumberSpinner",
+          "caption": "Boost Zeit",
+          "suffix": "Stunden"
+        },
+        {
+          "name": "PvLimitHysteresis",
+          "type": "NumberSpinner",
+          "caption": "PV Limit Hysterese",
+          "suffix": "°C"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Wochenplan",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Auswahl für Wochenplan:"
+        },
+        {
+          "type": "Select",
+          "name": "WeekTimerGroups",
+          "caption": "Auswahl Schaltgruppen",
+          "options": [
+            {
+              "caption": "Täglich",
+              "value": 0
+            },
+            {
+              "caption": "Wochentage, Wochenende",
+              "value": 1
+            },
+            {
+              "caption": "Ganze Woche",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Testbereich",
+      "items": [
+        {
+          "type": "TestCenter"
+        }
+      ]
+    }
+  ]
+}
