@@ -70,6 +70,7 @@ class HeatingPumpController extends IPSModule
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyInteger('BoostTime',2);
         $this->RegisterPropertyFloat('PvLimitHysteresis',300.0);
+        $this->RegisterPropertyString('ExternalRequestList', '[]');
        
         ########## Variables
 
@@ -159,6 +160,8 @@ class HeatingPumpController extends IPSModule
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
+
+         $variables = json_decode($this->ReadPropertyString('ExternalRequestList'), true);
      
         //Delete all references
         foreach ($this->GetReferenceList() as $referenceID) {
@@ -185,7 +188,10 @@ class HeatingPumpController extends IPSModule
         //Register references and messages
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         $this->RegisterReferenceVarIdList(self::ReferenciesList);
-       
+        foreach ($variables as $variable) {
+                $this->RegisterReference($variable['VariableID']);
+            }
+
         
         //------------------------------------------------------------------------------------------
         //Weekly schedule
@@ -519,7 +525,7 @@ class HeatingPumpController extends IPSModule
    private function StartBoostTimer () : void
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SetTimerInterval('HPCTRL_BoostTimer', $this->ReadPropertyInteger("BoostTime") * 1000 *60);
+        $this->SetTimerInterval('HPCTRL_BoostTimer', $this->ReadPropertyInteger("BoostTime") * 1000 * 60 * 60);
    }
 
     #################### Request action

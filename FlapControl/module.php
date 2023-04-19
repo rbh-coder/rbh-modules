@@ -54,7 +54,7 @@ class FlapControl extends IPSModule
         $this->RegisterPropertyInteger('MaxClosingTime', 20);
         $this->RegisterPropertyInteger('MaxOpeningTime', 20);
         $this->RegisterPropertyInteger('OpeningTime', 9);
-
+       
         $this->DeleteProfileList (self::ProfileList);
 
         //Variablen --------------------------------------------------------------------------------------------------------

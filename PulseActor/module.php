@@ -136,20 +136,13 @@ class PulseActor extends IPSModule
         $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
     }
 
-    private function RegisterVariableIds(string $itemsString)
-    {
-        foreach (explode(',', $itemsString) as $item) {
-            if ($item != "") $this->RegisterPropertyInteger($item, 0);
-        }
-    }
-
-    private function UpdateTimeProfile(string $profileName, float $maxValue, string $suffix)
+    private function UpdateTimeProfile(string $profileName, float $maxValue, string $suffix) : void
     {
         IPS_SetVariableProfileText($profileName,"",$suffix);
         IPS_SetVariableProfileValues ($profileName, 0, $maxValue,1);
     }
 
-    private function GetSuffix ( int $suffixId)
+    private function GetSuffix ( int $suffixId) : string
     {
         switch ($suffixId)
         {
@@ -163,7 +156,7 @@ class PulseActor extends IPSModule
         return " ???";
     }
 
-    private function GetTimerFactor ( int $suffixId)
+    private function GetTimerFactor ( int $suffixId) : int
     {
         switch ($suffixId)
         {
@@ -180,7 +173,7 @@ class PulseActor extends IPSModule
     //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable
     //void EnableAction (string $Ident)
     //regstriert wird
-    public function RequestAction($Ident,$Value)
+    public function RequestAction($Ident,$Value) 
     {
         switch($Ident) {
             case "OpMode":
@@ -201,7 +194,7 @@ class PulseActor extends IPSModule
         }
     }
 
-    public function HandleOpMode(int $opmode)
+    public function HandleOpMode(int $opmode) : void
     {
         switch($opmode) {
             case self::Aus: //Aus
@@ -252,24 +245,24 @@ class PulseActor extends IPSModule
         }
     }
 
-    public function UpdatePulseTimer()
+    public function UpdatePulseTimer() : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);;
         $this->PulseAction ();
     }
 
-    public function UpdatePauseTimer()
+    public function UpdatePauseTimer() : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->PulseAction ();
     }
 
-    private function AutomaticRelease ()
+    private function AutomaticRelease () : void
     {
         $this->PulseAction ();
     }
 
-    private function StatusUpdate (int $senderID)
+    private function StatusUpdate (int $senderID) : void
     {
         $itemArray =  $this->GetArrayFromString ($this->ReadAttributeString('StatusList'));
         $idx = 0;
@@ -328,10 +321,7 @@ class PulseActor extends IPSModule
             }
         }
 
-        $itemsString = $this->ReadAttributeString('StatusList');
-        foreach ( $this->GetArrayFromString($this->ReadAttributeString('StatusList')) as $item) {
-            $this->RegisterStatusUpdate($item);
-        }
+        $this->RegisterPropertiesUpdateList( $this->ReadAttributeString('StatusList'));
 
         //Link auf "StatusActorID" variable erzeugen, falls noch nicht existiert
         $targetID = $this->ReadPropertyInteger('StatusActorID');
@@ -368,19 +358,7 @@ class PulseActor extends IPSModule
 
     }
 
-    //Methode Registriert Variable für die MessageSink, soferne dieser in der Modul-Form aktiviert ist
-    public function RegisterStatusUpdate(string $statusName)
-    {
-        if (empty($statusName)) return;
-        $id= $this->ReadPropertyInteger($statusName);
-        //Register for change notification if a variable is defined
-        //IPS_LogMessage("ApplyChanges", 'id:'.$id.' name:'.$statusName);
-        if ($id>1) {
-            $this->RegisterMessage($id,VM_UPDATE);
-        }
-    }
-
-    public function RestartTimers()
+    public function RestartTimers() : void
     {
         switch($this->GetValue('OpMode'))
         {
@@ -391,7 +369,7 @@ class PulseActor extends IPSModule
     }
 
     //Methode setzt Variable, soferne dieser in der Modul-Form aktiviert ist
-    public function SetDevice(string $switchName, bool $status)
+    public function SetDevice(string $switchName, bool $status) : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SendDebug(__FUNCTION__, "switchName: ".$switchName, 0);
@@ -403,12 +381,12 @@ class PulseActor extends IPSModule
         }
     }
 
-    private function HandleExpertSwitch(int $id)
+    private function HandleExpertSwitch(int $id) : void
     {
         $this->HandleExpertSwitch($id,$this->ReadAttributeString('ExpertListHide'),$this->ReadAttributeString('ExpertListLock'));
     }
 
-    public function VerifySignal()
+    public function VerifySignal() : void
     {
         if (!$this->ReadPropertyBoolean('CheckActor')) return;
         $idSet = $this->ReadPropertyInteger("SwitchActorID");
@@ -429,7 +407,7 @@ class PulseActor extends IPSModule
         $this->StartSignalChecker();
     }
 
-    private function StopSignalChecker()
+    private function StopSignalChecker() : void
     {
         $this->SetTimerInterval('PAC_SignalCheckTimer', 0);
     }
@@ -438,7 +416,7 @@ class PulseActor extends IPSModule
         $this->SetTimerInterval('PAC_SignalCheckTimer', 3000);
     }
 
-    private function CheckSignal(int $idSet,bool $statusSet,int $idAct)
+    private function CheckSignal(int $idSet,bool $statusSet,int $idAct) :bool
     {
         $statusAct = GetValueBoolean($idAct);
         if ($statusSet ==  $statusAct)
@@ -456,7 +434,7 @@ class PulseActor extends IPSModule
         return ($statusSet ==  $statusAct);
     }
 
-    private function PulseAction ()
+    private function PulseAction () : void
     {
         $betriebsart = $this->GetValue('OpMode');
         $action =  $this->GetValue('ModuleStatus');
@@ -483,7 +461,7 @@ class PulseActor extends IPSModule
         IPS_LogMessage("PulsActor.PulseAction",'ModuleStatus: '.$action);
     }
 
-    private function GetAutomaticAction (int $action)
+    private function GetAutomaticAction (int $action) : int
     {
         switch ($action)
         {
@@ -495,18 +473,18 @@ class PulseActor extends IPSModule
         return $action;
     }
 
-    private function SwitchOff ()
+    private function SwitchOff () : void
     {
         $this->StopTimer();
         $this->SetDevice("SwitchActorID",false);
     }
 
-    private function SwitchOn ()
+    private function SwitchOn () : void
     {
         $this->SetDevice("SwitchActorID",true);
     }
 
-    private function SetAction (int $action)
+    private function SetAction (int $action) : int
     {
 	    $actAction = $action;
 
@@ -567,12 +545,12 @@ class PulseActor extends IPSModule
 	    return $actAction;
     }
 
-    private function IsReleased()
+    private function IsReleased() : bool
     {
         return $this->GetValue('AutomaticRelease');
     }
 
-    private function StartPauseTime ()
+    private function StartPauseTime () : bool
     {
         $pauseTime =   $this->GetPauseTime ();
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -580,7 +558,7 @@ class PulseActor extends IPSModule
         $this->SetTimerInterval('PAC_PauseTimer', $pauseTime);
         return $pauseTime > 0;
     }
-    private function StartPulseTime ()
+    private function StartPulseTime () : bool
     {
         $pulseTime =  $this->GetPulseTime();
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -589,17 +567,17 @@ class PulseActor extends IPSModule
         return $pulseTime > 0;
     }
 
-    public function GetPulseTime ()
+    public function GetPulseTime () : int
     {
         return $this->GetValue('PulseTime') * $this->ReadAttributeInteger('PulseTimeFactor');
     }
 
-    public function GetPauseTime ()
+    public function GetPauseTime () : int
     {
         return $this->GetValue('PauseTime') * $this->ReadAttributeInteger('PauseTimeFactor');
     }
 
-    private function Stoptimer ()
+    private function Stoptimer () : void
     {
         $this->SetTimerInterval('PAC_PauseTimer', 0);
         $this->SetTimerInterval('PAC_PulseTimer', 0);
