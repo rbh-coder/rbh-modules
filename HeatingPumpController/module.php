@@ -17,7 +17,7 @@ include_once __DIR__ . '../../libs/RBH_ModuleFunctions.php';
 
 class HeatingPumpController extends IPSModule
 {
-    use RBH_ModuleFunctions;StatusHpReleasedByPvPower
+    use RBH_ModuleFunctions;
 
 
     //Constants
