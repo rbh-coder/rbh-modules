@@ -68,7 +68,7 @@ class HeatingPumpController extends IPSModule
         $this->DeleteProfileList (self::ProfileList);
      
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
-        $this->RegisterPropertyIntegert('BoostTime',2);
+        $this->RegisterPropertyInteger('BoostTime',2);
         $this->RegisterPropertyFloat('PvLimitHysteresis',300.0);
        
         ########## Variables
