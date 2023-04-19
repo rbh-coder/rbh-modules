@@ -418,7 +418,7 @@ class HeatingPumpController extends IPSModule
            case self::Manuell:
                 $this->StopBoostTimer();
                 break;
-           case default:
+           default:
                 if ($this->GetValue('BoostMode'))
                 {
                     $status = self::HpBoostMode; 
