@@ -99,7 +99,7 @@ class HeatingPumpController extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
             IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Yellow);
         }
-        $this->RegisterVariableInteger($variable,"Zuheizen", $profileName, 30);
+        $this->RegisterVariableBoolean($variable,"Zuheizen", $profileName, 20);
         $this->EnableAction($variable);
 
          //HeatPumpActStatus
