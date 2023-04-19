@@ -27,7 +27,7 @@ class HeatingPumpController extends IPSModule
     private const MODULE_VERSION = '1.0, 14.02.2023';
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
-    private const ProfileList =                     'HeatPumpActStatus,OpMode,BoostMode,HeatPumpReleasePower';
+    private const ProfileList =                     'HeatPumpRequest,OpMode,BoostMode,HeatPumpReleasePower';
     private const RegisterVariablesUpdateList =     '';
     private const RegisterReferenciesUpdateList =   'ExpertModeID,IdPvPower,IdControlAlive';
     private const ReferenciesList =                 'ExpertModeID,IdPvPower,IdOpModeSend,IdHeatPumpRelease,IdHeatPumpNightLock,IdControlAlive,IdHeatPumpReleaseStatus';
@@ -44,7 +44,7 @@ class HeatingPumpController extends IPSModule
     private const HpPvLimit = 1;
     private const HpNightLock = 3;
     private const HpBoostMode = 4;
-    private const HpReleased = 5;
+    private const HpRequested = 5;
 
     private const WsUndef = 0;
     private const WsReleased = 1;
@@ -102,18 +102,18 @@ class HeatingPumpController extends IPSModule
         $this->RegisterVariableBoolean($variable,"Zuheizen", $profileName, 20);
         $this->EnableAction($variable);
 
-         //HeatPumpActStatus
-        $variable = 'HeatPumpActStatus';
+         //HeatPumpRequest
+        $variable = 'HeatPumpRequest';
         $profileName = $this->CreateProfileName($variable);
         if (!IPS_VariableProfileExists($profileName)) {
            IPS_CreateVariableProfile($profileName, 1);
            IPS_SetVariableProfileIcon($profileName, "Shutter");
-           IPS_SetVariableProfileAssociation($profileName, self::HpOff, "Gesperrt", "", self::Yellow);
+           IPS_SetVariableProfileAssociation($profileName, self::HpOff, "Keine Anforderung", "", self::Yellow);
            IPS_SetVariableProfileAssociation($profileName, self::HpPvLimit,"Warte auf minimale PV-Leistung", "", self::Yellow);
            IPS_SetVariableProfileAssociation($profileName, self::HpNightLock,"Nachtsperre aktiv", "", self::Blue);
-           IPS_SetVariableProfileAssociation($profileName, self::HpReleased,"Freigegeben", "", self::Green);
+           IPS_SetVariableProfileAssociation($profileName, self::HpRequested,"Angefordert", "", self::Green);
         }
-        $this->RegisterVariableInteger($variable, $this->Translate('Week Timer Status'), $profileName, 30);
+        $this->RegisterVariableInteger($variable, $this->Translate('Heat Pump Request'), $profileName, 30);
         //$this->EnableAction($variable);
 
         //HeatPumpRelease
@@ -407,7 +407,7 @@ class HeatingPumpController extends IPSModule
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        
-       $status = self::HpReleased;
+       $status = self::HpRequested;
 
        switch ($this->GetValue('OpMode'))
        {
@@ -434,7 +434,7 @@ class HeatingPumpController extends IPSModule
            
        }
 
-       $this->SetValue('HeatPumpActStatus',$status); 
+       $this->SetValue('HeatPumpRequest',$status); 
        $this-> OperateHeatPumpStatus($status);
        return  $status;
    }
@@ -459,7 +459,7 @@ class HeatingPumpController extends IPSModule
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
-       if ($this->GetValue('HeatPumpActStatus') == $status) return; 
+       if ($this->GetValue('HeatPumpRequest') == $status) return; 
 
        switch ($value)
        {
@@ -479,7 +479,7 @@ class HeatingPumpController extends IPSModule
                  $this->SendHeatPumpRelease(true);
                  $this->SendHeatPumpNightLock(false);
                 break;
-            case self::HpReleased:
+            case self::HpRequested:
                 $this->SendHeatPumpRelease(true);
                 $this->SendHeatPumpNightLock(false);
                 break;
@@ -560,6 +560,7 @@ class HeatingPumpController extends IPSModule
         $this->HideItemById ($this->ReadAttributeInteger('WeekTimerPv'),$hide);
         $this->HideItemById ($this->ReadAttributeInteger('PvPowerLink'),$hide);
         $this->HideItem ('HeatPumpReleasePower',$hide);
+        $this->HideItem ('BoostMode',$hide);
 
         $this->SendOpMode($opmode);
        

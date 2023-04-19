@@ -102,7 +102,7 @@
           "name": "PvLimitHysteresis",
           "type": "NumberSpinner",
           "caption": "PV Limit Hysterese",
-          "suffix": "°C"
+          "suffix": "W"
         }
       ]
     },

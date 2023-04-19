@@ -2,11 +2,10 @@
   "translations": {
     "de": {
       "Operation Mode": "Betriebsart",
-      "Active Operation Mode": "Aktive Betriebsart",
-      "Week Timer Status": "Wochenplan Status",
+      "Heat Pump Request": "Wärmepumpen Anforderung",
       "Scheduled Switch": "Schaltuhr",
       "Expert Mode": "Expertenmodus",
-      "Minimum PV Power": "Minimal PV Leistung",
+      "Minimum PV Power": "Minimale PV Leistung",
       "Hours": "Stunden",
       "Minutes": "Minuten"
     }
