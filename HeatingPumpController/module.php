@@ -511,12 +511,14 @@ class HeatingPumpController extends IPSModule
  
    private function StopBoostTimer () : void
    {
+       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        $this->SetTimerInterval('HPCTRL_BoostTimer',0);
        $this->SetValue('BoostMode',false);
    }
 
    private function StartBoostTimer () : void
    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetTimerInterval('HPCTRL_BoostTimer', $this->ReadPropertyInteger("BoostTime") * 1000 *60);
    }
 
