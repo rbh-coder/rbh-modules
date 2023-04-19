@@ -288,11 +288,6 @@ class HeatingPumpController extends IPSModule
                 if ($Data[1]==0) return;
                 $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
                
-                if ($this->SelectHeatPumpStatus($SenderID))
-                {
-                    $this->OperateHeatPumpStatus($Data[0]);
-                    return; 
-                }
                 if ($this->SelectExpertSwitch($SenderID))
                 {
                     $this->OperateExpertSwitch($SenderID);
@@ -331,15 +326,8 @@ class HeatingPumpController extends IPSModule
     //Methoden für MessageSink
     private function SelectHeatPumpStatus(int $sender) : bool
     {
-        $id = $this->GetIDForIdent('HeatPumpStatus');
-        if (!$this->IsValidId($id)) return false;
-        if ($id != $sender) return false;
-        return true;
-    }
-    private function SelectExpertSwitch(int $sender) : bool
-    {
         $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
-        $id = $this->ReadPropertyInteger('ExpertModeID');
+        $id = $this->GetIDForIdent('HeatPumpStatus');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
         return true;
@@ -347,6 +335,7 @@ class HeatingPumpController extends IPSModule
 
     private function SelectControlAlive(int $sender) : bool
     {
+        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
         $id = $this->ReadPropertyInteger('IdControlAlive');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
@@ -355,6 +344,7 @@ class HeatingPumpController extends IPSModule
 
     private function SelectPvPower(int $sender) : bool
     {
+        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
        $id = $this->ReadPropertyInteger('IdPvPower');
        if (!$this->IsValidId($id)) return false;
        if ($id != $sender) return false;
@@ -370,6 +360,7 @@ class HeatingPumpController extends IPSModule
 
     private function OperateControlAlive(bool $value) : void
     {
+        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
         if ($value)
         {
             $this->SendOpMode($this->GetValue('OpMode'));
@@ -379,7 +370,8 @@ class HeatingPumpController extends IPSModule
 
     private function OperatePvPower(float $value) : void
     {
-      $this->SetHeatPumpStatus();
+        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+        $this->SetHeatPumpStatus();
     }
 
     //----------------------------------------------------------------------------------------------------------------------------
