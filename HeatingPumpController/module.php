@@ -30,8 +30,8 @@ class HeatingPumpController extends IPSModule
     private const ProfileList =                     'HeatPumpActStatus,OpMode,BoostMode,HeatPumpReleasePower';
     private const RegisterVariablesUpdateList =     '';
     private const RegisterReferenciesUpdateList =   'ExpertModeID,IdPvPower,IdControlAlive';
-    private const ReferenciesList =                 'ExpertModeID,IdPvPower,IdOpModeSend,IdHeatPumpRelease,IdHeatPumpNightLock,IdHeatPumpReleaseStatus';
-    private const PropertiesList =                  'IdPvPower,IdOpModeSend,IdHeatPumpRelease,IdHeatPumpNightLock,IdControlAlive,IdHeatPumpReleaseStatus';
+    private const ReferenciesList =                 'ExpertModeID,IdPvPower,IdOpModeSend,IdHeatPumpRelease,IdHeatPumpNightLock,IdControlAlive,IdHeatPumpReleaseStatus';
+    private const PropertiesList =                  'ExpertModeID,IdPvPower,IdOpModeSend,IdHeatPumpRelease,IdHeatPumpNightLock,IdControlAlive,IdHeatPumpReleaseStatus';
     private const ExpertLockList =                  '';
     private const ExpertHideList =                  'HeatPumpReleasePower';
    
