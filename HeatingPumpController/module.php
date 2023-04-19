@@ -288,6 +288,7 @@ class HeatingPumpController extends IPSModule
                 if ($Data[1]==0) return;
                 $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
                
+              
                 if ($this->SelectExpertSwitch($SenderID))
                 {
                     $this->OperateExpertSwitch($SenderID);
@@ -324,10 +325,11 @@ class HeatingPumpController extends IPSModule
 
     //----------------------------------------------------------------------------------------------------------------------------
     //Methoden für MessageSink
-    private function SelectHeatPumpStatus(int $sender) : bool
+   
+    private function SelectExpertSwitch(int $sender) : bool
     {
         $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
-        $id = $this->GetIDForIdent('HeatPumpStatus');
+        $id = $this->ReadPropertyInteger('ExpertModeID');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
         return true;
