@@ -382,7 +382,7 @@ class HeatingPumpController extends IPSModule
    public function WeekTimerAction (int $action) : void
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-       $this->SetAttributeInteger('WeekTimerStatus',$actionID);
+       $this->WriteAttributeInteger('WeekTimerStatus',$action);
        $this->SetHeatPumpStatus();
    }
 
@@ -397,9 +397,9 @@ class HeatingPumpController extends IPSModule
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $weekTimerId = $this->ReadAttributeInteger('WeekTimerPv');
-        if (!$this->ValidateEventPlan($weekTimerId )) $actionID = 0;
-        else $actionID = $this->GetWeekTimerAction($weekTimerId);
-        $this->SetAttributeInteger('WeekTimerStatus',$actionID);
+        if (!$this->ValidateEventPlan($weekTimerId )) $action = 0;
+        else $action = $this->GetWeekTimerAction($weekTimerId);
+        $this->WriteAttributeInteger('WeekTimerStatus',$action);
         $this->SetHeatPumpStatus();
    }
 
