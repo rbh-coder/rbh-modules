@@ -233,7 +233,7 @@ class HeatingPumpController extends IPSModule
          //------------------------------------------------------------------------------------------
 
         ########## Links
-        $this->WriteAttributeInteger('IdPvPowerLink',$this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Intensitiy', 100));
+        $this->WriteAttributeInteger('PvPowerLink',$this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Intensitiy', 100));
         $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Ok', 110);
       
 
@@ -557,7 +557,7 @@ class HeatingPumpController extends IPSModule
         }
 
         $this->HideItemById ($this->ReadAttributeInteger('WeekTimerPv'),$hide);
-        $this->HideItemById ($this->ReadAttributeInteger('IdPvPowerLink'),$hide);
+        $this->HideItemById ($this->ReadAttributeInteger('PvPowerLink'),$hide);
         $this->HideItem ('HeatPumpReleasePower',$hide);
 
         $this->SendOpMode($opmode);
