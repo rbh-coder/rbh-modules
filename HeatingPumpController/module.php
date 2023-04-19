@@ -534,6 +534,7 @@ class HeatingPumpController extends IPSModule
             case "BoostMode":
                $this->SetValue($Ident, $Value);
                if ($this->SetHeatPumpStatus() == self::HpBoostMode) $this->StartBoostTimer();
+               else $this->StopBoostTimer();
                break;
             case "HeatPumpReleasePower":
                $this->SetValue($Ident, $Value);
