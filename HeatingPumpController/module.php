@@ -436,6 +436,7 @@ class HeatingPumpController extends IPSModule
 
        $this->SetValue('HeatPumpActStatus',$status); 
        $this-> OperateHeatPumpStatus($status);
+       return  $status;
    }
 
    private function IsPvPowerLocked(int $status): bool
