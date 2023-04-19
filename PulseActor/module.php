@@ -231,7 +231,7 @@ class PulseActor extends IPSModule
 
         if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
         {
-            $this->HandleExpertSwitch($SenderID);
+            $this->HandleExpertSwitch($SenderID,$this->ReadAttributeString('ExpertListHide'),$this->ReadAttributeString('ExpertListLock'));
         }
         else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
         {
