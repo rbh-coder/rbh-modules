@@ -459,7 +459,7 @@ class HeatingPumpController extends IPSModule
        $variables = json_decode($this->ReadPropertyString('ExternalRequestList'), true);
        foreach ($variables as $variable) 
        {
-          $id =  $variable['VariableID');
+          $id =  $variable['VariableID'];
           if  ($this->IsValidId($id))
           {
               //Bei zumindest einem Treffer mit true zurück 
