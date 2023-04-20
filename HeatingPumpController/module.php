@@ -45,6 +45,7 @@ class HeatingPumpController extends IPSModule
     private const HpNightLock = 3;
     private const HpBoostMode = 4;
     private const HpRequested = 5;
+    private const HpExternalRequested = 6;
 
     private const WsUndef = 0;
     private const WsReleased = 1;
@@ -114,6 +115,7 @@ class HeatingPumpController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, self::HpNightLock,"Nachtsperre aktiv", "", self::Blue);
            IPS_SetVariableProfileAssociation($profileName, self::HpBoostMode,"Zuheizen aktiv", "", self::Red);
            IPS_SetVariableProfileAssociation($profileName, self::HpRequested,"Angefordert", "", self::Green);
+           IPS_SetVariableProfileAssociation($profileName, self::HpExternalRequested,"Extern angefordert", "", self::Green);
         }
         
         $this->RegisterVariableInteger($variable, $this->Translate('Heat Pump Request'), $profileName, 30);
@@ -309,6 +311,8 @@ class HeatingPumpController extends IPSModule
                     $this->OperatePvPower($Data[0]);
                     return; 
                 }
+                //Default auf jeden Fall Wärmepumpen-Status prüfen, da dann einTrigger über eine externe Anforderung passiert
+                $this->SetHeatPumpStatus();
                 break;
 
             //case EM_UPDATE:
@@ -433,6 +437,11 @@ class HeatingPumpController extends IPSModule
                 {
                      $status = self::HpNightLock; 
                 }
+                else if  ($this->IsExternalRequested())
+                {
+                    $this->SendDebug(__FUNCTION__, 'Externe Anforderung.', 0);
+                    $status = self::HpExternalRequested; 
+                }
                 else if ($this->IsPvPowerLocked())
                 {
                      $status = self::HpPvLimit;
@@ -443,6 +452,21 @@ class HeatingPumpController extends IPSModule
        $this->SetValue('HeatPumpRequest',$status); 
        $this-> OperateHeatPumpStatus($status);
        return  $status;
+   }
+
+   private function IsExternalRequested () : bool
+   {
+       $variables = json_decode($this->ReadPropertyString('ExternalRequestList'), true);
+       foreach ($variables as $variable) 
+       {
+          $id =  $variable['VariableID');
+          if  ($this->IsValidId($id))
+          {
+              //Bei zumindest einem Treffer mit true zurück 
+              if (GetValueBool($id)) return true;
+          }
+       }
+       return false;
    }
 
    private function IsPvPowerLocked(): bool
@@ -486,6 +510,10 @@ class HeatingPumpController extends IPSModule
                  $this->SendHeatPumpNightLock(false);
                 break;
             case self::HpRequested:
+                $this->SendHeatPumpRelease(true);
+                $this->SendHeatPumpNightLock(false);
+                break;
+            case self::HpExternalRequested:
                 $this->SendHeatPumpRelease(true);
                 $this->SendHeatPumpNightLock(false);
                 break;
