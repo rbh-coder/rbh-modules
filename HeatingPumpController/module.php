@@ -323,7 +323,7 @@ class HeatingPumpController extends IPSModule
                 $this->SetHeatPumpStatus();
                 break;
 
-            case EM_UPDATE:
+            //case EM_UPDATE:
             case EM_CHANGEACTIVE:
             case EM_CHANGESCHEDULEGROUPPOINT:
             case EM_CHANGETRIGGER:
