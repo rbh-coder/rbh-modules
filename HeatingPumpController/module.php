@@ -463,7 +463,7 @@ class HeatingPumpController extends IPSModule
           if  ($this->IsValidId($id))
           {
               //Bei zumindest einem Treffer mit true zurück 
-              if (GetValueBool($id)) return true;
+              if (GetValueBoolean($id)) return true;
           }
        }
        return false;
