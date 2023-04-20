@@ -498,7 +498,7 @@ class HeatingPumpController extends IPSModule
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
-       if ($this->ReadAttributeInteger('HeatPumpStatus' == $status) return; 
+       if ($this->ReadAttributeInteger('HeatPumpStatus') == $status) return; 
 
        switch ($value)
        {
