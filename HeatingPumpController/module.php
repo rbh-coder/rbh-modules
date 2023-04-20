@@ -141,6 +141,7 @@ class HeatingPumpController extends IPSModule
         $this->RegisterAttributeInteger('WeekTimerPv', 0);
         $this->RegisterAttributeInteger('PvPowerLink', 0);
         $this->RegisterAttributeInteger('WeekTimerStatus', 0);
+        $this->RegisterAttributeInteger('HeatPumpStatus', -1);
        
        
         ########## Timer
@@ -497,7 +498,7 @@ class HeatingPumpController extends IPSModule
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
-       if ($this->GetValue('HeatPumpRequest') == $status) return; 
+       if ($this->ReadAttributeInteger('HeatPumpStatus' == $status) return; 
 
        switch ($value)
        {
@@ -526,6 +527,7 @@ class HeatingPumpController extends IPSModule
                 $this->SendHeatPumpNightLock(false);
                 break;
        }
+       $this->WriteAttributeInteger('HeatPumpStatus',$status);
    }
 
 
