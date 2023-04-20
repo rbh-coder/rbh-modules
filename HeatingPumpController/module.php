@@ -114,7 +114,7 @@ class HeatingPumpController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, self::HpPvLimit,"Warte auf minimale PV-Leistung", "", self::Yellow);
            IPS_SetVariableProfileAssociation($profileName, self::HpNightLock,"Nachtsperre aktiv", "", self::Blue);
            IPS_SetVariableProfileAssociation($profileName, self::HpBoostMode,"Zuheizen aktiv", "", self::Red);
-           IPS_SetVariableProfileAssociation($profileName, self::HpRequested,"Angefordert", "", self::Green);
+           IPS_SetVariableProfileAssociation($profileName, self::HpRequested,"PV-Anfordung", "", self::Green);
            IPS_SetVariableProfileAssociation($profileName, self::HpExternalRequested,"Extern angefordert", "", self::Green);
         }
         
@@ -253,7 +253,7 @@ class HeatingPumpController extends IPSModule
         ########## Links
         $id = $this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Electricity', 100);
         $this->WriteAttributeInteger('PvPowerLink',$id);
-        $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','Flame', 110);
+        $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','LockOpen', 110);
       
 
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
