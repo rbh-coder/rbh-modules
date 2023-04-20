@@ -190,8 +190,11 @@ class HeatingPumpController extends IPSModule
         //Register references and messages
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         $this->RegisterReferenceVarIdList(self::ReferenciesList);
+        
         foreach ($variables as $variable) {
-                $this->RegisterReference($variable['VariableID']);
+                $id = $variable['VariableID'];
+                $this->RegisterReference($id);
+                $this->RegisterStatusUpdate($id);
             }
 
         
@@ -461,10 +464,8 @@ class HeatingPumpController extends IPSModule
        foreach ($variables as $variable) 
        {
           $id =  $variable['VariableID'];
-          $this->SendDebug(__FUNCTION__, 'Externe Anforderung:'.$id, 0);
           if  ($this->IsValidId($id))
           {
-                $this->SendDebug(__FUNCTION__, 'Externe Anforderung valid.', 0);
               //Bei zumindest einem Treffer mit true zurück 
               if (GetValueBoolean($id)) return true;
           }
