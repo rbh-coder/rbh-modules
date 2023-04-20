@@ -114,7 +114,7 @@ class HeatingPumpController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, self::HpPvLimit,"Warte auf minimale PV-Leistung", "", self::Yellow);
            IPS_SetVariableProfileAssociation($profileName, self::HpNightLock,"Nachtsperre aktiv", "", self::Blue);
            IPS_SetVariableProfileAssociation($profileName, self::HpBoostMode,"Zuheizen aktiv", "", self::Red);
-           IPS_SetVariableProfileAssociation($profileName, self::HpRequested,"PV-Anfordung", "", self::Green);
+           IPS_SetVariableProfileAssociation($profileName, self::HpRequested,"PV-Anforderung", "", self::Green);
            IPS_SetVariableProfileAssociation($profileName, self::HpExternalRequested,"Extern angefordert", "", self::Green);
         }
         
