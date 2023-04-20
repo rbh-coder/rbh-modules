@@ -327,7 +327,6 @@ class HeatingPumpController extends IPSModule
             case EM_CHANGEACTIVE:
             case EM_CHANGESCHEDULEGROUPPOINT:
             case EM_CHANGETRIGGER:
-            case EM_CHANGESCHEDULEGROUP:
 
                 //$Data[0] = last run
                 //$Data[1] = next run
