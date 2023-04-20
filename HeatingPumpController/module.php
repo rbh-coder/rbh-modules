@@ -500,7 +500,7 @@ class HeatingPumpController extends IPSModule
 
        if ($this->ReadAttributeInteger('HeatPumpStatus') == $status) return; 
 
-       switch ($value)
+       switch ($status)
        {
             case self::HpOff:
                 $this->SendHeatPumpRelease(false);
