@@ -548,7 +548,7 @@ class HeatingPumpController extends IPSModule
     private function SendHeatPumpNightLock(bool $value): void
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $id= $this->ReadPropertyInteger('IdHeatingPumpNightLock');
+        $id= $this->ReadPropertyInteger('IdHeatPumpNightLock');
         if ($id>0) RequestAction($id, $value);
    }
 
