@@ -191,12 +191,16 @@ class HeatingPumpController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         $this->RegisterReferenceVarIdList(self::ReferenciesList);
         
-        foreach ($variables as $variable) {
+        foreach ($variables as $variable) 
+        {
                 $id = $variable['VariableID'];
                 $this->RegisterReference($id);
-                $this->RegisterStatusUpdate($id);
-            }
-
+                if ($this->IsValidId($id))
+                {
+                    $this->RegisterMessage($id,VM_UPDATE);
+                }
+           
+        }
         
         //------------------------------------------------------------------------------------------
         //Weekly schedule
