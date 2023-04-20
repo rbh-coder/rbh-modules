@@ -191,6 +191,7 @@ class HeatingPumpController extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         $this->RegisterReferenceVarIdList(self::ReferenciesList);
         foreach ($variables as $variable) {
+                $this->SendDebug(__FUNCTION__, 'Externe Anforderung:'.variable['VariableID'], 0);
                 $this->RegisterReference($variable['VariableID']);
             }
 
@@ -452,6 +453,7 @@ class HeatingPumpController extends IPSModule
        $this->SetValue('HeatPumpRequest',$status); 
        $this-> OperateHeatPumpStatus($status);
        return  $status;
+
    }
 
    private function IsExternalRequested () : bool
