@@ -241,6 +241,7 @@ class HeatingPumpController extends IPSModule
        IPS_SetEventScheduleAction($id,self::WsLocked,'Gesperrt',self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
        
        $this->RegisterReference($id);
+       $this->RegisterMessage($id, EM_UPDATE);
        $this->RegisterMessage($id, EM_CHANGEACTIVE);
        $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
        $this->RegisterMessage($id,EM_CHANGETRIGGER);
@@ -323,7 +324,7 @@ class HeatingPumpController extends IPSModule
                 $this->SetHeatPumpStatus();
                 break;
 
-            //case EM_UPDATE:
+            case EM_UPDATE:
             case EM_CHANGEACTIVE:
             case EM_CHANGESCHEDULEGROUPPOINT:
             case EM_CHANGETRIGGER:
