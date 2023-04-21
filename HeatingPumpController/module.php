@@ -438,6 +438,8 @@ class HeatingPumpController extends IPSModule
                 $this->StopBoostTimer();
                 break;
            default:
+                $this->SendDebug(__FUNCTION__, 'WeekTimerStatus='.this->ReadAttributeInteger('WeekTimerStatus') , 0);
+
                 if ($this->GetValue('BoostMode'))
                 {
                     $status = self::HpBoostMode; 
