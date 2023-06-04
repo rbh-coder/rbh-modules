@@ -376,7 +376,7 @@ class LightColorChanger extends IPSModule
 
         if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
         {
-            $this->HandleExpertSwitch($SenderID);
+            $this->OperateExpertSwitch($SenderID);
         }
         else if ($this->GetIDForIdent('CleaningMode') == $SenderID)
         {
@@ -672,7 +672,7 @@ class LightColorChanger extends IPSModule
         }
     }
 
-    private function HandleExpertSwitch(int $id) : void
+    private function OperateExpertSwitch(int $id) : void
     {
         $status = $this->HandleExpertSwitch($id,$this->ReadAttributeString('ExpertListHide'),$this->ReadAttributeString('ExpertListLock'));
         $this->HideItem('ColorFadeTime',$status || !$this->ReadPropertyBoolean('UseFading'));
