@@ -345,12 +345,12 @@ class PulseActor extends IPSModule
         $this->RegisterStatusUpdate('ExpertModeID');
         $this->RegisterMessage($this->GetIDForIdent('AutomaticRelease'),VM_UPDATE);
 
+        $this->WriteAttributeInteger('PulseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PulseTimeUnit')));
+        $this->WriteAttributeInteger('PauseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PauseTimeUnit')));
+
         //TimeProfile aufdatieren
         $this->UpdateTimeProfile($this->CreateProfileName("PulseTime"), $this->ReadPropertyInteger('MaxPulseTime'),$this->GetSuffix($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->UpdateTimeProfile($this->CreateProfileName("PauseTime"), $this->ReadPropertyInteger('MaxPauseTime'),$this->GetSuffix($this->ReadPropertyInteger('PauseTimeUnit')));
-
-        $this->WriteAttributeInteger('PulseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PulseTimeUnit')));
-        $this->WriteAttributeInteger('PauseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PauseTimeUnit')));
 
         $this->RegisterReferenceVarIdList($this->ReadAttributeString('SwitchList'));
         $this->RegisterReferenceVarIdList($this->ReadAttributeString('StatusList'));
