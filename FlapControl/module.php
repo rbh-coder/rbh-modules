@@ -318,7 +318,7 @@ class FlapControl extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $action: ' . $action, 0);
 	    $actAction = $action;
         switch ($actAction)
-        {F$
+        {
             case  self::Flap_Undef:
                 break;
             case self::Flap_StopAll:
