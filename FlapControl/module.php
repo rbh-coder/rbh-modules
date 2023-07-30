@@ -364,7 +364,7 @@ class FlapControl extends IPSModule
                 $this->StartFullOpenTime ();
                 break;
         }
-        $this->SendDebug(__FUNCTION__, '$actAction:' . $actAction, 0);
+        $this->SendDebug(__FUNCTION__, '$actAction: ' . $actAction, 0);
         return $actAction;
     }
 
