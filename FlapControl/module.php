@@ -108,7 +108,7 @@ class FlapControl extends IPSModule
     //regstriert wird
     public function RequestAction($Ident,$Value)
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $Ident:' . $Ident . ' $Value:' . $Value, 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $Ident: ' . $Ident . ' $Value: ' . $Value, 0);
         switch($Ident) {
               case "FlapAction":
                    $this->SetValue($Ident, $Value);
@@ -150,7 +150,7 @@ class FlapControl extends IPSModule
     private function SelectFlapAction(int $sender) : bool
     {
 
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $sender: '.$sender, 0);
         $id = $this->GetIDForIdent('FlapAction');
         if (!$this->IsValidId($id)) return false;
         if ($id != $sender) return false;
@@ -168,8 +168,9 @@ class FlapControl extends IPSModule
 
     private function OperateFlapAction(int $value) : void
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $flapStatus =  $this->GetValue('FlapStatus');
+
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $value: '. $value, 0);
+        $flapStatus = $this->GetValue('FlapStatus');
         $actAction =  $flapStatus;
         switch ($value)
         {
@@ -314,10 +315,10 @@ class FlapControl extends IPSModule
 
     private function SetAction (int $action) : int
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. Action:' . $action, 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $action: ' . $action, 0);
 	    $actAction = $action;
         switch ($actAction)
-        {
+        {F$
             case  self::Flap_Undef:
                 break;
             case self::Flap_StopAll:
@@ -363,6 +364,7 @@ class FlapControl extends IPSModule
                 $this->StartFullOpenTime ();
                 break;
         }
+        $this->SendDebug(__FUNCTION__, '$actAction:' . $actAction, 0);
         return $actAction;
     }
 
@@ -384,7 +386,7 @@ class FlapControl extends IPSModule
     public function SetDevice (string $switchName, bool $status)
     {
         $state = $status ? "On" : "Off";
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. Device:'. $switchName. ' Status:'. $state, 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $switchName: '. $switchName. ' $status: '. $state, 0);
         $id = $this->ReadPropertyInteger($switchName);
         if ($id>1) {
             //ImpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
