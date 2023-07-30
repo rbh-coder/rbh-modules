@@ -132,7 +132,7 @@ class FlapControl extends IPSModule
         //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
         if ($Data[1]==0) return;
 
-         $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
+         $this->SendDebug(__FUNCTION__, 'Wert von '. $SenderID .' hat sich auf ' . $Data[0] . ' geändert.', 0);
 
         if ($this->SelectFlapAction($SenderID))
         {
