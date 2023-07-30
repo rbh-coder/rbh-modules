@@ -313,8 +313,7 @@ class FlapControl extends IPSModule
 
     private function SetAction (int $action) : int
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SendDebug(__FUNCTION__, 'action = '. $action, 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. Action:' . $action, 0);
 	    $actAction = $action;
         switch ($actAction)
         {
@@ -383,10 +382,8 @@ class FlapControl extends IPSModule
 
     public function SetDevice (string $switchName, bool $status)
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $this->SendDebug(__FUNCTION__, "switchName: ".$switchName, 0);
         $state = $status ? "On" : "Off";
-        $this->SendDebug(__FUNCTION__, "status: ".$state, 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. Device:'. $switchName. ' Status:'. $state, 0);
         $id = $this->ReadPropertyInteger($switchName);
         if ($id>1) {
             //ImpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
