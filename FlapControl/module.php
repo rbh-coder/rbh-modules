@@ -16,7 +16,7 @@ class FlapControl extends IPSModule
     private const FullOpen = 2;
     private const AutoOpen = 3;
 
-    private const Flap_Undef = 0; 
+    private const Flap_Undef = 0;
     private const Flap_Closed = 1;
     private const Flap_Close = 2;
     private const Flap_StopClose = 3;
@@ -35,9 +35,9 @@ class FlapControl extends IPSModule
     private const ReferenciesList =                 'ExpertModeID,FlapOpenActorID,FlapCloseActorID';
     private const ExpertLockList =                  'FlapAction';
     private const ExpertHideList =                  '';
-    
 
-    
+
+
     private const Transparent = 0xffffff00;
     private const Red = 0xFF0000;
     private const Yellow = 0xFFFF00;
@@ -54,7 +54,7 @@ class FlapControl extends IPSModule
         $this->RegisterPropertyInteger('MaxClosingTime', 20);
         $this->RegisterPropertyInteger('MaxOpeningTime', 20);
         $this->RegisterPropertyInteger('OpeningTime', 9);
-       
+
         $this->DeleteProfileList (self::ProfileList);
 
         //Variablen --------------------------------------------------------------------------------------------------------
@@ -111,12 +111,12 @@ class FlapControl extends IPSModule
         switch($Ident) {
               case "FlapAction":
                    $this->SetValue($Ident, $Value);
-                   //$this->OperateFlapAction($Value);
+                   $this->OperateFlapAction($Value);
                    break;
         }
     }
 
-    
+
 
     //Wird aufgrufen wenn Variable mit
     //void RegisterMessage (integer $SenderID, integer $NachrichtID)
@@ -136,7 +136,7 @@ class FlapControl extends IPSModule
         if ($this->SelectFlapAction($SenderID))
         {
             $this->OperateFlapAction($Data[0]);
-            return; 
+            return;
         }
 
         if ($this->SelectExpertSwitch($SenderID))
@@ -148,7 +148,7 @@ class FlapControl extends IPSModule
 
     private function SelectFlapAction(int $sender) : bool
     {
-        
+
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $id = $this->GetIDForIdent('FlapAction');
         if (!$this->IsValidId($id)) return false;
@@ -178,12 +178,12 @@ class FlapControl extends IPSModule
                      $actAction = $this-> SetAction(self::Flap_StopAll);
                 }
                 break;
-            case self::FullClose: 
+            case self::FullClose:
                 if ($flapStatus != self::Flap_Closed)
                 {
                     $actAction = $this-> SetAction(self::Flap_Close);
                 }
-                else 
+                else
                 {
 	                $this->SetValue('FlapAction',self::Stop);
                 }
@@ -193,7 +193,7 @@ class FlapControl extends IPSModule
                 {
                     $actAction = $this-> SetAction(self::Flap_FullOpen);
                 }
-                else 
+                else
                 {
 	                $this->SetValue('FlapAction',self::Stop);
                 }
@@ -203,7 +203,7 @@ class FlapControl extends IPSModule
                 {
                     $actAction = $this-> SetAction(self::Flap_CloseOpen);
                 }
-                else 
+                else
                 {
 	                $this->SetValue('FlapAction',self::Stop);
                 }
@@ -248,8 +248,8 @@ class FlapControl extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
-        
-        
+
+
         $this->DeleteProfileList (self::ProfileList);
     }
 
@@ -266,14 +266,14 @@ class FlapControl extends IPSModule
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-     
+
         //Delete all references
         foreach ($this->GetReferenceList() as $referenceID) {
             $this->UnregisterReference($referenceID);
         }
 
         //Delete all message registrations
-       
+
         foreach ($this->GetMessageList() as $senderID => $messages) {
             foreach ($messages as $message) {
                 if ($message == EM_UPDATE) {
@@ -289,7 +289,7 @@ class FlapControl extends IPSModule
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
         $this->RegisterReferenceVarIdList(self::ReferenciesList);
-       
+
     }
 
 
@@ -327,13 +327,13 @@ class FlapControl extends IPSModule
                 break;
             case self::Flap_CloseOpen:
                 $this->SwitchClose ();
-                $this->StartCloseTime (); 
+                $this->StartCloseTime ();
                 break;
             case self::Flap_Closed:
                 break;
             case self::Flap_Close:
                 $this->SwitchClose ();
-                $this->StartCloseTime (); 
+                $this->StartCloseTime ();
                 break;
              case self::Flap_StopClose:
                 $this->Stoptimer();
@@ -344,7 +344,7 @@ class FlapControl extends IPSModule
                 break;
             case self::Flap_Open:
                 $this->SwitchOpen ();
-                $this->StartOpenTime (); 
+                $this->StartOpenTime ();
                 break;
              case self::Flap_StopOpen:
                 $this->Stoptimer();
@@ -360,7 +360,7 @@ class FlapControl extends IPSModule
                 break;
             case self::Flap_FullOpen:
                 $this->SwitchOpen ();
-                $this->StartFullOpenTime (); 
+                $this->StartFullOpenTime ();
                 break;
         }
         return $actAction;
