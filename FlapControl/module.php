@@ -108,6 +108,7 @@ class FlapControl extends IPSModule
     //regstriert wird
     public function RequestAction($Ident,$Value)
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $Ident:' . $Ident . ' $Value:' . $value, 0);
         switch($Ident) {
               case "FlapAction":
                    $this->SetValue($Ident, $Value);
