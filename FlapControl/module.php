@@ -112,7 +112,7 @@ class FlapControl extends IPSModule
         switch($Ident) {
               case "FlapAction":
                    $this->SetValue($Ident, $Value);
-                   //$this->OperateFlapAction($Value);
+                   $this->OperateFlapAction($Value);
                    break;
         }
     }
