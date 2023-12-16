@@ -530,7 +530,7 @@ class HeatingPumpController extends IPSModule
 
    private function SendStati(int $opMode, bool $hpRequested, bool $hpNightLocked ): void
    {
-        $this->SendHeatPumpRelease(hpRequested);
+        $this->SendHeatPumpRelease($hpRequested);
         $this->SendHeatPumpNightLock($hpNightLocked);
         $this->SendOpMode($opmode);
    }
