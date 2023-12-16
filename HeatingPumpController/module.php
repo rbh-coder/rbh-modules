@@ -502,7 +502,7 @@ class HeatingPumpController extends IPSModule
 
        if ($this->ReadAttributeInteger('HeatPumpStatus') == $status) return;
 
-       $opmode = $this->GetValue('OpMode');
+       $opMode = $this->GetValue('OpMode');
        switch ($status)
        {
             case self::HpOff:
@@ -515,7 +515,7 @@ class HeatingPumpController extends IPSModule
                 $this->SendStati($opMode, false, true);
                 break;
             case self::HpBoostMode:
-                $opmode = self::Zuheizen;
+                $opMode = self::Zuheizen;
                 $this->SendStati($opMode, false, false);
                 break;
             case self::HpRequested:
