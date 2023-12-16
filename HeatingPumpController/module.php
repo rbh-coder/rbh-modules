@@ -34,10 +34,11 @@ class HeatingPumpController extends IPSModule
     private const PropertiesList =                  'ExpertModeID,IdPvPower,IdOpModeSend,IdHeatPumpRelease,IdHeatPumpNightLock,IdControlAlive,IdHeatPumpReleaseStatus';
     private const ExpertLockList =                  '';
     private const ExpertHideList =                  'HeatPumpReleasePower';
-   
+
     private const Aus = 0;
     private const Manuell = 1;
     private const Automatik = 2;
+    private const Zuheizen = 3;
 
 
     private const HpOff = 0;
@@ -50,7 +51,7 @@ class HeatingPumpController extends IPSModule
     private const WsUndef = 0;
     private const WsReleased = 1;
     private const WsLocked = 2;
-    
+
 
     private const Transparent = 0xffffff00;
     private const Red = 0xFF0000;
@@ -59,7 +60,7 @@ class HeatingPumpController extends IPSModule
     private const Blue=0x0000FF;
     private const DarkGreen = 0x24F065;
     private const DarkBlue  = 0x0D0FE4;
-  
+
     public function Create()
     {
         //Never delete this line!
@@ -67,16 +68,16 @@ class HeatingPumpController extends IPSModule
 
         ########## Properties
         $this->DeleteProfileList (self::ProfileList);
-     
+
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyInteger('BoostTime',2);
         $this->RegisterPropertyFloat('PvLimitHysteresis',300.0);
         $this->RegisterPropertyString('ExternalRequestList', '[]');
-       
+
         ########## Variables
 
        //Variablen --------------------------------------------------------------------------------------------------------
-       
+
        //OpMode
         $variable = 'OpMode';
         $profileName =  $this->CreateProfileName($variable);
@@ -91,7 +92,7 @@ class HeatingPumpController extends IPSModule
         $this->RegisterVariableInteger($variable, $this->Translate('Operation Mode'),$profileName, 10);
         $this->EnableAction($variable);
 
-       
+
         //BoostMode
         $variable = 'BoostMode';
         $profileName = $this->CreateProfileName($variable);
@@ -117,7 +118,7 @@ class HeatingPumpController extends IPSModule
            IPS_SetVariableProfileAssociation($profileName, self::HpRequested,"PV-Anforderung", "", self::Green);
            IPS_SetVariableProfileAssociation($profileName, self::HpExternalRequested,"Extern angefordert", "", self::Green);
         }
-        
+
         $this->RegisterVariableInteger($variable, $this->Translate('Heat Pump Request'), $profileName, 30);
         //$this->EnableAction($variable);
 
@@ -142,8 +143,8 @@ class HeatingPumpController extends IPSModule
         $this->RegisterAttributeInteger('PvPowerLink', 0);
         $this->RegisterAttributeInteger('WeekTimerStatus', 0);
         $this->RegisterAttributeInteger('HeatPumpStatus', -1);
-       
-       
+
+
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
        //Timer ------------------------------------------------------------------------------------------------------------
@@ -165,14 +166,14 @@ class HeatingPumpController extends IPSModule
         }
 
          $variables = json_decode($this->ReadPropertyString('ExternalRequestList'), true);
-     
+
         //Delete all references
         foreach ($this->GetReferenceList() as $referenceID) {
             $this->UnregisterReference($referenceID);
         }
 
         //Delete all message registrations
-       
+
         foreach ($this->GetMessageList() as $senderID => $messages) {
             foreach ($messages as $message) {
                 if ($message == EM_UPDATE) {
@@ -184,15 +185,15 @@ class HeatingPumpController extends IPSModule
             }
         }
         ########## WebFront options
-       
+
         ########## References and Messages
 
 
         //Register references and messages
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
         $this->RegisterReferenceVarIdList(self::ReferenciesList);
-        
-        foreach ($variables as $variable) 
+
+        foreach ($variables as $variable)
         {
                 $id = $variable['VariableID'];
                 $this->RegisterReference($id);
@@ -200,17 +201,17 @@ class HeatingPumpController extends IPSModule
                 {
                     $this->RegisterMessage($id,VM_UPDATE);
                 }
-           
+
         }
-        
+
         //------------------------------------------------------------------------------------------
         //Weekly schedule
         $weektimerName = 'Wochenplan Nachtsperre';
         $id = @IPS_GetEventIDByName($weektimerName,$this->InstanceID);
-       
+
        if (!$id || !@IPS_ObjectExists($id))
        {
-           $id = IPS_CreateEvent (2); 
+           $id = IPS_CreateEvent (2);
            $this->SendDebug(__FUNCTION__, 'Erstelle Wochenplan mit ID: '.$id, 0);
            IPS_SetParent($id, $this->InstanceID);
            IPS_SetPosition($id,20);
@@ -236,18 +237,18 @@ class HeatingPumpController extends IPSModule
                    break;
            }
        }
-       
+
        IPS_SetEventScheduleAction($id,self::WsReleased,'Freigegeben',self::Yellow,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,1);");
        IPS_SetEventScheduleAction($id,self::WsLocked,'Gesperrt',self::DarkBlue,self::MODULE_PREFIX . "_WeekTimerAction($this->InstanceID,2);");
-       
+
        $this->RegisterReference($id);
        $this->RegisterMessage($id, EM_UPDATE);
        $this->RegisterMessage($id, EM_CHANGEACTIVE);
        $this->RegisterMessage($id,EM_CHANGESCHEDULEGROUPPOINT);
        $this->RegisterMessage($id,EM_CHANGETRIGGER);
        $this->HideItemById ($id,false);
-        
-       
+
+
         //Aktuell ermittelte Id des Weektimers merken
         $this->WriteAttributeInteger('WeekTimerPv', $id);
          //------------------------------------------------------------------------------------------
@@ -256,20 +257,20 @@ class HeatingPumpController extends IPSModule
         $id = $this->CreateLink ($this->ReadPropertyInteger('IdPvPower'),'Aktuelle PV-Leistung','Electricity', 100);
         $this->WriteAttributeInteger('PvPowerLink',$id);
         $id= $this->CreateLink ( $this->ReadPropertyInteger('IdHeatPumpReleaseStatus'),'Status Wärmepumpe','LockOpen', 110);
-      
+
 
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
         ########## Timer
 
-      
+
 
         ########## Profile
-       
+
 
         ########## Misc
-      
+
         $this->HandleOpMode ($this->GetValue('OpMode'));
     }
 
@@ -303,8 +304,8 @@ class HeatingPumpController extends IPSModule
                 //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
                 if ($Data[1]==0) return;
                 $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
-               
-              
+
+
                 if ($this->SelectExpertSwitch($SenderID))
                 {
                     $this->OperateExpertSwitch($SenderID);
@@ -313,14 +314,14 @@ class HeatingPumpController extends IPSModule
                 if ($this->SelectControlAlive($SenderID))
                 {
                     $this->OperateControlAlive($Data[0]);
-                    return; 
+                    return;
                 }
                 if ($this->SelectPvPower($SenderID))
                 {
                     $this->OperatePvPower($Data[0]);
-                    return; 
+                    return;
                 }
-                //Default auf jeden Fall Wärmepumpen-Status prüfen, da dann einTrigger über eine externe Anforderung passiert
+                //Default auf jeden Fall Wärmepumpen-Status prüfen, da dann ein Trigger über eine externe Anforderung passiert
                 $this->SetHeatPumpStatus();
                 break;
 
@@ -331,19 +332,19 @@ class HeatingPumpController extends IPSModule
 
                 //$Data[0] = last run
                 //$Data[1] = next run
-                
+
                 //Weekly schedule
                 $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
                 $this->SendDebug(__FUNCTION__, 'Data[] = ' . json_encode($Data). ' ID: '. $SenderID, 0);
                 $this->TriggerAction();
-             
+
                 break;
         }
     }
 
     //----------------------------------------------------------------------------------------------------------------------------
     //Methoden für MessageSink
-   
+
     private function SelectExpertSwitch(int $sender) : bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -371,7 +372,7 @@ class HeatingPumpController extends IPSModule
        return true;
     }
 
-    
+
     private function OperateExpertSwitch(int $id) : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -411,7 +412,7 @@ class HeatingPumpController extends IPSModule
        $this->SetHeatPumpStatus();
    }
 
-  
+
    private function TriggerAction(): void
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -425,7 +426,7 @@ class HeatingPumpController extends IPSModule
    private function SetHeatPumpStatus(): int
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-       
+
        $status = self::HpRequested;
 
        switch ($this->GetValue('OpMode'))
@@ -440,25 +441,25 @@ class HeatingPumpController extends IPSModule
            default:
                 if ($this->GetValue('BoostMode'))
                 {
-                    $status = self::HpBoostMode; 
+                    $status = self::HpBoostMode;
                 }
                 else if  ($this->ReadAttributeInteger('WeekTimerStatus') == self::WsLocked)
                 {
-                     $status = self::HpNightLock; 
+                     $status = self::HpNightLock;
                 }
                 else if  ($this->IsExternalRequested())
                 {
                     $this->SendDebug(__FUNCTION__, 'Externe Anforderung.', 0);
-                    $status = self::HpExternalRequested; 
+                    $status = self::HpExternalRequested;
                 }
                 else if ($this->IsPvPowerLocked())
                 {
                      $status = self::HpPvLimit;
                 }
-           
+
        }
 
-       $this->SetValue('HeatPumpRequest',$status); 
+       $this->SetValue('HeatPumpRequest',$status);
        $this-> OperateHeatPumpStatus($status);
        return  $status;
 
@@ -467,12 +468,12 @@ class HeatingPumpController extends IPSModule
    private function IsExternalRequested () : bool
    {
        $variables = json_decode($this->ReadPropertyString('ExternalRequestList'), true);
-       foreach ($variables as $variable) 
+       foreach ($variables as $variable)
        {
           $id =  $variable['VariableID'];
           if  ($this->IsValidId($id))
           {
-              //Bei zumindest einem Treffer mit true zurück 
+              //Bei zumindest einem Treffer mit true zurück
               if (GetValueBoolean($id)) return true;
           }
        }
@@ -499,36 +500,39 @@ class HeatingPumpController extends IPSModule
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
-       if ($this->ReadAttributeInteger('HeatPumpStatus') == $status) return; 
+       if ($this->ReadAttributeInteger('HeatPumpStatus') == $status) return;
 
+       $opmode = $this->GetValue('OpMode');
        switch ($status)
        {
             case self::HpOff:
-                $this->SendHeatPumpRelease(false);
-                $this->SendHeatPumpNightLock(false);
+                $this->SendStati($opMode, false, false);
                 break;
             case self::HpPvLimit:
-                $this->SendHeatPumpRelease(false);
-                $this->SendHeatPumpNightLock(false);
+                $this->SendStati($opMode, false, false);
                 break;
             case self::HpNightLock:
-                $this->SendHeatPumpRelease(false);
-                $this->SendHeatPumpNightLock(true);
+                $this->SendStati($opMode, false, true);
                 break;
             case self::HpBoostMode:
-                 $this->SendHeatPumpRelease(true);
-                 $this->SendHeatPumpNightLock(false);
+                $opmode = self::Zuheizen;
+                $this->SendStati($opMode, false, false);
                 break;
             case self::HpRequested:
-                $this->SendHeatPumpRelease(true);
-                $this->SendHeatPumpNightLock(false);
+                $this->SendStati($opMode, true, false);
                 break;
             case self::HpExternalRequested:
-                $this->SendHeatPumpRelease(true);
-                $this->SendHeatPumpNightLock(false);
+                $this->SendStati($opMode, true, false);
                 break;
        }
        $this->WriteAttributeInteger('HeatPumpStatus',$status);
+   }
+
+   private function SendStati(int $opMode, bool $hpRequested, bool $hpNightLocked ): void
+   {
+        $this->SendHeatPumpRelease(hpRequested);
+        $this->SendHeatPumpNightLock($hpNightLocked);
+        $this->SendOpMode($opmode);
    }
 
 
@@ -553,7 +557,7 @@ class HeatingPumpController extends IPSModule
         if ($id>0) RequestAction($id, $value);
    }
 
- 
+
    private function StopBoostTimer () : void
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -594,13 +598,13 @@ class HeatingPumpController extends IPSModule
        $hide=true;
 
         switch($opmode) {
-           case self::Aus:         //Aus 
+           case self::Aus:         //Aus
            case self::Manuell:     //Handbetrieb
                 $this->SetHeatPumpStatus ();
                break;
            case self::Automatik:   //Automatikbetrieb
                $hide=false;
-               $this->TriggerAction(); 
+               $this->TriggerAction();
                break;
            default:
         }
@@ -609,8 +613,6 @@ class HeatingPumpController extends IPSModule
         $this->HideItemById ($this->ReadAttributeInteger('PvPowerLink'),$hide);
         $this->HideItem ('BoostMode',$hide);
         $this->HideItem ('HeatPumpRequest',$hide);
-        $this->SendOpMode($opmode);
-       
    }
 }
 
