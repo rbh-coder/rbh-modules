@@ -532,7 +532,7 @@ class HeatingPumpController extends IPSModule
    {
         $this->SendHeatPumpRelease($hpRequested);
         $this->SendHeatPumpNightLock($hpNightLocked);
-        $this->SendOpMode($opmode);
+        $this->SendOpMode($opMode);
    }
 
 
