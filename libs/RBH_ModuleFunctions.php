@@ -26,7 +26,7 @@ trait RBH_ModuleFunctions
     private function RegisterReferenceVarId(int $id) : void
     {
         if (!$this->IsValidId($id)) return;
-        $this->RegisterReference($id); 
+        $this->RegisterReference($id);
     }
 
     private function RegisterReferenceVarIdList(string $itemsString) : void
@@ -100,6 +100,7 @@ trait RBH_ModuleFunctions
         if (strlen($variableName) == 0) return;
         $id= $this->ReadPropertyInteger($variableName);
         if ($this->IsValidId($id)) {
+            $this->SendDebug(__FUNCTION__, 'Register variableName:'.$variableName, 0);
             $this->RegisterMessage($id,VM_UPDATE);
         }
     }
@@ -142,7 +143,7 @@ trait RBH_ModuleFunctions
    private function IsValidId(int $id) : bool
    {
       // $this->SendDebug(__FUNCTION__, 'ID:'.$id.' Exists: '. @IPS_ObjectExists($id), 0);
-      
+
        return (($id>0) && @IPS_ObjectExists($id));
    }
 
