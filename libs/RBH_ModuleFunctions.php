@@ -240,6 +240,7 @@ trait RBH_ModuleFunctions
     }
      private function HideItem(string $item,bool $status) : void
     {
+        $this->SendDebug(__FUNCTION__,'Set visibility'.$item.':' . $status, 0);
         if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
         if (!$this->IsValidId($id)) return;
