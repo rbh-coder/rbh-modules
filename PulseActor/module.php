@@ -7,9 +7,12 @@ class PulseActor extends IPSModule
 {
     use RBH_ModuleFunctions;
 
+    //Operation Modi
     private const Aus = 0;
     private const Manuell = 1;
     private const Automatik = 2;
+
+    //Action Stati
     private const Ausgeschaltet = 0;
     private const WarteAufFreigabe = 1;
     private const SetzeAktiv = 2;
