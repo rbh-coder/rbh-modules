@@ -158,9 +158,6 @@ class PulseActor extends IPSModule
         $this->RegisterAttributeInteger('PulseTimeFactor',0);
         $this->RegisterAttributeInteger('PauseTimeFactor',0);
 
-        $this->RegisterVariableIds($this->ReadAttributeString('SwitchList'));
-        $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
-
         //Alle in der "form.json" definierten Variablenreferenzen registrieren
         $this->RegisterVariableIds(self::ReferenciesList);
     }
