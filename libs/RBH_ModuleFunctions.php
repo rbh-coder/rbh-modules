@@ -243,6 +243,7 @@ trait RBH_ModuleFunctions
         if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
         if (!$this->IsValidId($id)) return;
+        $this->SendDebug(__FUNCTION__, 'Set visibility'. $item.':'. $status, 0);
         IPS_SetHidden($id, $status);
     }
 
