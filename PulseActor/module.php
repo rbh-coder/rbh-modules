@@ -87,7 +87,6 @@ class PulseActor extends IPSModule
         $this->RegisterVariableInteger($variable, $this->Translate('Pause Time'), $profileName, 20);
         $this->EnableAction($variable);
 
-
         //ModuleStatus
         $variable = 'ModuleStatus';
         $profileName =  $this->CreateProfileName($variable);
@@ -105,6 +104,20 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 7, "Manuell Ein", "", $red);
         }
         $this->RegisterVariableInteger($variable , $this->Translate('Status'), $profileName, 40);
+
+        //AutomaticRelease
+        $variable = 'AutomaticRelease';
+        $profileName = $this->CreateProfileName($variable);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Ok");
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
+        }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'), $profileName, 60);
+        $this->EnableAction($variable);
+        //Variable für Änderungen registrieren
+        $this->RegisterMessage($this->GetIDForIdent($variable), VM_UPDATE);
 
 
         //AutomaticContinued
@@ -350,7 +363,7 @@ class PulseActor extends IPSModule
                 $linkID = IPS_CreateLink();
             }
             IPS_SetParent($linkID, $this->InstanceID);
-            IPS_SetPosition($linkID, 70);
+            IPS_SetPosition($linkID, 90);
             IPS_SetName($linkID, 'Gerätestatus');
             IPS_SetIcon($linkID, 'Electricity');
             IPS_SetLinkTargetID($linkID, $targetID);
@@ -362,6 +375,7 @@ class PulseActor extends IPSModule
 
         $this->RegisterStatusUpdate('ExpertModeID');
         $this->RegisterMessage($this->GetIDForIdent('AutomaticRelease'),VM_UPDATE);
+        $this->RegisterMessage($this->GetIDForIdent('AutomaticContinued'), VM_UPDATE);
 
         $this->WriteAttributeInteger('PulseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->WriteAttributeInteger('PauseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PauseTimeUnit')));

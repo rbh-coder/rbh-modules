@@ -9,6 +9,7 @@
 				"Pulse Time": "Aktivzeit",
 				"Pause Time": "Pausenzeit",
 				"Automatic Release": "Automatikfreigabe",
+				"Automatic Continued": "Dauerbetrieb",
 				"Expert Mode": "Expertenmodus",
 				"Debug Mode": "Debug Modus",
 				"Actor ID": "Aktor ID",
@@ -16,8 +17,7 @@
 				"Minutes": "Minuten",
 				"Hours": "Stunden",
 				"Active": "Gerätestatus",
-				"Check Actor Status": "Aktor Status überwachen",
-				"Automatic Continued": "Dauerbetrieb"
+				"Check Actor Status": "Aktor Status überwachen"
 			}
     }
 }
