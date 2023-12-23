@@ -147,8 +147,6 @@ class PulseActor extends IPSModule
         $this->RegisterTimer('PAC_PauseTimer', 0, 'PAC_UpdatePauseTimer($_IPS[\'TARGET\']);');
         $this->RegisterTimer('PAC_SignalCheckTimer', 0, 'PAC_VerifySignal($_IPS[\'TARGET\']);');
         //------------------------------------------------------------------------------------------------------------------
-
-        $this->RegisterPropertyInteger('ExpertModeID', 0);
         $this->RegisterPropertyInteger('MaxPulseTime', 60);
         $this->RegisterPropertyInteger('MaxPauseTime', 60);
         $this->RegisterPropertyInteger('PulseTimeUnit',0);
