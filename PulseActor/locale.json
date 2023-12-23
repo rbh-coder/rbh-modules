@@ -16,7 +16,8 @@
 				"Minutes": "Minuten",
 				"Hours": "Stunden",
 				"Active": "Gerätestatus",
-				"Check Actor Status":  "Aktor Status überwachen"
+				"Check Actor Status": "Aktor Status überwachen",
+				"Automatic Continued": "Dauerbetrieb"
 			}
     }
 }

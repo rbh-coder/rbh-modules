@@ -21,12 +21,14 @@ class PulseActor extends IPSModule
     private const Pause = 5;
     private const Ausschalten = 6;
     private const ManuellAktiv = 7;
+    private const SetzeDauerAktiv = 8;
+    private const DauerAktiv = 9;
 
     private const MODULE_PREFIX = 'PAC';
     private const MODULE_NAME = 'PulseActor';
 
-    private const ProfileList = 'AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus';
-    
+    private const ProfileList = 'AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus,AutomaticContinued';
+
     public function Create()
     {
         //Never delete this line!
@@ -40,26 +42,12 @@ class PulseActor extends IPSModule
         $blue=0x0000FF;
         $this->RegisterAttributeString('SwitchList', "SwitchActorID");
         $this->RegisterAttributeString('StatusList', "StatusActorID");
-        $this->RegisterAttributeString('ExpertListHide',"");
+        $this->RegisterAttributeString('ExpertListHide',"AutomaticContinued");
         $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
-      
+
         $this->DeleteProfileList (self::ProfileList);
 
         //Variablen --------------------------------------------------------------------------------------------------------
-        //AutomaticRelease
-        $variable = 'AutomaticRelease';
-        $profileName = $this->CreateProfileName($variable);
-        if (!IPS_VariableProfileExists($profileName)) {
-            IPS_CreateVariableProfile($profileName, 0);
-            IPS_SetVariableProfileIcon($profileName, "Ok");
-            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
-            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
-        }
-        $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Release'), $profileName, 60);
-        $this->EnableAction($variable);
-        //Variable für Änderungen registrieren
-        $this->RegisterMessage($this->GetIDForIdent($variable),VM_UPDATE);
-
         //OpMode
         $variable = 'OpMode';
         $profileName =  $this->CreateProfileName($variable);
@@ -117,6 +105,22 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 7, "Manuell Ein", "", $red);
         }
         $this->RegisterVariableInteger($variable , $this->Translate('Status'), $profileName, 40);
+
+
+        //AutomaticContinued
+        $variable = 'AutomaticContinued';
+        $profileName = $this->CreateProfileName($variable);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Ok");
+            IPS_SetVariableProfileAssociation($profileName, false, "Aus", "", $transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ein", "", $green);
+        }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Automatic Continued'), $profileName, 80);
+        $this->EnableAction($variable);
+        //Variable für Änderungen registrieren
+        $this->RegisterMessage($this->GetIDForIdent($variable), VM_UPDATE);
+
 
         //------------------------------------------------------------------------------------------------------------------
         //Timer ------------------------------------------------------------------------------------------------------------
@@ -176,7 +180,7 @@ class PulseActor extends IPSModule
     //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable
     //void EnableAction (string $Ident)
     //regstriert wird
-    public function RequestAction($Ident,$Value) 
+    public function RequestAction($Ident,$Value)
     {
         switch($Ident) {
             case "OpMode":
@@ -194,6 +198,9 @@ class PulseActor extends IPSModule
             case "AutomaticRelease":
                 $this->SetValue($Ident, $Value);
                 break;
+            case "AutomaticContinued":
+                $this->SetValue($Ident, $Value);
+                break;
         }
     }
 
@@ -202,14 +209,17 @@ class PulseActor extends IPSModule
         switch($opmode) {
             case self::Aus: //Aus
                 $this->HideItem("AutomaticRelease",true);
+                $this->HideItem("AutomaticContinued", true);
                 $this->PulseAction ();
                 break;
             case self::Manuell: //Handbetrieb
                 $this->HideItem("AutomaticRelease",true);
+                $this->HideItem("AutomaticContinued", true);
                 $this->PulseAction ();
                 break;
             case self::Automatik: //Automatikbetrieb
                 $this->HideItem("AutomaticRelease",false);
+                $this->HideItem("AutomaticContinued", false);
                 $this->PulseAction ();
                 break;
             default:
@@ -239,6 +249,11 @@ class PulseActor extends IPSModule
         else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
         {
             $this->SendDebug(__FUNCTION__,'id:'.$SenderID.' message:'.$Message, 0);
+            $this->AutomaticRelease();
+        }
+        else if ($this->GetIDForIdent('AutomaticContinued') == $SenderID)
+        {
+            $this->SendDebug(__FUNCTION__, 'id:' . $SenderID . ' message:' . $Message, 0);
             $this->AutomaticRelease();
         }
         //Die Statusänderung des Actors auswerten
@@ -288,8 +303,8 @@ class PulseActor extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
-        
-        
+
+
         $this->DeleteProfileList (self::ProfileList);
     }
 
@@ -375,10 +390,10 @@ class PulseActor extends IPSModule
     public function SetDevice(string $switchName, bool $status) : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-       
+
         $id = $this->ReadPropertyInteger($switchName);
         $this->SendDebug(__FUNCTION__, "switchName: ".$switchName." id: ".$id, 0);
-        
+
         if ($id>1) {
             RequestAction($id, $status);
             $this->StartSignalChecker();
@@ -495,7 +510,11 @@ class PulseActor extends IPSModule
                 $this->SwitchOff ();
 			    if ($this->IsReleased())
 			    {
-				    if ($this->GetPulseTime() > 0) $actAction =  $this->SetAction ( self::SetzeAktiv);
+                     if ($this->IsContinuedMode())
+                     {
+                        $actAction = $this->SetAction(self::SetzeDauerAktiv);
+                     }
+				     else if ($this->GetPulseTime() > 0) $actAction =  $this->SetAction ( self::SetzeAktiv);
 			    }
 			    break;
 		    case  self::SetzeAktiv:
@@ -514,7 +533,18 @@ class PulseActor extends IPSModule
                     $actAction =  $this->SetAction ( self::WarteAufFreigabe);
                 }
 			    break;
-		    case  self::SetzePause:
+            case self::SetzeDauerAktiv:
+                $this->StopTimer();
+                $this->SwitchOn();
+                $actAction = self::DauerAktiv;
+                break;
+            case self::DauerAktiv:
+                if (!$this->IsReleased())
+                {
+                    $actAction = $this->SetAction(self::WarteAufFreigabe);
+                }
+                break;
+            case  self::SetzePause:
 			    $this->SwitchOff ();
                 $this->StartPauseTime();
 			    $actAction =  self::Pause;
@@ -547,6 +577,11 @@ class PulseActor extends IPSModule
     private function IsReleased() : bool
     {
         return $this->GetValue('AutomaticRelease');
+    }
+
+    private function IsContinuedMode() : bool
+    {
+        return $this->GetValue('AutomaticContinued');
     }
 
     private function StartPauseTime () : bool
