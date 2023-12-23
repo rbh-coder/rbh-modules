@@ -223,7 +223,7 @@ trait RBH_ModuleFunctions
 
     private function HideItemById (int $id, bool $hide ) : void
     {
-        $this->SendDebug(__FUNCTION__, 'Set visibility' . $id . ':' . $hide, 0);
+        $this->SendDebug(__FUNCTION__, 'Set visibility' . $id . ': ' . $hide, 0);
         if (!$this->IsValidId($id)) return;
         IPS_SetHidden($id,$hide);
     }
@@ -239,13 +239,13 @@ trait RBH_ModuleFunctions
         if (!$this->IsValidId($id)) return;
         IPS_SetDisabled($id, $status);
     }
-     private function HideItem(string $item,bool $status) : void
+    private function HideItem(string $item,bool $status) : void
     {
-        $this->SendDebug(__FUNCTION__,'Set visibility'.$item.':' . $status, 0);
+        $this->SendDebug(__FUNCTION__,'Set visibility'.$item.': ' . $status, 0);
         if (empty($item)) return;
         $id = $this->GetIDForIdent($item);
         if (!$this->IsValidId($id)) return;
-        $this->SendDebug(__FUNCTION__, 'Set visibility'. $item.':'. $status, 0);
+        $this->SendDebug(__FUNCTION__, 'Set visibility'. $item.': '. $status, 0);
         IPS_SetHidden($id, $status);
     }
 

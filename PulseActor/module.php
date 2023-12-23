@@ -28,6 +28,14 @@ class PulseActor extends IPSModule
     private const MODULE_NAME = 'PulseActor';
 
     private const ProfileList = 'AutomaticRelease,PulseTime,PauseTime,OpMode,ModuleStatus,AutomaticContinued';
+    private const ExpertLockList = 'OpMode,PulseTime,PauseTime';
+    private const ExpertHideList = 'AutomaticContinued';
+
+    private const RegisterVariablesUpdateList = 'AutomaticRelease,AutomaticContinued';
+
+    private const RegisterReferenciesUpdateList = 'ExpertModeID';
+
+    private const ReferenciesList = 'ExpertModeID,StatusActorID,SwitchActorID';
 
     public function Create()
     {
@@ -42,8 +50,6 @@ class PulseActor extends IPSModule
         $blue=0x0000FF;
         $this->RegisterAttributeString('SwitchList', "SwitchActorID");
         $this->RegisterAttributeString('StatusList', "StatusActorID");
-        $this->RegisterAttributeString('ExpertListHide',"AutomaticContinued");
-        $this->RegisterAttributeString('ExpertListLock',"OpMode,PulseTime,PauseTime");
 
         $this->DeleteProfileList (self::ProfileList);
 
@@ -154,6 +160,9 @@ class PulseActor extends IPSModule
 
         $this->RegisterVariableIds($this->ReadAttributeString('SwitchList'));
         $this->RegisterVariableIds($this->ReadAttributeString('StatusList'));
+
+        //Alle in der "form.json" definierten Variablenreferenzen registrieren
+        $this->RegisterVariableIds(self::ReferenciesList);
     }
 
     private function UpdateTimeProfile(string $profileName, float $maxValue, string $suffix) : void
@@ -257,7 +266,7 @@ class PulseActor extends IPSModule
 
         if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
         {
-            $this->HandleExpertSwitch($SenderID,$this->ReadAttributeString('ExpertListHide'),$this->ReadAttributeString('ExpertListLock'));
+            $this->HandleExpertSwitch($SenderID,self::ExpertHideList,self::ExpertLockList);
         }
         else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
         {
@@ -372,10 +381,12 @@ class PulseActor extends IPSModule
                 IPS_SetHidden($linkID, true);
             }
         }
+        //Referenzen registrieren
+        $this->RegisterReferenceVarIdList(self::ReferenciesList);
 
-        $this->RegisterStatusUpdate('ExpertModeID');
-        $this->RegisterMessage($this->GetIDForIdent('AutomaticRelease'),VM_UPDATE);
-        $this->RegisterMessage($this->GetIDForIdent('AutomaticContinued'), VM_UPDATE);
+        //Alle benötigten aktiven Referenzen für die Messagesink anmelden
+        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
+        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
 
         $this->WriteAttributeInteger('PulseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->WriteAttributeInteger('PauseTimeFactor',$this->GetTimerFactor($this->ReadPropertyInteger('PauseTimeUnit')));
@@ -388,8 +399,7 @@ class PulseActor extends IPSModule
         $this->RegisterReferenceVarIdList($this->ReadAttributeString('StatusList'));
         $this->RegisterReferenceVarId($this->ReadPropertyInteger('ExpertModeID'));
 
-        $this->HandleExpertSwitch($this->ReadPropertyInteger('ExpertModeID'), $this->ReadAttributeString('ExpertListHide'), $this->ReadAttributeString('ExpertListLock'));
-
+        $this->HandleExpertSwitch($this->ReadPropertyInteger('ExpertModeID'), self::ExpertHideList, self::ExpertLockList);
     }
 
     public function RestartTimers() : void
