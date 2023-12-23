@@ -108,6 +108,8 @@ class PulseActor extends IPSModule
             IPS_SetVariableProfileAssociation($profileName, 5, "Pause", "", $blue);
             IPS_SetVariableProfileAssociation($profileName, 6, "Ausschalten", "", $transparent);
             IPS_SetVariableProfileAssociation($profileName, 7, "Manuell Ein", "", $red);
+            IPS_SetVariableProfileAssociation($profileName, 8, "Setze Daueraktiv", "", $green);
+            IPS_SetVariableProfileAssociation($profileName, 9, "Daueraktiv", "", $green);
         }
         $this->RegisterVariableInteger($variable , $this->Translate('Status'), $profileName, 40);
 
