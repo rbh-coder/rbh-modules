@@ -223,6 +223,7 @@ trait RBH_ModuleFunctions
 
     private function HideItemById (int $id, bool $hide ) : void
     {
+        $this->SendDebug(__FUNCTION__, 'Set visibility' . $id . ':' . $hide, 0);
         if (!$this->IsValidId($id)) return;
         IPS_SetHidden($id,$hide);
     }
