@@ -100,6 +100,7 @@ class FlapControl extends IPSModule
         //------------------------------------------------------------------------------------------------------------------
 
         $this->RegisterVariableIds(self::ReferenciesList);
+        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
     }
 
 

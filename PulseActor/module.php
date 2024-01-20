@@ -160,6 +160,9 @@ class PulseActor extends IPSModule
 
         //Alle in der "form.json" definierten Variablenreferenzen registrieren
         $this->RegisterVariableIds(self::ReferenciesList);
+
+        $this->UpdateTimeProfile($this->CreateProfileName("PulseTime"), $this->ReadPropertyInteger('MaxPulseTime'), $this->GetSuffix($this->ReadPropertyInteger('PulseTimeUnit')));
+        $this->UpdateTimeProfile($this->CreateProfileName("PauseTime"), $this->ReadPropertyInteger('MaxPauseTime'), $this->GetSuffix($this->ReadPropertyInteger('PauseTimeUnit')));
     }
 
     private function UpdateTimeProfile(string $profileName, float $maxValue, string $suffix) : void
