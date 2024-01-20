@@ -161,6 +161,10 @@ class PulseActor extends IPSModule
         //Alle in der "form.json" definierten Variablenreferenzen registrieren
         $this->RegisterVariableIds(self::ReferenciesList);
 
+        //Alle benötigten aktiven Referenzen für die Messagesink anmelden
+        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
+        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
+
         $this->UpdateTimeProfile($this->CreateProfileName("PulseTime"), $this->ReadPropertyInteger('MaxPulseTime'), $this->GetSuffix($this->ReadPropertyInteger('PulseTimeUnit')));
         $this->UpdateTimeProfile($this->CreateProfileName("PauseTime"), $this->ReadPropertyInteger('MaxPauseTime'), $this->GetSuffix($this->ReadPropertyInteger('PauseTimeUnit')));
     }

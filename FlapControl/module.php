@@ -100,6 +100,8 @@ class FlapControl extends IPSModule
         //------------------------------------------------------------------------------------------------------------------
 
         $this->RegisterVariableIds(self::ReferenciesList);
+        //Alle benötigten aktiven Referenzen für die Messagesink anmelden
+        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
     }
 
