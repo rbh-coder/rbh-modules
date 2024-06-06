@@ -257,35 +257,37 @@ class PulseActor extends IPSModule
     //registriert wird
     public function MessageSink($TimeStamp,$SenderID,$Message,$Data)
     {
-        //$Data:
-        //0: Aktueller Wert
-        //1: Ob es eine Differenz zum alten Wert gibt.
-        //2: Alter Wert
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+                break;
+            default:
+                //$Data:
+                //0: Aktueller Wert
+                //1: Ob es eine Differenz zum alten Wert gibt.
+                //2: Alter Wert
 
-        //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
-        if ($Data[1]==0) return;
+                //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
+                if ($Data[1] == 0)
+                    return;
 
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        //$this->SendDebug(__FUNCTION__, 'id:'.$SenderID.' message:'.$Message.' data:'.print_r($Data, true), 0);
+                $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+                //$this->SendDebug(__FUNCTION__, 'id:'.$SenderID.' message:'.$Message.' data:'.print_r($Data, true), 0);
 
-        if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID)
-        {
-            $this->HandleExpertSwitch($SenderID,self::ExpertHideList,self::ExpertLockList);
-        }
-        else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID)
-        {
-            $this->SendDebug(__FUNCTION__,'id:'.$SenderID.' message:'.$Message, 0);
-            $this->AutomaticRelease();
-        }
-        else if ($this->GetIDForIdent('AutomaticContinued') == $SenderID)
-        {
-            $this->SendDebug(__FUNCTION__, 'id:' . $SenderID . ' message:' . $Message, 0);
-            $this->AutomaticRelease();
-        }
-        //Die Statusänderung des Actors auswerten
-        else
-        {
-            $this->StatusUpdate($SenderID);
+                if ($this->ReadPropertyInteger('ExpertModeID') == $SenderID) {
+                    $this->HandleExpertSwitch($SenderID, self::ExpertHideList, self::ExpertLockList);
+                } else if ($this->GetIDForIdent('AutomaticRelease') == $SenderID) {
+                    $this->SendDebug(__FUNCTION__, 'id:' . $SenderID . ' message:' . $Message, 0);
+                    $this->AutomaticRelease();
+                } else if ($this->GetIDForIdent('AutomaticContinued') == $SenderID) {
+                    $this->SendDebug(__FUNCTION__, 'id:' . $SenderID . ' message:' . $Message, 0);
+                    $this->AutomaticRelease();
+                }
+                //Die Statusänderung des Actors auswerten
+                else {
+                    $this->StatusUpdate($SenderID);
+                }
+                break;
         }
     }
 
