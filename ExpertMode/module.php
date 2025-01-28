@@ -14,8 +14,8 @@ class ExpertMode extends IPSModule
     private const RegisterVariablesUpdateList =     '';
     private const RegisterReferenciesUpdateList =   '';
     private const ReferenciesList =                 '';
-   
-   
+
+
     private const Transparent = 0xffffff00;
     private const Red = 0xFF0000;
     private const Yellow = 0xFFFF00;
@@ -36,7 +36,7 @@ class ExpertMode extends IPSModule
         $this->RegisterPropertyString('EnableInstanciesL1',"[]");
         $this->RegisterPropertyString('ShowInstanciesL2',"[]");
         $this->RegisterPropertyString('EnableInstanciesL2',"[]");
-       
+
         $this->DeleteProfileList (self::ProfileList);
 
        //Variablen --------------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ class ExpertMode extends IPSModule
         }
         $this->RegisterVariableInteger($variable, $this->Translate('User Level'),$profileName, 20);
         $this->EnableAction($variable);
-        
+
         //------------------------------------------------------------------------------------------------------------------
         //Timer ------------------------------------------------------------------------------------------------------------
         $this->RegisterTimer('EXPRT_Timer', 0, 'EXPRT_UpdateTimer($_IPS[\'TARGET\']);');
@@ -74,7 +74,7 @@ class ExpertMode extends IPSModule
         switch($Ident) {
               case "Password":
                    $this->SetValue($Ident, $Value);
-                   $level = $this->CheckPassword($Value); 
+                   $level = $this->CheckPassword($Value);
                    $this->SetLevelProfile($level);
                    $this->SetValue($Ident,'');
                    break;
@@ -85,7 +85,7 @@ class ExpertMode extends IPSModule
         }
     }
 
-    
+
 
     //Wird aufgrufen wenn Variable mit
     //void RegisterMessage (integer $SenderID, integer $NachrichtID)
@@ -103,12 +103,12 @@ class ExpertMode extends IPSModule
          $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
     }
 
-  
+
     private function CheckPassword(string $value) : int
     {
 
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        
+
         if ($this->IsValidStringPair($this->ReadPropertyString('Password_L2'),$value)) return 2;
         if ($this->IsValidStringPair($this->ReadPropertyString('Password_L1'),$value)) return 1;
         return 0;
@@ -177,33 +177,33 @@ class ExpertMode extends IPSModule
         }
     }
 
-    private function OperateHideList (string $list, bool $status) : void 
+    private function OperateHideList (string $list, bool $status) : void
     {
         if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $variables = json_decode($list,true);
-        foreach ($variables as $variable) 
+        foreach ($variables as $variable)
         {
                 $this->HideItemById($variable['ObjectID'],$status);
         }
     }
-    private function OperateLockList (string $list, bool $status) : void 
+    private function OperateLockList (string $list, bool $status) : void
     {
         if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $variables = json_decode($list,true);
-        foreach ($variables as $variable) 
+        foreach ($variables as $variable)
         {
                 $this->LockItemById($variable['ObjectID'],$status);
         }
     }
 
-    private function RegisterReferenceVarIdList (string $list) : void 
+    private function RegisterReferenceVarIdList (string $list) : void
     {
         if (!$this->IsValidStringList($list)) return;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $variables = json_decode($list,true);
-        foreach ($variables as $variable) 
+        foreach ($variables as $variable)
         {
             $this->RegisterReferenceVarId($variable['ObjectID']);
         }
@@ -222,8 +222,8 @@ class ExpertMode extends IPSModule
     {
         //Never delete this line!
         parent::Destroy();
-        
-        
+
+
         $this->DeleteProfileList (self::ProfileList);
     }
 
@@ -240,14 +240,14 @@ class ExpertMode extends IPSModule
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-     
+
         //Delete all references
         foreach ($this->GetReferenceList() as $referenceID) {
             $this->UnregisterReference($referenceID);
         }
 
         //Delete all message registrations
-       
+
         foreach ($this->GetMessageList() as $senderID => $messages) {
             foreach ($messages as $message) {
                 if ($message == EM_UPDATE) {
@@ -260,15 +260,17 @@ class ExpertMode extends IPSModule
         }
 
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
+        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('ShowInstanciesL1'));
+        $this->RegisterReferenceVarIdList($this->ReadPropertyString('EnableInstanciesL1'));
+        $this->RegisterReferenceVarIdList($this->ReadPropertyString('ShowInstanciesL2'));
+        $this->RegisterReferenceVarIdList($this->ReadPropertyString('EnableInstanciesL2'));
+
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
 
         $this->RegisterVariableIds(self::ReferenciesList);
-        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('ShowInstanciesL1'));
-        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('EnableInstanciesL1'));
-        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('ShowInstanciesL2'));
-        $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('EnableInstanciesL2'));
-        
+
+
         $this->SetLevelProfile($this->GetValue('ExpertLevel'));
 
     }
