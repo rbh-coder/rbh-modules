@@ -17,8 +17,9 @@
 			"name": "UsePassword",
 			"caption": "Passworteingabe verwenden",
 			"default": true,
-		  "onChange": "EXPRT_UI_ToggleExpertMode($id, $onChange['UsePassword']);"
+			"onChange": "EXPRT_UI_ToggleExpertMode($id, $onChange['UsePassword']);"
 		},
+
 		{
 			"type": "ExpansionPanel",
 			"caption": "Level 1 Instanzen",
