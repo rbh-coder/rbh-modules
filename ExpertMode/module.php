@@ -227,7 +227,7 @@ class ExpertMode extends IPSModule
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->StopTimer();
-        $this->SetValue('ExpertLevel',self::Level0));
+        $this->SetValue('ExpertLevel',self::Level0);
         if (!$this->ReadPropertyBoolean('UsePassword')) 
         {
             $this->SetLevelProfile(self::Level0);
