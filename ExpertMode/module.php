@@ -24,12 +24,20 @@ class ExpertMode extends IPSModule
     private const DarkGreen = 0x24F065;
     private const DarkBlue  = 0x0D0FE4;
 
+    private enum UserLevel: int
+    {
+        case Level0 = 0;
+        case Level1 = 1;
+        case Level2 = 2;
+    }
+
     public function Create()
     {
         //Never delete this line!
         parent::Create();
 
         $this->RegisterPropertyInteger('ExpertLeaseTime',60);
+        $this->RegisterPropertyBoolean('UsePassword', true);
         $this->RegisterPropertyString('Password_L1',"");
         $this->RegisterPropertyString('Password_L2',"");
         $this->RegisterPropertyString('ShowInstanciesL1',"[]");
@@ -73,6 +81,12 @@ class ExpertMode extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         switch($Ident) {
               case "Password":
+                   if (!$this->ReadPropertyBoolean('UsePassword')) 
+                   {
+                       $this->SetLevelProfile(UserLevel::Level2);
+                       $this->SetValue($Ident,'');
+                       break;
+                   }
                    $this->SetValue($Ident, $Value);
                    $level = $this->CheckPassword($Value); 
                    $this->SetLevelProfile($level);
@@ -109,8 +123,9 @@ class ExpertMode extends IPSModule
 
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
-        if ($this->IsValidStringPair($this->ReadPropertyString('Password_L2'),$value)) return 2;
-        if ($this->IsValidStringPair($this->ReadPropertyString('Password_L1'),$value)) return 1;
+        if (!$this->ReadPropertyBoolean('UsePassword')) return  UserLevel::Level2;          
+        if ($this->IsValidStringPair($this->ReadPropertyString('Password_L2'),$value)) return UserLevel::Level2;
+        if ($this->IsValidStringPair($this->ReadPropertyString('Password_L1'),$value)) return UserLevel::Level1;
         return 0;
     }
 
@@ -129,23 +144,23 @@ class ExpertMode extends IPSModule
             IPS_SetVariableProfileValues($profileName, 0, $level, 0);
             switch ($level)
             {
-                case 0:
+                case UserLevel::Level0:
                     $this->StopTimer();
-                    IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
-                    @IPS_SetVariableProfileAssociation($profileName, 1, "", "", 0);
-                    @IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
+                    IPS_SetVariableProfileAssociation($profileName, UserLevel::Level0), "Level 0", "", self::Transparent);
+                    @IPS_SetVariableProfileAssociation($profileName, UserLevel::Level1), "", "", 0);
+                    @IPS_SetVariableProfileAssociation($profileName, UserLevel::Level2), "", "", 0);
                     break;
-                case 1:
+                case UserLevel::Level1:
                     $this->StartTimer();
-                    IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
-                    IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
-                    @IPS_SetVariableProfileAssociation($profileName, 2, "", "", 0);
+                    IPS_SetVariableProfileAssociation($profileName, UserLevel::Level0), "Level 0", "", self::Transparent);
+                    IPS_SetVariableProfileAssociation($profileName, UserLevel::Level1), "Level 1", "", self::Yellow);
+                    @IPS_SetVariableProfileAssociation($profileName, UserLevel::Level2), "", "", 0);
                     break;
-                case 2:
+                case UserLevel::Level2:
                     $this->StartTimer();
-                    IPS_SetVariableProfileAssociation($profileName, 0, "Level 0", "", self::Transparent);
-                    IPS_SetVariableProfileAssociation($profileName, 1, "Level 1", "", self::Yellow);
-                    IPS_SetVariableProfileAssociation($profileName, 2, "Level 2", "",  self::Red);
+                    IPS_SetVariableProfileAssociation($profileName, UserLevel::Level0), "Level 0", "", self::Transparent);
+                    IPS_SetVariableProfileAssociation($profileName, UserLevel::Level1), "Level 1", "", self::Yellow);
+                    IPS_SetVariableProfileAssociation($profileName, UserLevel::Level2), "Level 2", "",  self::Red);
                     break;
             }
         }
@@ -213,9 +228,12 @@ class ExpertMode extends IPSModule
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->StopTimer();
-        $this->SetValue('ExpertLevel',0);
-        $this->SetLevelProfile(0);
-        $this->OperateExpertSwitch(0);
+        $this->SetValue('ExpertLevel',UserLevel::Level0));
+        if (!$this->ReadPropertyBoolean('UsePassword')) 
+        {
+            $this->SetLevelProfile(UserLevel::Level0);
+        }
+        $this->OperateExpertSwitch(UserLevel::Level0);
     }
 
     public function Destroy()
@@ -269,9 +287,17 @@ class ExpertMode extends IPSModule
         $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('EnableInstanciesL1'));
         $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('ShowInstanciesL2'));
         $this-> RegisterReferenceVarIdList ($this->ReadPropertyString('EnableInstanciesL2'));
-        
-        $this->SetLevelProfile($this->GetValue('ExpertLevel'));
 
+        if  (!$this->ReadPropertyBoolean('UsePassword'))
+        {   
+            $this->HideItem('Password',true);
+            $this->SetLevelProfile(UsaerLevel::Level2);
+        }
+        else
+        {
+           $this->HideItem('Password',false);
+           $this->SetLevelProfile($this->GetVale('ExpertLevel'));
+        }
     }
 
     private function StartTimer () : void

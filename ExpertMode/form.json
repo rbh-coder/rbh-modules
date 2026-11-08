@@ -13,13 +13,20 @@
 			]
 		},
 		{
+			"type": "CheckBox",
+			"name": "UsePassword",
+			"caption": "Passworteingabe verwenden",
+			"default": true
+		},
+		{
 			"type": "ExpansionPanel",
 			"caption": "Level 1 Instanzen",
 			"items": [
 				{
 					"type": "ValidationTextBox",
 					"name": "Password_L1",
-					"caption": "Password Level 1"
+					"caption": "Password Level 1",
+					"visible": "UsePassword"
 				},
 				{
 					"type": "Label",
@@ -70,7 +77,8 @@
 				{
 					"type": "ValidationTextBox",
 					"name": "Password_L2",
-					"caption": "Password Level 2"
+					"caption": "Password Level 2",
+					"visible": "UsePassword"
 				},
 				{
 					"type": "Label",
