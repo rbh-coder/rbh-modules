@@ -145,21 +145,21 @@ class ExpertMode extends IPSModule
             {
                 case self::Level0:
                     $this->StopTimer();
-                    IPS_SetVariableProfileAssociation($profileName, self::Level0), "Level 0", "", self::Transparent);
-                    @IPS_SetVariableProfileAssociation($profileName, self::Level1), "", "", 0);
-                    @IPS_SetVariableProfileAssociation($profileName, self::Level2), "", "", 0);
+                    IPS_SetVariableProfileAssociation($profileName, self::Level0, "Level 0", "", self::Transparent);
+                    @IPS_SetVariableProfileAssociation($profileName, self::Level1, "", "", 0);
+                    @IPS_SetVariableProfileAssociation($profileName, self::Level2, "", "", 0);
                     break;
                 case self::Level1:
                     $this->StartTimer();
-                    IPS_SetVariableProfileAssociation($profileName, self::Level0), "Level 0", "", self::Transparent);
-                    IPS_SetVariableProfileAssociation($profileName, self::Level1), "Level 1", "", self::Yellow);
-                    @IPS_SetVariableProfileAssociation($profileName, self::Level2), "", "", 0);
+                    IPS_SetVariableProfileAssociation($profileName, self::Level0, "Level 0", "", self::Transparent);
+                    IPS_SetVariableProfileAssociation($profileName, self::Level1, "Level 1", "", self::Yellow);
+                    @IPS_SetVariableProfileAssociation($profileName, self::Level2, "", "", 0);
                     break;
                 case self::Level2:
                     $this->StartTimer();
-                    IPS_SetVariableProfileAssociation($profileName, self::Level0), "Level 0", "", self::Transparent);
-                    IPS_SetVariableProfileAssociation($profileName, self::Level1), "Level 1", "", self::Yellow);
-                    IPS_SetVariableProfileAssociation($profileName, self::Level2), "Level 2", "",  self::Red);
+                    IPS_SetVariableProfileAssociation($profileName, self::Level0, "Level 0", "", self::Transparent);
+                    IPS_SetVariableProfileAssociation($profileName, self::Level1, "Level 1", "", self::Yellow);
+                    IPS_SetVariableProfileAssociation($profileName, self::Level2, "Level 2", "",  self::Red);
                     break;
             }
         }
