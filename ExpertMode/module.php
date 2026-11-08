@@ -312,4 +312,16 @@ class ExpertMode extends IPSModule
         $this->SetTimerInterval('EXPRT_Timer', 0);
     }
 
+    public function UI_ToggleExpertMode(bool $state) {
+    // Liste aller Elemente, die ein- oder ausgeblendet werden sollen
+    $fields = ['Password_L1', 'Password_L2'];
+    
+    foreach ($fields as $field) {
+        $this->UpdateFormField($field, 'visible', $state);
+    }
+    
+    // Sie können hier auch komplexere Logik einbauen:
+    // $this->UpdateFormField('InverseField', 'visible', !$state);
+}
+
 }
