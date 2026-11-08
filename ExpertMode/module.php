@@ -295,7 +295,7 @@ class ExpertMode extends IPSModule
         else
         {
            $this->HideItem('Password',false);
-           $this->SetLevelProfile($this->GetVale('ExpertLevel'));
+           $this->SetLevelProfile($this->GetValue('ExpertLevel'));        
         }
     }
 
