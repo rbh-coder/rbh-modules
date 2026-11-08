@@ -24,7 +24,7 @@ class ExpertMode extends IPSModule
     private const DarkGreen = 0x24F065;
     private const DarkBlue  = 0x0D0FE4;
 
-    private enum UserLevel: int
+    enum UserLevel: int
     {
         case Level0 = 0;
         case Level1 = 1;
