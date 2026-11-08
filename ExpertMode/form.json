@@ -17,7 +17,7 @@
 			"name": "UsePassword",
 			"caption": "Passworteingabe verwenden",
 			"default": true,
-			"onChange": "EXPRT_UI_ToggleExpertMode($id,$UsePassword);"
+			"onChange": "EXPRT_UI_ToggleExpertMode($id,$__value);"
 		},
 
 		{
