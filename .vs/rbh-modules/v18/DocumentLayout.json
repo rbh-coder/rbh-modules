@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\ExpertMode\\form.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ExpertMode\\form.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -29,7 +33,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -41,7 +45,24 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\.gitignore",
+              "RelativeDocumentMoniker": ".gitignore",
+              "ToolTip": "C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\.gitignore",
+              "RelativeToolTip": ".gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-11-08T18:00:40.183Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c6f34f0d-7ae5-4f3a-be61-fe0c21ae9eb8}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "RBH_ModuleFunctions.php",
               "DocumentMoniker": "C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\libs\\RBH_ModuleFunctions.php",
               "RelativeDocumentMoniker": "libs\\RBH_ModuleFunctions.php",
@@ -62,7 +83,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "plan-expertmode-passworteingabe-konfigurierbar-machen.md [Vorschau]",
               "DocumentMoniker": "C:\\Users\\alfre\\.copilot\\plans\\plan-expertmode-passworteingabe-konfigurierbar-machen.md",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\.copilot\\plans\\plan-expertmode-passworteingabe-konfigurierbar-machen.md",
@@ -74,7 +95,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "locale.json",
               "DocumentMoniker": "C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\ExpertMode\\locale.json",
               "RelativeDocumentMoniker": "ExpertMode\\locale.json",
@@ -87,7 +108,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "form.json",
               "DocumentMoniker": "C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\ExpertMode\\form.json",
               "RelativeDocumentMoniker": "ExpertMode\\form.json",
@@ -100,7 +121,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "module.php",
               "DocumentMoniker": "C:\\Users\\alfre\\OneDrive\\Softwareprojekte\\IPSymcon\\rbh-modules\\ExpertMode\\module.php",
               "RelativeDocumentMoniker": "ExpertMode\\module.php",
