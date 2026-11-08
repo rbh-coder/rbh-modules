@@ -16,7 +16,8 @@
 			"type": "CheckBox",
 			"name": "UsePassword",
 			"caption": "Passworteingabe verwenden",
-			"default": true
+			"default": true,
+		  "onChange": "$this->UpdateFormField('Password_L1', 'visible', $OnChange); $this->UpdateFormField('Password_L2', 'visible', $OnChange);"
 		},
 		{
 			"type": "ExpansionPanel",
