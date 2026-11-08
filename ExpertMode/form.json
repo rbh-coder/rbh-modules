@@ -25,8 +25,7 @@
 				{
 					"type": "ValidationTextBox",
 					"name": "Password_L1",
-					"caption": "Password Level 1",
-					"visible": "UsePassword"
+					"caption": "Password Level 1"
 				},
 				{
 					"type": "Label",
@@ -77,8 +76,7 @@
 				{
 					"type": "ValidationTextBox",
 					"name": "Password_L2",
-					"caption": "Password Level 2",
-					"visible": "UsePassword"
+					"caption": "Password Level 2"
 				},
 				{
 					"type": "Label",
