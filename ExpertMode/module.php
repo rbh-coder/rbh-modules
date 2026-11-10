@@ -349,6 +349,7 @@ class ExpertMode extends IPSModule
                     {
                         // Setzt die Sichtbarkeit basierend auf der Checkbox
                         $subElement['visible'] = $usePassword;
+                        $this->SendDebug(__FUNCTION__, 'Code reached', 0);
                     }
                 }
             }
