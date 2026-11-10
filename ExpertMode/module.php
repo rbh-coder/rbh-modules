@@ -329,6 +329,7 @@ class ExpertMode extends IPSModule
         }
     }
 
+    /*
     public function GetConfigurationForm() 
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -346,6 +347,33 @@ class ExpertMode extends IPSModule
     
         return json_encode($form);
     }
+    */
+
+    public function GetConfigurationForm() 
+    {
+    // Lädt die originale form.json
+    $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+    
+    // Status der Checkbox auslesen
+    $usePassword = $this->ReadPropertyBoolean('UsePassword');
+    $fields = ['Password_L1', 'Password_L2'];
+    // Da die Passwörter in ExpansionPanels liegen, durchlaufen wir die Elemente
+    foreach ($form['elements'] as &$element) {
+        if ($element['type'] === 'ExpansionPanel' && isset($element['items'])) {
+            foreach ($element['items'] as &$subElement) 
+            {
+                if (array_key_exists($subElement['name'], $fields)) {
+                //if ($subElement['name'] === 'Password_L1' || $subElement['name'] === 'Password_L2') {
+                    // Setzt die Sichtbarkeit basierend auf der Checkbox
+                    $subElement['visible'] = $usePassword;
+                }
+            }
+        }
+    }
+    
+    return json_encode($form);
+}
+
 
 
     public function UI_ShowPassword(bool $state) 
