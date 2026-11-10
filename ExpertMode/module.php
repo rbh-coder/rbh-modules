@@ -331,6 +331,7 @@ class ExpertMode extends IPSModule
 
     public function UI_ToggleExpertMode(bool $state) 
     {
+         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         // Liste aller Elemente, die ein- oder ausgeblendet werden sollen
         $fields = ['Password_L1', 'Password_L2'];
     
