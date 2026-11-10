@@ -333,6 +333,7 @@ class ExpertMode extends IPSModule
 
     public function GetConfigurationForm() 
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         // Lädt die originale form.json
         $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
     
