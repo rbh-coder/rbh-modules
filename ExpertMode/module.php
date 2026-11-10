@@ -82,18 +82,20 @@ class ExpertMode extends IPSModule
               case "Password":
                    if (!$this->ReadPropertyBoolean('UsePassword')) 
                    {
-                       $this->SetLevelProfile(self::Level2);
                        $this->SetValue($Ident,'');
                        break;
                    }
                    $this->SetValue($Ident, $Value);
                    $level = $this->CheckPassword($Value); 
                    $this->SetLevelProfile($level);
+                   $this->OperateTimer($level); 
                    $this->SetValue($Ident,'');
+                   
                    break;
               case "ExpertLevel":
                    $this->SetValue($Ident, $Value);
                    $this->OperateExpertSwitch($Value);
+                   $this->OperateTimer($Value); 
                    break;
         }
     }
@@ -144,19 +146,16 @@ class ExpertMode extends IPSModule
             switch ($level)
             {
                 case self::Level0:
-                    $this->StopTimer();
                     IPS_SetVariableProfileAssociation($profileName, self::Level0, "Level 0", "", self::Transparent);
                     @IPS_SetVariableProfileAssociation($profileName, self::Level1, "", "", 0);
                     @IPS_SetVariableProfileAssociation($profileName, self::Level2, "", "", 0);
                     break;
                 case self::Level1:
-                    $this->StartTimer();
                     IPS_SetVariableProfileAssociation($profileName, self::Level0, "Level 0", "", self::Transparent);
                     IPS_SetVariableProfileAssociation($profileName, self::Level1, "Level 1", "", self::Yellow);
                     @IPS_SetVariableProfileAssociation($profileName, self::Level2, "", "", 0);
                     break;
                 case self::Level2:
-                    $this->StartTimer();
                     IPS_SetVariableProfileAssociation($profileName, self::Level0, "Level 0", "", self::Transparent);
                     IPS_SetVariableProfileAssociation($profileName, self::Level1, "Level 1", "", self::Yellow);
                     IPS_SetVariableProfileAssociation($profileName, self::Level2, "Level 2", "",  self::Red);
@@ -170,19 +169,19 @@ class ExpertMode extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         switch ($level)
         {
-            case 0:
+            case self::Level0:
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),true);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL1'),true);
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),true);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL2'),true);
                 break;
-            case 1:
+            case self::Level1:
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),false);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL1'),false);
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),true);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL2'),true);
                 break;
-            case 2:
+            case self::Level2:
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL1'),false);
                 $this-> OperateLockList ($this->ReadPropertyString('EnableInstanciesL1'),false);
                 $this-> OperateHideList ($this->ReadPropertyString('ShowInstanciesL2'),false);
@@ -231,6 +230,7 @@ class ExpertMode extends IPSModule
         if ($this->ReadPropertyBoolean('UsePassword')) 
         {
             $this->SetLevelProfile(self::Level0);
+
         }
         $this->OperateExpertSwitch(self::Level0);
     }
@@ -295,7 +295,7 @@ class ExpertMode extends IPSModule
         else
         {
            $this->HideItem('Password',false);
-           $this->SetLevelProfile($this->GetValue('ExpertLevel'));        
+           $this->SetLevelProfile(self::Level0);        
         }
     }
 
@@ -310,6 +310,23 @@ class ExpertMode extends IPSModule
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $this->SetTimerInterval('EXPRT_Timer', 0);
+    }
+
+    private function OperateTimer(int $level) : void
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        switch ($level)
+        {
+            case self::Level0:
+                 $this->StopTimer();
+                break;
+            case self::Level1:
+                $this->StartTimer();
+                break;
+            case self::Level2:
+                $this->StartTimer();
+                break;
+        }
     }
 
     public function UI_ToggleExpertMode(bool $state) 
