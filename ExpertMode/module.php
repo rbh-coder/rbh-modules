@@ -289,12 +289,12 @@ class ExpertMode extends IPSModule
 
         if  (!$this->ReadPropertyBoolean('UsePassword'))
         {   
-            $this->HideItem('Password',true);
+            $this->HideItem('Password',false);
             $this->SetLevelProfile(self::Level2);
         }
         else
         {
-           $this->HideItem('Password',false);
+           $this->HideItem('Password',true);
            $this->SetLevelProfile(self::Level0);        
         }
     }
