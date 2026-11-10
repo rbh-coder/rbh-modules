@@ -291,13 +291,11 @@ class ExpertMode extends IPSModule
         {   
             $this->HideItem('Password',true);
             $this->SetLevelProfile(self::Level2);
-            $this->UI_ShowPassword(false);
         }
         else
         {
            $this->HideItem('Password',false);
            $this->SetLevelProfile(self::Level0);
-           $this->UI_ShowPassword(true);
         }
     }
 
@@ -330,6 +328,25 @@ class ExpertMode extends IPSModule
                 break;
         }
     }
+
+    public function GetConfigurationForm() 
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        // Lädt die originale form.json
+        $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+    
+        $fields = ['Password_L1', 'Password_L2'];
+        foreach ($form['elements'] as &$element) 
+        {
+            if (array_key_exists($element['name'], $fields)) 
+            {
+                $element['visible'] = $this->ReadPropertyBoolean('UsePassword');
+            }   
+        }
+    
+        return json_encode($form);
+    }
+
 
     public function UI_ShowPassword(bool $state) 
     {
