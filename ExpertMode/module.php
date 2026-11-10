@@ -291,11 +291,13 @@ class ExpertMode extends IPSModule
         {   
             $this->HideItem('Password',true);
             $this->SetLevelProfile(self::Level2);
+            $this->UI_ShowPassword(false);
         }
         else
         {
            $this->HideItem('Password',false);
-           $this->SetLevelProfile(self::Level0);        
+           $this->SetLevelProfile(self::Level0);
+           $this->UI_ShowPassword(true);
         }
     }
 
@@ -329,7 +331,7 @@ class ExpertMode extends IPSModule
         }
     }
 
-    public function UI_ToggleExpertMode(bool $state) 
+    public function UI_ShowPassword(bool $state) 
     {
          $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         // Liste aller Elemente, die ein- oder ausgeblendet werden sollen
