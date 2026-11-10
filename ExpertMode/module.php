@@ -345,7 +345,7 @@ class ExpertMode extends IPSModule
             if ($element['type'] === 'ExpansionPanel' && isset($element['items'])) {
                 foreach ($element['items'] as &$subElement) 
                 {
-                    if (isset($subElement['name']) && (array_key_exists($subElement['name'], $fields)))   
+                    if (isset($subElement['name']) && (in_array($subElement['name'], $fields)))   
                     {
                         // Setzt die Sichtbarkeit basierend auf der Checkbox
                         $subElement['visible'] = $usePassword;
