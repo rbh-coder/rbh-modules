@@ -144,8 +144,8 @@
               "edit": { "type": "SelectVariable" }
             },
             {
-              "caption": "Variable",
-              "name": "VariableID",
+              "caption": "Sende Instanz",
+              "name": "SendID",
               "width": "auto",
               "add": 0,
               "edit": { "type": "SelectVariable" }
