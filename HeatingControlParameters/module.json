@@ -1,0 +1,12 @@
+{
+  "id": "{EED96F29-CFDD-6B87-A175-30C34661C6DB}",
+  "name": "Heating Control Parameters",
+  "type": 3,
+  "vendor": "",
+  "aliases": [],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "HCP",
+  "url": ""
+}

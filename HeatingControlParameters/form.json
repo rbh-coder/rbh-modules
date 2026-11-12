@@ -1,0 +1,170 @@
+{
+  "elements": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Regler Parameter",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "name": "DesignTemperatureRadiator",
+          "type": "NumberSpinner",
+          "caption": "Auslegungstemperatur Radiator",
+          "suffix": "°C"
+        },
+        {
+          "name": "IdDesignTemperatureRadiator",
+          "type": "SelectVariable",
+          "caption": "ID Auslegungstemperatur Radiator"
+        },
+        {
+          "name": "DesignTemperatureFloor",
+          "type": "NumberSpinner",
+          "caption": "Auslegungstemperatur Fussboden",
+          "suffix": "°C"
+        },
+        {
+          "name": "IdDesignTemperatureFloor",
+          "type": "SelectVariable",
+          "caption": "ID Auslegungstemperatur Fussboden"
+        },
+        {
+          "name": "MixerPulseLengthMax",
+          "type": "NumberSpinner",
+          "caption": "Mischer Maximale Pulslänge",
+          "suffix": "s"
+        },
+        {
+          "name": "IdMixerPulseLengthMax",
+          "type": "SelectVariable",
+          "caption": "ID Mischer Maximale Pulslänge"
+        },
+        {
+          "name": "MixerProportionalRange",
+          "type": "NumberSpinner",
+          "caption": "Mischer Proportionalbereich",
+          "suffix": "°C"
+        },
+        {
+          "name": "IdMixerProportionalRange",
+          "type": "SelectVariable",
+          "caption": "ID Mischer Proportionalbereich"
+        },
+        {
+          "name": "MixerToleranceRange",
+          "type": "NumberSpinner",
+          "caption": "Mischer Toleranzband",
+          "suffix": "°C"
+        },
+        {
+          "name": "IdMixerToleranceRange",
+          "type": "SelectVariable",
+          "caption": "ID Mischer Toleranzband"
+        },
+        {
+          "name": "MixerCycleTime",
+          "type": "NumberSpinner",
+          "caption": "Mischer Zykluszeit",
+          "suffix": "s"
+        },
+        {
+          "name": "IdMixerCycleTime",
+          "type": "SelectVariable",
+          "caption": "ID Mischer Zykluszeit"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        }
+      ]
+    },
+
+    {
+      "type": "ExpansionPanel",
+      "caption": "Controller Kommunikation",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "name": "IdCommunicationRunning",
+          "type": "SelectVariable",
+          "caption": "ID Kommunikationläuft"
+        },
+        {
+          "name": "IdControlIsAlive",
+          "type": "SelectVariable",
+          "caption": "ID Steuerung gestartet"
+        },
+        {
+          "type": "List",
+          "caption": "Controller Variablen",
+          "name": "ControllerVariablesList",
+          "add": true,
+          "delete": true,
+          "columns": [
+            {
+              "caption": "Variablen ID",
+              "name": "VariableID",
+              "add": 0,
+              "width": "auto",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Test",
+      "items": [
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "List",
+          "name": "Variables",
+          "caption": "Zu synchronisierende Variablen",
+          "rowCount": 2,
+          "add": true,
+          "delete": true,
+          "multiAdd": true,
+          "columns": [
+            {
+              "caption": "Variable",
+              "name": "VariableID",
+              "width": "auto",
+              "add": 0,
+              "edit": { "type": "SelectVariable" }
+            },
+            {
+              "caption": "Variable",
+              "name": "VariableID",
+              "width": "auto",
+              "add": 0,
+              "edit": { "type": "SelectVariable" }
+            }
+          ]
+        } 
+      ]
+    }
+
+  ],
+  "actions": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Testbereich",
+      "items": [
+        {
+          "type": "TestCenter"
+        }
+      ]
+    }
+  ]
+}
