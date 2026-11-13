@@ -257,7 +257,7 @@ class HeatingControlParameters extends IPSModule
                                    $this->SendDebug(__FUNCTION__, 'Item: ' . $parElement['name'] , 0);
                                    if (str_starts_with($parElement['name'],'P_') ) 
                                    {
-                                       $this->SendDebug(__FUNCTION__, 'Itemvalue: ' . $parElement['default', 0);
+                                       $this->SendDebug(__FUNCTION__, 'Itemvalue: ' . $parElement['default'], 0);
                                        $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
                                    }
                                 }
