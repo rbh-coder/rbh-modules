@@ -241,18 +241,23 @@ class HeatingControlParameters extends IPSModule
         {
             if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
             {
+                $this->SendDebug(__FUNCTION__, 'Expansionpanel: ' . $element['name'], 0);
                 if ($element['name'] === 'ControlParameters' && isset($element['items'])) 
                 {
                     foreach ($element['items'] as &$subElement) 
                     {
+                        $this->SendDebug(__FUNCTION__, 'Item: ' . $subElement['type'] , 0);
+
                         if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
                         {
                             foreach ($subElement['items'] as &$parElement) 
                             {   
                                 if (isset($parElement['name']) && isset($parElement['default']))  
                                 {
+                                   $this->SendDebug(__FUNCTION__, 'Item: ' . $parElement['name'] , 0);
                                    if (str_starts_with($parElement['name'],'P_') ) 
                                    {
+                                       $this->SendDebug(__FUNCTION__, 'Itemvalue: ' . $parElement['default', 0);
                                        $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
                                    }
                                 }
