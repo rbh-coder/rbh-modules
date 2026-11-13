@@ -345,7 +345,7 @@ class HeatingControlParameters extends IPSModule
             {
                 $value = $this->ReadPropertyFloat($name);
                 $id = $this->ReadPropertyInteger($switchName);
-                if (($id>1) && $value> -1 
+                if (($id>1) && ($value> -1)) 
                 {
                     //IpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
                     RequestAction($id,$value);
