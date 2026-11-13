@@ -3,7 +3,7 @@
     {
       "type": "ExpansionPanel",
       "caption": "Regler Parameter",
-      "name": "ControlParameters ",
+      "name": "ControlParameters",
       "items": [
         {
           "type": "RowLayout",
