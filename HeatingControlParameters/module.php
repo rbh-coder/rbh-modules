@@ -306,7 +306,7 @@ class HeatingControlParameters extends IPSModule
    {
         foreach ($subElement['items'] as &$parElement) 
         {   
-            $this->WriteInstance ($parElement);
+            $this->SendInstance ($parElement);
         }
    }
 
