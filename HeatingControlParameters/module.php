@@ -233,30 +233,9 @@ class HeatingControlParameters extends IPSModule
                         }
                         else 
                         {
-                             $this->RegisterItems ($element,$identifier,$type,$result);
+                             $this->RegisterItem ($subElement,$identifier,$type,$result);
 	                    }
                     }
-                }
-            }
-        }
-        return trim($result,",");
-    }
-
-
-   private function _RegisterPropertiesFromFlatJson(array $form,string $group,string $identifier, string $type) : string
-   {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        
-        $result="";
-        if ($form == null) return result;  
-        
-        foreach ($form['elements'] as &$element) 
-        {
-            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
-            {
-                if ($element['name'] === $group && isset($element['items'])) 
-                {
-                    $this->RegisterItems ($element,$identifier,$type,$result);
                 }
             }
         }
@@ -295,25 +274,30 @@ class HeatingControlParameters extends IPSModule
    {
         foreach ($subElement['items'] as &$parElement) 
         {   
-            if (isset($parElement['name']))  
+           $this->RegisterItem (array $parElement,string $identifier,string $type, &$result);
+        }
+   }
+
+   private function RegisterItem (array $parElement,string $identifier,string $type, &$result)
+   {
+        if (isset($parElement['name']))  
+        {
+            if (str_starts_with($parElement['name'],$identifier)) 
             {
-                if (str_starts_with($parElement['name'],$identifier)) 
+                $default = 0;
+                if (isset($parElement['default'])) $default = $parElement['default'];
+                $item = $parElement['name'];
+                switch ($type)
                 {
-                    $default = 0;
-                    if (isset($parElement['default'])) $default = $parElement['default'];
-                    $item = $parElement['name'];
-                    switch ($type)
-                    {
-                        case "float":
-                        $this->RegisterPropertyFloat($item,$default);
-                        $result = $result.$item.',';
-                        break;
-                        case "integer":
-                        $this->RegisterPropertyInteger($item,$default);
-                        $result = $result.$item.',';
-                        break;
-                    }                 
-                }
+                    case "float":
+                    $this->RegisterPropertyFloat($item,$default);
+                    $result = $result.$item.',';
+                    break;
+                    case "integer":
+                    $this->RegisterPropertyInteger($item,$default);
+                    $result = $result.$item.',';
+                    break;
+                }                 
             }
         }
    }
