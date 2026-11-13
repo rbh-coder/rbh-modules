@@ -302,7 +302,7 @@ class HeatingControlParameters extends IPSModule
         return trim($result,",");
    }
 
-   private function RegisterItems (array $subElement,string $identifier,string type,&$result)
+   private function RegisterItems (array $subElement,string $identifier,string $type, &$result)
    {
         foreach ($subElement['items'] as &$parElement) 
         {   
