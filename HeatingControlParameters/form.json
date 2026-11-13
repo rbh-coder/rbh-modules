@@ -35,7 +35,7 @@
               "default": "55.0"
             },
             {
-              "name": "IdDesignTemperatureRadiator",
+              "name": "Id_DesignTemperatureRadiator",
               "type": "SelectVariable",
               "caption": "ID Auslegungstemperatur Radiator"
             }

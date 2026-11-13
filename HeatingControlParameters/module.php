@@ -124,11 +124,8 @@ class HeatingControlParameters extends IPSModule
 
 
         //Register references and messages
-        $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);
-         
-        IPS_LogMessage( $this->InstanceID,'Test:');
-        IPS_LogMessage( $this->InstanceID,$this->ReadPropertyString('ReferenciesList'));
-       
+        $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);     
+      
         $this->RegisterReferenceVarIdList($this->ReadPropertyString('ReferenciesList'));
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
