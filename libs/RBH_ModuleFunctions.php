@@ -31,8 +31,10 @@ trait RBH_ModuleFunctions
 
     private function RegisterReferenceVarIdList(string $itemsString) : void
     {
+        IPS_LogMessage(__FUNCTION__,$itemsString);
         if (!$this->IsValidStringList($itemsString)) return;
         foreach (explode(',', $itemsString) as $item) {
+            IPS_LogMessage(__FUNCTION__,$item);
             if ($item != "") $this-> RegisterReferenceVarId($this->ReadPropertyInteger($item));
         }
     }
