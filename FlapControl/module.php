@@ -392,7 +392,7 @@ class FlapControl extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $switchName: '. $switchName. ' $status: '. $state, 0);
         $id = $this->ReadPropertyInteger($switchName);
         if ($id>1) {
-            //ImpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
+            //IpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
             RequestAction($id, $status);
         }
     }

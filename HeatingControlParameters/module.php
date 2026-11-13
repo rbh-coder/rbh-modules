@@ -77,7 +77,7 @@ class HeatingControlParameters extends IPSModule
         $referenciesList = $this->RegisterPropertiesFromRowJson  ($form,"ControlParameters","Id_","integer");
         $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromFlatJson ($form,"ControlMonitoring","Id_","integer");
         $referenciesList= trim($referenciesList,",");
-        
+        IPS_LogMessage(__FUNCTION__,$referenciesList);
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
        
         ########## Timer
@@ -222,6 +222,8 @@ class HeatingControlParameters extends IPSModule
                     {
                         if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
                         {
+                            $this->RegisterItems (array $subElement,string $identifier,&$result);
+                            /*
                             foreach ($subElement['items'] as &$parElement) 
                             {   
                                 if (isset($parElement['name']))  
@@ -246,6 +248,7 @@ class HeatingControlParameters extends IPSModule
                                    }
                                 }
                             }
+                            */
                         }
                     }
                 }
@@ -267,6 +270,8 @@ class HeatingControlParameters extends IPSModule
             {
                 if ($element['name'] === $group && isset($element['items'])) 
                 {
+                    $this->RegisterItems (array $element,string $identifier,&$result);
+                    /*
                     foreach ($element['items'] as &$parElement) 
                     {
                         if (isset($parElement['name']))  
@@ -290,10 +295,63 @@ class HeatingControlParameters extends IPSModule
                             }
                         }
                     }
+                    */
                 }
             }
         }
         return trim($result,",");
+   }
+
+   private function RegisterItems (array $subElement,string $identifier,&$result)
+   {
+        foreach ($subElement['items'] as &$parElement) 
+        {   
+            if (isset($parElement['name']))  
+            {
+                if (str_starts_with($parElement['name'],$identifier)) 
+                {
+                    $default = 0;
+                    if (isset($parElement['default'])) $default = $parElement['default'];
+                    $item = $parElement['name'];
+                    switch ($type)
+                    {
+                        case "float":
+                        $this->RegisterPropertyFloat($item,$default);
+                        $result = $result.$item.',';
+                        break;
+                        case "integer":
+                        $this->RegisterPropertyInteger($item,$default);
+                        $result = $result.$item.',';
+                        break;
+                    }                 
+                }
+            }
+        }
+   }
+
+    private function WriteInstance (&$parElement)
+    {
+        $state = $status ? "On" : "Off";
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $switchName: '. $switchName. ' $status: '. $state, 0);
+        if (isset($parElement['name']))  
+        {  
+            $value=-1.0;
+            $name = $parElement['name'];    
+            if (str_starts_with($name,'P_')) 
+            {
+                $value = $this->ReadPropertyFloat($parElement['name']);
+            }
+            else if (str_starts_with($name,'Id_')) 
+            {
+                $value = $this->ReadPropertyFloat($name);
+                $id = $this->ReadPropertyInteger($switchName);
+                if (($id>1) && $value> -1 
+                {
+                    //IpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
+                    RequestAction($id,$value);
+                }
+            }  
+        }
     }
 
    private function RegisterVariablesIdsFromJson(array $form,string $group,string $identifier) 
