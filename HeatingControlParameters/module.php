@@ -81,7 +81,7 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
         
         IPS_LogMessage( $this->InstanceID,'Test:');
-        IPS_LogMessage( $this->InstanceID,var_dump($referenciesList));
+        IPS_LogMessage( $this->InstanceID,$referenciesList);
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
@@ -204,45 +204,11 @@ class HeatingControlParameters extends IPSModule
         }
     }
 
-    /*
-    private function SelectControlAlive(int $sender) : bool
-    {
-       $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $id = $this->ReadPropertyInteger('IdControlAlive');
-        if (!$this->IsValidId($id)) return false;
-        if ($id != $sender) return false;
-        return true;
-    }
-
-
-   public function UpdateTimer() : void
-   {
-       $this->StopBoostTimer();
-       $this->SetHeatPumpStatus();
-   }
-
-
-   private function WriteVariables () : void
-   {
-       $variables = json_decode($this->ReadPropertyString('ControllerVariablesList'), true);
-       foreach ($variables as $variable)
-       {
-          $id =  $variable['VariableID'];
-          if  ($this->IsValidId($id))
-          {
-              //Bei zumindest einem Treffer mit true zurück
-              if (GetValueBoolean($id)) return true;
-          }
-       }
-       return false;
-   }
-   */
-
-    #################### Request action
-
+   #################### Request action
    public function RequestAction($Ident, $Value)
    {
-          switch($Ident) {
+          switch($Ident) 
+          {
             case "OpMode":
                $this->SetValue($Ident, $Value);
                break;
