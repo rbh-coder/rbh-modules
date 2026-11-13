@@ -234,8 +234,6 @@ class HeatingControlParameters extends IPSModule
                         {
                              $this->RegisterItems ($element,$identifier,$type,$result);
 	                    }
-}
-
                     }
                 }
             }
