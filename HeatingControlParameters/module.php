@@ -298,6 +298,8 @@ class HeatingControlParameters extends IPSModule
         }
    }
 
+   //Die Property-Werte und zu übertragendende VariablenId sind in form.json paarweise angeordnet. So werden sie auch abearbeitet.
+   //Der Wert vom Property geholt und auf die SendeInstanz geschrieben
    private function SendInstances (array $subElement)
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -309,13 +311,14 @@ class HeatingControlParameters extends IPSModule
         }
         if (($id>1) && ($value> -1)) 
         {
-            //IpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
+            //Ipsymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction!
+            $this->SendDebug(__FUNCTION__, 'Sende '.$value.' an '. $id, 0);
             RequestAction($id,$value);
         }
    }
 
-    private function ConfigureInstance (array $parElement,&$value,&$id)
-    {
+   private function ConfigureInstance (array $parElement,&$value,&$id)
+   {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (isset($parElement['name']))  
         {  
@@ -329,7 +332,7 @@ class HeatingControlParameters extends IPSModule
                 $id = $this->ReadPropertyInteger($name);
             }  
         }
-    }
+   }
 
    private function RegisterVariablesIdsFromJson(array $form,string $group,string $identifier) 
    {
