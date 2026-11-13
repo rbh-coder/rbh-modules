@@ -251,9 +251,9 @@ class HeatingControlParameters extends IPSModule
                             {   
                                 if (isset($parElement['name']) && isset($parElement['default']))  
                                 {
-                                   if (str_starts_with(parElement['name'],'P_') ) 
+                                   if (str_starts_with($parElement['name'],'P_') ) 
                                    {
-                                       $this->RegisterPropertyFloat(parElement['name'],isset($parElement['default']);
+                                       $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
                                    }
                                 }
 
