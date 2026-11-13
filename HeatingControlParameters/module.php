@@ -260,10 +260,6 @@ class HeatingControlParameters extends IPSModule
                         {
                             $this->SendInstances($subElement);
                         }
-                        else
-                        {
-                            $this->SendInstances($element);
-                        }
                     }
                 }
             }
@@ -304,32 +300,33 @@ class HeatingControlParameters extends IPSModule
 
    private function SendInstances (array $subElement)
    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $value=-1.0;
+        $id=0;
         foreach ($subElement['items'] as &$parElement) 
         {   
-            $this->SendInstance ($parElement);
+            $this->ConfigureInstance ($parElement,$value,$id);
+        }
+        if (($id>1) && ($value> -1)) 
+        {
+            //IpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
+            RequestAction($id,$value);
         }
    }
 
-    private function SendInstance (array $parElement)
+    private function ConfigureInstance (array $parElement,&$value,&$id)
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $switchName: '. $switchName. ' $status: '. $state, 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (isset($parElement['name']))  
         {  
-            $value=-1.0;
             $name = $parElement['name'];    
             if (str_starts_with($name,'P_')) 
             {
-                $value = $this->ReadPropertyFloat($parElement['name']);
+                $value = $this->ReadPropertyFloat($name);
             }
             else if (str_starts_with($name,'Id_')) 
             {
-                $value = $this->ReadPropertyFloat($name);
-                $id = $this->ReadPropertyInteger($switchName);
-                if (($id>1) && ($value> -1)) 
-                {
-                    //IpSymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction !
-                    RequestAction($id,$value);
-                }
+                $id = $this->ReadPropertyInteger($name);
             }  
         }
     }
