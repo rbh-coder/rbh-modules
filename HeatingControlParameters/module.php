@@ -50,8 +50,9 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertyFloat('MixerProportionalRange',15.0);
         $this->RegisterPropertyFloat('MixerToleranceRange',1.0);
         $this->RegisterPropertyFloat('MixerCycleTime',15.0);
-        $this->RegisterPropertyString('ControllerVariablesList', '[]'); 
         */
+        $this->RegisterPropertyString('ControllerVariablesList', '[]'); 
+       
         $this->RegisterProperties();   
         
         //Alle in der "form.json" definierten Variablenreferenzen registrieren
