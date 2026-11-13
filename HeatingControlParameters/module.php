@@ -244,7 +244,7 @@ class HeatingControlParameters extends IPSModule
                 IPS_LogMessage(__FUNCTION__, 'Expansionpanel: ' . $element['name']);
                 if ($element['name'] === 'ControlParameters' && isset($element['items'])) 
                 {
-                    IPS_LogMessage(__FUNCTION__, 'Item: ' . $subElement['type']. 'reached' );
+                    IPS_LogMessage(__FUNCTION__, 'Item: ' . $element['type']. 'reached' );
                     foreach ($element['items'] as &$subElement) 
                     {
                         IPS_LogMessage(__FUNCTION__, 'Item: ' . $subElement['type']);
