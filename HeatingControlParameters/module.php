@@ -77,6 +77,7 @@ class HeatingControlParameters extends IPSModule
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"P_","float");
         $referenciesList = $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"Id_","integer");
+        IPS_LogMessage(__FUNCTION__,$referenciesList);
         $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromJson ($form,"ControlMonitoring","Id_","integer");
         $referenciesList= trim($referenciesList,",");
         IPS_LogMessage(__FUNCTION__,$referenciesList);
