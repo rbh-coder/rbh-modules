@@ -27,14 +27,23 @@ class HeatingControlParameters extends IPSModule
     private const MODULE_VERSION = '1.0, 12.11.2026';
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
-    private const ProfileList =                     '';
+    private const ProfileList =                     'ControlInitialized';
     private const RegisterVariablesUpdateList =     '';
-    private const RegisterReferenciesUpdateList =   '';
-    private const ReferenciesList =                 '';
+    private const RegisterReferenciesUpdateList =   'Id_CommunicationRunning,Id_ControlIsAlive';
+    private const ReferenciesList =                 'Id_CommunicationRunning,Id_ControlIsAlive';
     private const PropertiesList =                  '';
     private const ExpertLockList =                  '';
     private const ExpertHideList =                  '';
     private const SyncList =                        '';
+
+    private const  Transparent = 0xffffff00;
+    private const  Red = 0xFF0000;
+    private const  Yellow = 0xFFFF00;
+    private const  Green=0x00FF00;
+    private const  Blue=0x0000FF;
+
+    private const DarkGreen = 0x24F065;
+    private const DarkBlue  = 0x0D0FE4;
 
     public function Create()
     {
@@ -43,22 +52,35 @@ class HeatingControlParameters extends IPSModule
 
         ########## Properties
         $this->DeleteProfileList (self::ProfileList);
-        /*
-        $this->RegisterPropertyFloat('DesignTemperatureRadiator',55.0);
-        $this->RegisterPropertyFloat('DesignTemperatureFloor',35.0);
-        $this->RegisterPropertyFloat('MixerPulseLengthMax',10.0);
-        $this->RegisterPropertyFloat('MixerProportionalRange',15.0);
-        $this->RegisterPropertyFloat('MixerToleranceRange',1.0);
-        $this->RegisterPropertyFloat('MixerCycleTime',15.0);
-        */
-        $this->RegisterPropertyString('ControllerVariablesList', '[]'); 
        
-        $this->RegisterProperties();   
+        $this->RegisterPropertyString('ReferenciesUpdateList', '[]');
+        $this->RegisterPropertyString('VariablesUpdateList', '[]');
+       
+        //Profile erstellen 
+        $variable = 'ControlInitialized';
+        $profileName = $this->CreateProfileName($variable);
+        if (!IPS_VariableProfileExists($profileName)) {
+            IPS_CreateVariableProfile($profileName, 0);
+            IPS_SetVariableProfileIcon($profileName, "Ok");
+            IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
+            IPS_SetVariableProfileAssociation($profileName, true, "Ja", "", self::Yellow);
+        }
+        $this->RegisterVariableBoolean($variable, $this->Translate('Control initialized'),$profileName, 10);
+        $this->EnableAction($variable);
+
+
+        //Alle Properties aus form.json registrieren
+        $referenciesList="";
+        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true));
+        $this->RegisterPropertiesFromRowJson  ($form,"ControlParameters","P_","float");
+        $referenciesList = $this->RegisterPropertiesFromRowJson  ($form,"ControlParameters","Id_","integer");
+        $referenciesList += ','.$this->RegisterPropertiesFromFlatJson ($form,"ControlMonitoring","Id_","integer");
+        $referenciesList= trim($referenciesList,",");
+        $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
         
-        //Alle in der "form.json" definierten Variablenreferenzen registrieren
-        $this->RegisterVariableIds(self::PropertiesList);
-        //Id Speicher für Weektimer vorbereiten
-        $this->RegisterAttributeBoolean('ControllerInitialized', false);
+        IPS_LogMessage( $this->InstanceID,'Test:');
+        IPS_LogMessage( $this->InstanceID,var_dump($referenciesList);
+       
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
        //Timer ------------------------------------------------------------------------------------------------------------
@@ -66,6 +88,7 @@ class HeatingControlParameters extends IPSModule
        //------------------------------------------------------------------------------------------------------------------
     }
 
+     //Wird aufgerufen, wenn in der Form für das Module was geändert wurde und das "Änderungen Übernehmen" bestätigt wird.
     public function ApplyChanges()
     {
         //Wait until IP-Symcon is started
@@ -79,7 +102,7 @@ class HeatingControlParameters extends IPSModule
             return;
         }
 
-         $variables = json_decode($this->ReadPropertyString('ControllerVariablesList'), true);
+         $variables = json_decode($this->ReadPropertyString('ReferenciesList'), true);
 
         //Delete all references
         foreach ($this->GetReferenceList() as $referenceID) {
@@ -230,39 +253,119 @@ class HeatingControlParameters extends IPSModule
        }
    }
 
-   private function RegisterProperties() 
+   private function RegisterPropertiesFromRowJson(string $form,string $group,string $identifier, string $type) 
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        // Lädt die originale form.json
-        $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-
-    
+        $result="";
+        if (empty($form)) return result;  
+        
         foreach ($form['elements'] as &$element) 
         {
             if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
             {
-                IPS_LogMessage(__FUNCTION__, 'Expansionpanel: ' . $element['name']);
-                if ($element['name'] === 'ControlParameters' && isset($element['items'])) 
+                if ($element['name'] === $group && isset($element['items'])) 
                 {
-                    IPS_LogMessage(__FUNCTION__, 'Item: ' . $element['type']. 'reached' );
                     foreach ($element['items'] as &$subElement) 
                     {
-                        IPS_LogMessage(__FUNCTION__, 'Item: ' . $subElement['type']);
+                        if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
+                        {
+                            foreach ($subElement['items'] as &$parElement) 
+                            {   
+                                if (isset($parElement['name']))  
+                                {
+                                   if (str_starts_with($parElement['name'],$identifier)) 
+                                   {
+                                       $default = 0;
+                                       if (isset($parElement['default'])) $default = $parElement['default'];
+                                       $item = $parElement['name'];
+                                       switch ($type)
+                                       {
+                                           case "float":
+                                            this->RegisterPropertyFloat($item,$default);
+                                            $result += $item.',';
+                                            break;
+                                           case "integer":
+                                            this->RegisterPropertyInteger($item,$default);
+                                            $result += $item.',';
+                                            break;
+                                       }
+                                       
+                                   }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return trim($result,",");
+    }
 
+   private function RegisterPropertiesFromFlatJson(string $form,string $group,string $identifier, string $type) : string
+   {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $result="";
+        if (empty($form)) return result;  
+        
+        foreach ($form['elements'] as &$element) 
+        {
+            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
+            {
+                if ($element['name'] === $group && isset($element['items'])) 
+                {
+                    foreach ($element['items'] as &$parElement) 
+                    {
+                        if (isset($parElement['name']))  
+                        {
+                            if (str_starts_with($parElement['name'],$identifier)) 
+                            {
+                                $default = 0;
+                                if (isset($parElement['default'])) $default = $parElement['default'];
+                                $item = $parElement['name'];
+                                switch ($type)
+                                {
+                                    case "float":
+                                        this->RegisterPropertyFloat($item,$default);
+                                       $result += $item.',';
+                                    break;
+                                    case "integer":
+                                        this->RegisterPropertyInteger($item,$default);
+                                        $result += $item.',';
+                                    break;
+                                }    
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return trim($result,",");
+    }
+
+    private function RegisterVariablesIdsFromJson(string $form,string $group,string $identifier,) 
+   {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        if (empty($form)) return;  
+
+        foreach ($form['elements'] as &$element) 
+        {
+            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
+            {
+                if ($element['name'] === $group && isset($element['items'])) 
+                {
+                    foreach ($element['items'] as &$subElement) 
+                    {
                         if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
                         {
                             foreach ($subElement['items'] as &$parElement) 
                             {   
                                 if (isset($parElement['name']) && isset($parElement['default']))  
                                 {
-                                   IPS_LogMessage(__FUNCTION__, 'Item: ' . $parElement['name']);
-                                   if (str_starts_with($parElement['name'],'P_') ) 
+                                   if (str_starts_with($parElement['name'],$identifier) ) 
                                    {
-                                       IPS_LogMessage(__FUNCTION__, 'Itemvalue: ' . $parElement['default']);
                                        $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
                                    }
                                 }
-
                             }
                         }
                     }

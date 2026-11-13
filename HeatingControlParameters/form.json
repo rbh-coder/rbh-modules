@@ -132,12 +132,8 @@
     {
       "type": "ExpansionPanel",
       "caption": "Controller Überwachung",
-      "name": "ControllerMonitoring",
+      "name": "ControlMonitoring",
       "items": [
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "name": "Id_CommunicationRunning",
           "type": "SelectVariable",
@@ -152,8 +148,8 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Controller Variablen",
-      "name": "ControllerVariables",
+      "caption": "Steuerungs Variablen",
+      "name": "ControlVariables",
       "items": [
         {
           "type": "List",
