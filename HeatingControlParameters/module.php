@@ -222,7 +222,7 @@ class HeatingControlParameters extends IPSModule
                     {
                         if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
                         {
-                            $this->RegisterItems ($subElement,$identifier,&$result);
+                            $this->RegisterItems ($subElement,$identifier,$result);
                             /*
                             foreach ($subElement['items'] as &$parElement) 
                             {   
@@ -270,7 +270,7 @@ class HeatingControlParameters extends IPSModule
             {
                 if ($element['name'] === $group && isset($element['items'])) 
                 {
-                    $this->RegisterItems ($element,$identifier,&$result);
+                    $this->RegisterItems ($element,$identifier,$result);
                     /*
                     foreach ($element['items'] as &$parElement) 
                     {
