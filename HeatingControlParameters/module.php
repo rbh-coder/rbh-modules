@@ -59,7 +59,8 @@ class HeatingControlParameters extends IPSModule
         //Profile erstellen 
         $variable = 'ControlInitialized';
         $profileName = $this->CreateProfileName($variable);
-        if (!IPS_VariableProfileExists($profileName)) {
+        if (!IPS_VariableProfileExists($profileName)) 
+        {
             IPS_CreateVariableProfile($profileName, 0);
             IPS_SetVariableProfileIcon($profileName, "Ok");
             IPS_SetVariableProfileAssociation($profileName, false, "Nein", "", self::Transparent);
@@ -71,11 +72,12 @@ class HeatingControlParameters extends IPSModule
 
         //Alle Properties aus form.json registrieren
         $referenciesList="";
-        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true));
+        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->RegisterPropertiesFromRowJson  ($form,"ControlParameters","P_","float");
         $referenciesList = $this->RegisterPropertiesFromRowJson  ($form,"ControlParameters","Id_","integer");
         $referenciesList += ','.$this->RegisterPropertiesFromFlatJson ($form,"ControlMonitoring","Id_","integer");
         $referenciesList= trim($referenciesList,",");
+        
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
         
         IPS_LogMessage( $this->InstanceID,'Test:');
