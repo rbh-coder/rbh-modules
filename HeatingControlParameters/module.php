@@ -241,12 +241,12 @@ class HeatingControlParameters extends IPSModule
         {
             if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
             {
-                $this->SendDebug(__FUNCTION__, 'Expansionpanel: ' . $element['name'], 0);
+                IPS_LogMessage(__FUNCTION__, 'Expansionpanel: ' . $element['name']);
                 if ($element['name'] === 'ControlParameters' && isset($element['items'])) 
                 {
                     foreach ($element['items'] as &$subElement) 
                     {
-                        $this->SendDebug(__FUNCTION__, 'Item: ' . $subElement['type'] , 0);
+                        IPS_LogMessage(__FUNCTION__, 'Item: ' . $subElement['type']);
 
                         if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
                         {
@@ -254,10 +254,10 @@ class HeatingControlParameters extends IPSModule
                             {   
                                 if (isset($parElement['name']) && isset($parElement['default']))  
                                 {
-                                   $this->SendDebug(__FUNCTION__, 'Item: ' . $parElement['name'] , 0);
+                                   IPS_LogMessage(__FUNCTION__, 'Item: ' . $parElement['name']);
                                    if (str_starts_with($parElement['name'],'P_') ) 
                                    {
-                                       $this->SendDebug(__FUNCTION__, 'Itemvalue: ' . $parElement['default'], 0);
+                                       IPS_LogMessage(__FUNCTION__, 'Itemvalue: ' . $parElement['default']);
                                        $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
                                    }
                                 }
