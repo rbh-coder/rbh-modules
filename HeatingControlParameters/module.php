@@ -284,11 +284,11 @@ class HeatingControlParameters extends IPSModule
                                        switch ($type)
                                        {
                                            case "float":
-                                            this->RegisterPropertyFloat($item,$default);
+                                            $this->RegisterPropertyFloat($item,$default);
                                             $result += $item.',';
                                             break;
                                            case "integer":
-                                            this->RegisterPropertyInteger($item,$default);
+                                            $this->RegisterPropertyInteger($item,$default);
                                             $result += $item.',';
                                             break;
                                        }
@@ -329,11 +329,11 @@ class HeatingControlParameters extends IPSModule
                                 switch ($type)
                                 {
                                     case "float":
-                                        this->RegisterPropertyFloat($item,$default);
+                                       $this->RegisterPropertyFloat($item,$default);
                                        $result += $item.',';
                                     break;
                                     case "integer":
-                                        this->RegisterPropertyInteger($item,$default);
+                                        $this->RegisterPropertyInteger($item,$default);
                                         $result += $item.',';
                                     break;
                                 }    
