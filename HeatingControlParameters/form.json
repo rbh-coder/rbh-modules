@@ -3,22 +3,36 @@
     {
       "type": "ExpansionPanel",
       "caption": "Regler Parameter",
+      "name": "ControlParameters ",
       "items": [
-        {
-          "type": "Label",
-          "caption": " "
-        },
-
-
         {
           "type": "RowLayout",
           "items": [
 
             {
-              "name": "DesignTemperatureRadiator",
+              "name": "P_SupplyMininmumTemperature",
+              "type": "NumberSpinner",
+              "caption": "Heizung Mindesttemperatur ",
+              "suffix": "°C",
+              "default": "20.0"
+            },
+            {
+              "name": "Id_SupplyMininmumTemperature",
+              "type": "SelectVariable",
+              "caption": "ID Heizung Mininaltemperatur "
+            }
+          ]
+        },
+        {
+          "type": "RowLayout",
+          "items": [
+
+            {
+              "name": "P_DesignTemperatureRadiator",
               "type": "NumberSpinner",
               "caption": "Auslegungstemperatur Radiator",
-              "suffix": "°C"
+              "suffix": "°C",
+              "default": "55.0"
             },
             {
               "name": "IdDesignTemperatureRadiator",
@@ -31,13 +45,14 @@
           "type": "RowLayout",
           "items": [
             {
-              "name": "DesignTemperatureFloor",
+              "name": "P_DesignTemperatureFloor",
               "type": "NumberSpinner",
               "caption": "Auslegungstemperatur Fussboden",
-              "suffix": "°C"
+              "suffix": "°C",
+              "default": "35.0"
             },
             {
-              "name": "IdDesignTemperatureFloor",
+              "name": "Id_DesignTemperatureFloor",
               "type": "SelectVariable",
               "caption": "ID Auslegungstemperatur Fussboden"
             }
@@ -47,13 +62,14 @@
           "type": "RowLayout",
           "items": [
             {
-              "name": "MixerPulseLengthMax",
+              "name": "P_MixerPulseLengthMax",
               "type": "NumberSpinner",
               "caption": "Mischer Maximale Pulslänge",
-              "suffix": "s"
+              "suffix": "s",
+              "default": "10.0"
             },
             {
-              "name": "IdMixerPulseLengthMax",
+              "name": "Id_MixerPulseLengthMax",
               "type": "SelectVariable",
               "caption": "ID Mischer Maximale Pulslänge"
             }
@@ -63,13 +79,14 @@
           "type": "RowLayout",
           "items": [
             {
-              "name": "MixerProportionalRange",
+              "name": "P_MixerProportionalRange",
               "type": "NumberSpinner",
               "caption": "Mischer Proportionalbereich",
-              "suffix": "°C"
+              "suffix": "°C",
+              "default": "15.0"
             },
             {
-              "name": "IdMixerProportionalRange",
+              "name": "Id_MixerProportionalRange",
               "type": "SelectVariable",
               "caption": "ID Mischer Proportionalbereich"
             }
@@ -79,13 +96,14 @@
           "type": "RowLayout",
           "items": [
             {
-              "name": "MixerToleranceRange",
+              "name": "P_MixerToleranceRange",
               "type": "NumberSpinner",
               "caption": "Mischer Toleranzband",
-              "suffix": "°C"
+              "suffix": "°C",
+              "default": "1.0"
             },
             {
-              "name": "IdMixerToleranceRange",
+              "name": "Id_MixerToleranceRange",
               "type": "SelectVariable",
               "caption": "ID Mischer Toleranzband"
             }
@@ -95,13 +113,14 @@
           "type": "RowLayout",
           "items": [
             {
-              "name": "MixerCycleTime",
+              "name": "P_MixerCycleTime",
               "type": "NumberSpinner",
               "caption": "Mischer Zykluszeit",
-              "suffix": "s"
+              "suffix": "s",
+              "default": "15.0"
             },
             {
-              "name": "IdMixerCycleTime",
+              "name": "Id_MixerCycleTime",
               "type": "SelectVariable",
               "caption": "ID Mischer Zykluszeit"
             }
@@ -109,53 +128,33 @@
         }
       ]
     },
-                
+
     {
       "type": "ExpansionPanel",
-      "caption": "Controller Kommunikation",
+      "caption": "Controller Überwachung",
+      "name": "ControllerMonitoring",
       "items": [
         {
           "type": "Label",
           "caption": " "
         },
         {
-          "name": "IdCommunicationRunning",
+          "name": "Id_CommunicationRunning",
           "type": "SelectVariable",
           "caption": "ID Kommunikationläuft"
         },
         {
-          "name": "IdControlIsAlive",
+          "name": "Id_ControlIsAlive",
           "type": "SelectVariable",
           "caption": "ID Steuerung gestartet"
-        },
-        {
-          "type": "List",
-          "caption": "Controller Variablen",
-          "name": "ControllerVariablesList",
-          "add": true,
-          "delete": true,
-          "columns": [
-            {
-              "caption": "Variablen ID",
-              "name": "VariableID",
-              "add": 0,
-              "width": "auto",
-              "edit": {
-                "type": "SelectVariable"
-              }
-            }
-          ]
         }
       ]
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Test",
+      "caption": "Controller Variablen",
+      "name": "ControllerVariables",
       "items": [
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "type": "List",
           "name": "Variables",
@@ -180,7 +179,7 @@
               "edit": { "type": "SelectVariable" }
             }
           ]
-        } 
+        }
       ]
     }
 

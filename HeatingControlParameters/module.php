@@ -30,16 +30,11 @@ class HeatingControlParameters extends IPSModule
     private const ProfileList =                     '';
     private const RegisterVariablesUpdateList =     '';
     private const RegisterReferenciesUpdateList =   '';
-    private const ReferenciesList =                 'IdDesignTemperatureRadiator,IdDesignTemperatureFloor,IdMixerMaxPulseLength,IdMixerProportionalRange,IdMixerToleranceRange,IdMixerCycleTime,IdCommunicationRunning,IdControlIsAlive';
-    private const PropertiesList =                  'IdDesignTemperatureRadiator,IdDesignTemperatureFloor,IdMixerMaxPulseLength,IdMixerProportionalRange,IdMixerToleranceRange,IdMixerCycleTime,IdCommunicationRunning,IdControlIsAlive';
+    private const ReferenciesList =                 '';
+    private const PropertiesList =                  '';
     private const ExpertLockList =                  '';
     private const ExpertHideList =                  '';
-    private const SyncList =                        'DesignTemperatureRadiator:IdDesignTemperatureRadiator,
-                                                     DesignTemperatureFloor:IdDesignTemperatureFloor,
-                                                     MixerMaxPulseLength:IdMixerMaxPulseLength,
-                                                     MixerProportionalRange:IdMixerProportionalRange,
-                                                     MixerToleranceRange:IdMixerToleranceRange,
-                                                     MixerCycleTime:IdMixerCycleTime';
+    private const SyncList =                        '';
 
     public function Create()
     {
@@ -48,7 +43,7 @@ class HeatingControlParameters extends IPSModule
 
         ########## Properties
         $this->DeleteProfileList (self::ProfileList);
-
+        /*
         $this->RegisterPropertyFloat('DesignTemperatureRadiator',55.0);
         $this->RegisterPropertyFloat('DesignTemperatureFloor',35.0);
         $this->RegisterPropertyFloat('MixerPulseLengthMax',10.0);
@@ -56,7 +51,8 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertyFloat('MixerToleranceRange',1.0);
         $this->RegisterPropertyFloat('MixerCycleTime',15.0);
         $this->RegisterPropertyString('ControllerVariablesList', '[]'); 
-
+        */
+        $this->RegisterProperties();   
         
         //Alle in der "form.json" definierten Variablenreferenzen registrieren
         $this->RegisterVariableIds(self::PropertiesList);
@@ -232,5 +228,40 @@ class HeatingControlParameters extends IPSModule
                break;
        }
    }
+
+   private function RegisterProperties() 
+   {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        // Lädt die originale form.json
+        $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+
+    
+        foreach ($form['elements'] as &$element) 
+        {
+            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
+            {
+                if ($element['name'] === 'ControlParameters' && isset($element['items'])) 
+                {
+                    foreach ($element['items'] as &$subElement) 
+                    {
+                        if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
+                        {
+                            foreach ($subElement['items'] as &$parElement) 
+                            {   
+                                if (isset($parElement['name']) && isset($parElement['default']))  
+                                {
+                                   if (str_starts_with(parElement['name'],'P_') ) 
+                                   {
+                                       $this->RegisterPropertyFloat(parElement['name'],isset($parElement['default']);
+                                   }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
