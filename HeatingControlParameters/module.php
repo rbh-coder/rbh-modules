@@ -255,12 +255,12 @@ class HeatingControlParameters extends IPSModule
        }
    }
 
-   private function RegisterPropertiesFromRowJson(string $form,string $group,string $identifier, string $type) : string
+   private function RegisterPropertiesFromRowJson(array $form,string $group,string $identifier, string $type) : string
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
         $result="";
-        if (empty($form)) return result;  
+        if ($form == null) return result;  
         
         foreach ($form['elements'] as &$element) 
         {
@@ -304,12 +304,12 @@ class HeatingControlParameters extends IPSModule
         return trim($result,",");
     }
 
-   private function RegisterPropertiesFromFlatJson(string $form,string $group,string $identifier, string $type) : string
+   private function RegisterPropertiesFromFlatJson(array $form,string $group,string $identifier, string $type) : string
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
         $result="";
-        if (empty($form)) return result;  
+        if ($form == null) return result;  
         
         foreach ($form['elements'] as &$element) 
         {
@@ -346,10 +346,10 @@ class HeatingControlParameters extends IPSModule
         return trim($result,",");
     }
 
-   private function RegisterVariablesIdsFromJson(string $form,string $group,string $identifier) 
+   private function RegisterVariablesIdsFromJson(array $form,string $group,string $identifier) 
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        if (empty($form)) return;  
+        if ($form == null) return;  
 
         foreach ($form['elements'] as &$element) 
         {
