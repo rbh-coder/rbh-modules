@@ -8,79 +8,107 @@
           "type": "Label",
           "caption": " "
         },
+
         {
-          "name": "DesignTemperatureRadiator",
-          "type": "NumberSpinner",
-          "caption": "Auslegungstemperatur Radiator",
-          "suffix": "°C"
+          "type": "RowLayout",
+          "items": [
+
+            {
+              "name": "DesignTemperatureRadiator",
+              "type": "NumberSpinner",
+              "caption": "Auslegungstemperatur Radiator",
+              "suffix": "°C"
+            },
+            {
+              "name": "IdDesignTemperatureRadiator",
+              "type": "SelectVariable",
+              "caption": "ID Auslegungstemperatur Radiator"
+            }
+          ]
         },
         {
-          "name": "IdDesignTemperatureRadiator",
-          "type": "SelectVariable",
-          "caption": "ID Auslegungstemperatur Radiator"
+          "type": "RowLayout",
+          "items": [
+            {
+              "name": "DesignTemperatureFloor",
+              "type": "NumberSpinner",
+              "caption": "Auslegungstemperatur Fussboden",
+              "suffix": "°C"
+            },
+            {
+              "name": "IdDesignTemperatureFloor",
+              "type": "SelectVariable",
+              "caption": "ID Auslegungstemperatur Fussboden"
+            }
+          ]
         },
         {
-          "name": "DesignTemperatureFloor",
-          "type": "NumberSpinner",
-          "caption": "Auslegungstemperatur Fussboden",
-          "suffix": "°C"
+          "type": "RowLayout",
+          "items": [
+            {
+              "name": "MixerPulseLengthMax",
+              "type": "NumberSpinner",
+              "caption": "Mischer Maximale Pulslänge",
+              "suffix": "s"
+            },
+            {
+              "name": "IdMixerPulseLengthMax",
+              "type": "SelectVariable",
+              "caption": "ID Mischer Maximale Pulslänge"
+            }
+          ]
         },
         {
-          "name": "IdDesignTemperatureFloor",
-          "type": "SelectVariable",
-          "caption": "ID Auslegungstemperatur Fussboden"
+          "type": "RowLayout",
+          "items": [
+            {
+              "name": "MixerProportionalRange",
+              "type": "NumberSpinner",
+              "caption": "Mischer Proportionalbereich",
+              "suffix": "°C"
+            },
+            {
+              "name": "IdMixerProportionalRange",
+              "type": "SelectVariable",
+              "caption": "ID Mischer Proportionalbereich"
+            }
+          ]
         },
         {
-          "name": "MixerPulseLengthMax",
-          "type": "NumberSpinner",
-          "caption": "Mischer Maximale Pulslänge",
-          "suffix": "s"
+          "type": "RowLayout",
+          "items": [
+            {
+              "name": "MixerToleranceRange",
+              "type": "NumberSpinner",
+              "caption": "Mischer Toleranzband",
+              "suffix": "°C"
+            },
+            {
+              "name": "IdMixerToleranceRange",
+              "type": "SelectVariable",
+              "caption": "ID Mischer Toleranzband"
+            }
+          ]
         },
         {
-          "name": "IdMixerPulseLengthMax",
-          "type": "SelectVariable",
-          "caption": "ID Mischer Maximale Pulslänge"
-        },
-        {
-          "name": "MixerProportionalRange",
-          "type": "NumberSpinner",
-          "caption": "Mischer Proportionalbereich",
-          "suffix": "°C"
-        },
-        {
-          "name": "IdMixerProportionalRange",
-          "type": "SelectVariable",
-          "caption": "ID Mischer Proportionalbereich"
-        },
-        {
-          "name": "MixerToleranceRange",
-          "type": "NumberSpinner",
-          "caption": "Mischer Toleranzband",
-          "suffix": "°C"
-        },
-        {
-          "name": "IdMixerToleranceRange",
-          "type": "SelectVariable",
-          "caption": "ID Mischer Toleranzband"
-        },
-        {
-          "name": "MixerCycleTime",
-          "type": "NumberSpinner",
-          "caption": "Mischer Zykluszeit",
-          "suffix": "s"
-        },
-        {
-          "name": "IdMixerCycleTime",
-          "type": "SelectVariable",
-          "caption": "ID Mischer Zykluszeit"
-        },
-        {
-          "type": "Label",
-          "caption": " "
+          "type": "RowLayout",
+          "items": [
+            {
+              "name": "MixerCycleTime",
+              "type": "NumberSpinner",
+              "caption": "Mischer Zykluszeit",
+              "suffix": "s"
+            },
+            {
+              "name": "IdMixerCycleTime",
+              "type": "SelectVariable",
+              "caption": "ID Mischer Zykluszeit"
+            }
+          ]
         }
       ]
     },
-
+                
     {
       "type": "ExpansionPanel",
       "caption": "Controller Kommunikation",

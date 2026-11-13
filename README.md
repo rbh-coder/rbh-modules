@@ -16,3 +16,5 @@ Folgende Module beinhaltet das RBH Modules Repository:
 	Kurze Beschreibung des Moduls.
 - __ExpertMode__ ([Dokumentation](ExpertMode))  
 	Kurze Beschreibung des Moduls.
+-__HeatingControlParameters__ ([Dokumentation](HeatingControlParameters))  
+	Kurze Beschreibung des Moduls.
