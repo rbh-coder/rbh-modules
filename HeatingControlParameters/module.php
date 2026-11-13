@@ -81,7 +81,7 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
         
         IPS_LogMessage( $this->InstanceID,'Test:');
-        IPS_LogMessage( $this->InstanceID,var_dump($referenciesList);
+        IPS_LogMessage( $this->InstanceID,var_dump($referenciesList));
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
