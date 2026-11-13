@@ -36,6 +36,8 @@ class HeatingControlParameters extends IPSModule
     private const ExpertHideList =                  '';
     private const SyncList =                        '';
 
+    private const ControlParameters = 'ControlParameters';
+
     private const  Transparent = 0xffffff00;
     private const  Red = 0xFF0000;
     private const  Yellow = 0xFFFF00;
@@ -73,9 +75,9 @@ class HeatingControlParameters extends IPSModule
         //Alle Properties aus form.json registrieren
         $referenciesList="";
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $this->RegisterPropertiesFromRowJson  ($form,"ControlParameters","P_","float");
-        $referenciesList = $this->RegisterPropertiesFromRowJson  ($form,"ControlParameters","Id_","integer");
-        $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromFlatJson ($form,"ControlMonitoring","Id_","integer");
+        $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"P_","float");
+        $referenciesList = $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"Id_","integer");
+        $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromJson ($form,"ControlMonitoring","Id_","integer");
         $referenciesList= trim($referenciesList,",");
         IPS_LogMessage(__FUNCTION__,$referenciesList);
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
@@ -130,6 +132,10 @@ class HeatingControlParameters extends IPSModule
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
+        
+        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $this->SendPropertyValuesFromJson($form,self::ControlParameters);
+
         ########## Timer
 
 
@@ -205,7 +211,7 @@ class HeatingControlParameters extends IPSModule
        }
    }
 
-   private function RegisterPropertiesFromRowJson(array $form,string $group,string $identifier, string $type) : string
+   private function RegisterPropertiesFromJson(array $form,string $group,string $identifier, string $type) : string
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
@@ -220,36 +226,16 @@ class HeatingControlParameters extends IPSModule
                 {
                     foreach ($element['items'] as &$subElement) 
                     {
-                        if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
+                        if (isset($subElement['items'])) 
                         {
                             $this->RegisterItems ($subElement,$identifier,$type,$result);
-                            /*
-                            foreach ($subElement['items'] as &$parElement) 
-                            {   
-                                if (isset($parElement['name']))  
-                                {
-                                   if (str_starts_with($parElement['name'],$identifier)) 
-                                   {
-                                       $default = 0;
-                                       if (isset($parElement['default'])) $default = $parElement['default'];
-                                       $item = $parElement['name'];
-                                       switch ($type)
-                                       {
-                                           case "float":
-                                            $this->RegisterPropertyFloat($item,$default);
-                                            $result = $result.$item.',';
-                                            break;
-                                           case "integer":
-                                            $this->RegisterPropertyInteger($item,$default);
-                                            $result = $result.$item.',';
-                                            break;
-                                       }
-                                       
-                                   }
-                                }
-                            }
-                            */
                         }
+                        else 
+                        {
+                             $this->RegisterItems ($element,$identifier,$type,$result);
+	                    }
+}
+
                     }
                 }
             }
@@ -257,7 +243,8 @@ class HeatingControlParameters extends IPSModule
         return trim($result,",");
     }
 
-   private function RegisterPropertiesFromFlatJson(array $form,string $group,string $identifier, string $type) : string
+
+   private function _RegisterPropertiesFromFlatJson(array $form,string $group,string $identifier, string $type) : string
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
@@ -271,36 +258,39 @@ class HeatingControlParameters extends IPSModule
                 if ($element['name'] === $group && isset($element['items'])) 
                 {
                     $this->RegisterItems ($element,$identifier,$type,$result);
-                    /*
-                    foreach ($element['items'] as &$parElement) 
-                    {
-                        if (isset($parElement['name']))  
-                        {
-                            if (str_starts_with($parElement['name'],$identifier)) 
-                            {
-                                $default = 0;
-                                if (isset($parElement['default'])) $default = $parElement['default'];
-                                $item = $parElement['name'];
-                                switch ($type)
-                                {
-                                    case "float":
-                                       $this->RegisterPropertyFloat($item,$default);
-                                       $result = $result.$item.',';
-                                    break;
-                                    case "integer":
-                                        $this->RegisterPropertyInteger($item,$default);
-                                        $result = $result.$item.',';
-                                    break;
-                                }    
-                            }
-                        }
-                    }
-                    */
                 }
             }
         }
         return trim($result,",");
    }
+
+   private function SendPropertyValuesFromJson(array $form,string $group)
+   {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+       
+        if ($form == null) return;  
+        
+        foreach ($form['elements'] as &$element) 
+        {
+            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
+            {
+                if ($element['name'] === $group && isset($element['items'])) 
+                {
+                    foreach ($element['items'] as &$subElement) 
+                    {
+                        if (isset($subElement['items'])) 
+                        {
+                            $this->SendInstances($subElement);
+                        }
+                        else
+                        {
+                            $this->SendInstances($element);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
    private function RegisterItems (array $subElement,string $identifier,string $type, &$result)
    {
@@ -329,9 +319,16 @@ class HeatingControlParameters extends IPSModule
         }
    }
 
-    private function WriteInstance (&$parElement)
+   private function SendInstances (array $subElement)
+   {
+        foreach ($subElement['items'] as &$parElement) 
+        {   
+            $this->WriteInstance ($parElement);
+        }
+   }
+
+    private function SendInstance (array $parElement)
     {
-        $state = $status ? "On" : "Off";
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. $switchName: '. $switchName. ' $status: '. $state, 0);
         if (isset($parElement['name']))  
         {  
