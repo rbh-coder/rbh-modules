@@ -135,6 +135,13 @@
       "name": "ControlMonitoring",
       "items": [
         {
+          "name": "P_MonitoringInterval",
+          "type": "NumberSpinner",
+          "caption": "Überwachunsintervall",
+          "suffix": "s",
+          "default": "5.0"
+        },
+        {
           "name": "Id_CommunicationRunning",
           "type": "SelectVariable",
           "caption": "ID Kommunikationläuft"

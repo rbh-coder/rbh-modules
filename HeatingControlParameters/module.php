@@ -77,16 +77,14 @@ class HeatingControlParameters extends IPSModule
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"P_","float");
         $referenciesList = $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"Id_","integer");
-        IPS_LogMessage(__FUNCTION__,$referenciesList);
         $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromJson ($form,"ControlMonitoring","Id_","integer");
         $referenciesList= trim($referenciesList,",");
-        IPS_LogMessage(__FUNCTION__,$referenciesList);
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
        //Timer ------------------------------------------------------------------------------------------------------------
-       $this->RegisterTimer('HCP_HeartbeatTimer', 0, 'HCP_HeartbeatTimer($_IPS[\'TARGET\']);');
+       $this->RegisterTimer(MODULE_PREFIX.'HeartbeatTimer',$this->ReadPropertyFloat('P_MonitoringInterval')*1000, MODULE_PREFIX.'HeartbeatTimer($_IPS[\'TARGET\']);');
        //------------------------------------------------------------------------------------------------------------------
     }
 
@@ -134,6 +132,8 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
         
+        this->SetTimerInterval(MODULE_PREFIX.'HeartbeatTimer',$this->ReadPropertyFloat('P_MonitoringInterval')*1000);
+
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->SendPropertyValuesFromJson($form,self::ControlParameters);
 
@@ -364,6 +364,20 @@ class HeatingControlParameters extends IPSModule
                 }
             }
         }
+   }
+    // Muss 'public' sein, damit der Timer die Funktion aufrufen kann
+    public function HeartbeatTimer()
+    {
+        // Hier steht die Logik, die zyklisch ausgeführt werden soll
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
     }
-}
+
+    // Muss 'public' sein, damit Funktion von ausserhalb aufgerufen werden kann
+    public function ResendAllControlParameters()
+    {
+        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $this->SendPropertyValuesFromJson($form,self::ControlParameters);
+    }
+   
+   }
 
