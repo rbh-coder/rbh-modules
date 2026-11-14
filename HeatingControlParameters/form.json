@@ -139,7 +139,7 @@
           "type": "NumberSpinner",
           "caption": "Überwachunsintervall",
           "suffix": "s",
-          "default": "5.0"
+          "default": "5"
         },
         {
           "name": "Id_CommunicationRunning",

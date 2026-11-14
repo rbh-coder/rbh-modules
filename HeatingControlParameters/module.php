@@ -37,6 +37,7 @@ class HeatingControlParameters extends IPSModule
     private const SyncList =                        '';
 
     private const ControlParameters = 'ControlParameters';
+    private const ControlMonitoring ='ControlMonitoring';
 
     private const  Transparent = 0xffffff00;
     private const  Red = 0xFF0000;
@@ -76,15 +77,16 @@ class HeatingControlParameters extends IPSModule
         $referenciesList="";
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"P_","float");
+        $this->RegisterPropertiesFromJson  ($form,self::ControlMonitoring,"P_","integer");
         $referenciesList = $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"Id_","integer");
-        $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromJson ($form,"ControlMonitoring","Id_","integer");
+        $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromJson ($form,self::ControlMonitoring,"Id_","integer");
         $referenciesList= trim($referenciesList,",");
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
        //Timer ------------------------------------------------------------------------------------------------------------
-       $this->RegisterTimer($this->CreateName('HeartbeatTimer'),$this->ReadPropertyFloat('P_MonitoringInterval')*1000,$this->CreateName('HeartbeatTimer').'($_IPS[\'TARGET\']);');
+       $this->RegisterTimer($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000,$this->CreateName('HeartbeatTimer').'($_IPS[\'TARGET\']);');
        //------------------------------------------------------------------------------------------------------------------
     }
 
@@ -132,7 +134,7 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
         
-        this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyFloat('P_MonitoringInterval')*1000);
+        this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000);
 
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->SendPropertyValuesFromJson($form,self::ControlParameters);
