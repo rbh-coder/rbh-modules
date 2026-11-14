@@ -382,7 +382,8 @@ class HeatingControlParameters extends IPSModule
     private function Test ()
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $form = $this->GetConfigurationForm();
+        $form=IPS_GetConfiguration($this->InstanceID);
+        
         if (empty($form)) return;
         var_dump ($form);
         
