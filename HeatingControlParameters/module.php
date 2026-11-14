@@ -218,13 +218,12 @@ class HeatingControlParameters extends IPSModule
    #################### Request action
    public function RequestAction($Ident, $Value)
    {
-          switch($Ident) 
-          {
-            case "ControlInitialized":
-               $this->SetValue($Ident, $Value);
-               break;
-          }
-       }
+        switch($Ident) 
+        {
+        case "ControlInitialized":
+            $this->SetValue($Ident, $Value);
+            break;
+        }
    }
 
    # USER METHODS ###################################################################################################
