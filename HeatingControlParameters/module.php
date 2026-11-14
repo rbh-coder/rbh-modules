@@ -411,7 +411,7 @@ class HeatingControlParameters extends IPSModule
                 ModBus_WriteCoil($id,false); 
                 $this->ResendAllControlParameters();
 		        SetValue('ControlInitialized',true);
-                $this->SendDebug(__FUNCTION__,"Wago Daten erneut übertragen gestartet."), 0);
+                $this->SendDebug(__FUNCTION__,"Wago Daten erneut übertragen gestartet.", 0);
             }
         }
     }
