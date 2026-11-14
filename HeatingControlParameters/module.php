@@ -146,10 +146,7 @@ class HeatingControlParameters extends IPSModule
 
         ########## Timer
 
-
-
         ########## Profile
-
 
         ########## Misc
     }
@@ -211,24 +208,23 @@ class HeatingControlParameters extends IPSModule
                 break;
         }
     }
-   
     //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable
     //void EnableAction (string $Ident)
     //regstriert wird
-   #################### Request action
-   public function RequestAction($Ident, $Value)
-   {
+    #################### Request action
+    public function RequestAction($Ident, $Value)
+    {
         switch($Ident) 
         {
-        case "ControlInitialized":
-            $this->SetValue($Ident, $Value);
-            break;
+            case "ControlInitialized":
+                $this->SetValue($Ident, $Value);
+                break;
         }
-   }
+    }
 
-   # USER METHODS ###################################################################################################
-   private function RegisterPropertiesFromJson(array $form,string $group,string $identifier, string $type) : string
-   {
+    # USER METHODS ###################################################################################################
+    private function RegisterPropertiesFromJson(array $form,string $group,string $identifier, string $type) : string
+    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
         $result="";
@@ -248,17 +244,17 @@ class HeatingControlParameters extends IPSModule
                         }
                         else 
                         {
-                             $this->RegisterItem ($subElement,$identifier,$type,$result);
+                                $this->RegisterItem ($subElement,$identifier,$type,$result);
 	                    }
                     }
                 }
             }
         }
         return trim($result,",");
-   }
+    }
 
-   private function SendPropertyValuesFromJson(array $form,string $group)
-   {
+    private function SendPropertyValuesFromJson(array $form,string $group)
+    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
        
         if ($form == null) return;  
@@ -281,16 +277,16 @@ class HeatingControlParameters extends IPSModule
         }
     }
 
-   private function RegisterItems (array $subElement,string $identifier,string $type, &$result)
-   {
+    private function RegisterItems (array $subElement,string $identifier,string $type, &$result)
+    {
         foreach ($subElement['items'] as &$parElement) 
         {   
-           $this->RegisterItem ($parElement,$identifier,$type, $result);
+            $this->RegisterItem ($parElement,$identifier,$type, $result);
         }
-   }
+    }
 
-   private function RegisterItem (array $parElement,string $identifier,string $type, &$result)
-   {
+    private function RegisterItem (array $parElement,string $identifier,string $type, &$result)
+    {
         if (isset($parElement['name']))  
         {
             if (str_starts_with($parElement['name'],$identifier)) 
@@ -311,12 +307,12 @@ class HeatingControlParameters extends IPSModule
                 }                 
             }
         }
-   }
+    }
 
-   //Die Property-Werte und zu übertragendende VariablenId sind in form.json paarweise angeordnet. So werden sie auch abearbeitet.
-   //Der Wert vom Property geholt und auf die SendeInstanz geschrieben
-   private function SendInstances (array $subElement)
-   {
+    //Die Property-Werte und zu übertragendende VariablenId sind in form.json paarweise angeordnet. So werden sie auch abearbeitet.
+    //Der Wert vom Property geholt und auf die SendeInstanz geschrieben
+    private function SendInstances (array $subElement)
+    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $value=-1.0;
         $id=0;
@@ -330,10 +326,10 @@ class HeatingControlParameters extends IPSModule
             $this->SendDebug(__FUNCTION__, 'Sende '.$value.' an '. $id, 0);
             RequestAction($id,$value);
         }
-   }
+    }
 
-   private function ConfigureInstance (array $parElement,&$value,&$id)
-   {
+    private function ConfigureInstance (array $parElement,&$value,&$id)
+    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if (isset($parElement['name']))  
         {  
@@ -347,10 +343,10 @@ class HeatingControlParameters extends IPSModule
                 $id = $this->ReadPropertyInteger($name);
             }  
         }
-   }
+    }
 
-   private function RegisterVariablesIdsFromJson(array $form,string $group,string $identifier) 
-   {
+    private function RegisterVariablesIdsFromJson(array $form,string $group,string $identifier) 
+    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($form == null) return;  
 
@@ -368,10 +364,10 @@ class HeatingControlParameters extends IPSModule
                             {   
                                 if (isset($parElement['name']) && isset($parElement['default']))  
                                 {
-                                   if (str_starts_with($parElement['name'],$identifier) ) 
-                                   {
-                                       $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
-                                   }
+                                    if (str_starts_with($parElement['name'],$identifier) ) 
+                                    {
+                                        $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
+                                    }
                                 }
                             }
                         }
@@ -379,20 +375,20 @@ class HeatingControlParameters extends IPSModule
                 }
             }
         }
-   }
+    }
 
-   //Einen übergebenen Namen modulspezifisch aufbereiten
-   private function CreateName (string $name) : string
-   {
+    //Einen übergebenen Namen modulspezifisch aufbereiten
+    private function CreateName (string $name) : string
+    {
         return self::MODULE_PREFIX.'_'.$name;
-   }
+    }
 
-   //durch "," getrennte Listenwerte concatenieren und gesäubert zurückliefern
-   private function AddToStringList (string $list, string $addList) : string
-   {
+    //durch "," getrennte Listenwerte concatenieren und gesäubert zurückliefern
+    private function AddToStringList (string $list, string $addList) : string
+    {
         $newList = $list.','.$addList;
         return trim($newList,",");
-   }
+    }
 
     // Muss 'public' sein, damit der Timer die Funktion aufrufen kann
     public function HeartbeatTimer()
@@ -400,7 +396,7 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
         $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
-        if (!IPS_InstanceExists($id) return;      
+        if (!IPS_InstanceExists($id)) return;      
         $id= IPS_GetParent($id);
         
         if (!ModBus_RequestRead($id))
@@ -410,13 +406,13 @@ class HeatingControlParameters extends IPSModule
         }
         else
         {
-           if (!GetValue('ControlInitialized'))
-           {
+            if (!GetValue('ControlInitialized'))
+            {
                 ModBus_WriteCoil($id,false); 
                 $this->ResendAllControlParameters();
 		        SetValue('ControlInitialized',true);
                 $this->SendDebug(__FUNCTION__,"Wago Daten erneut übertragen gestartet."), 0);
-           }
+            }
         }
     }
 
@@ -427,6 +423,5 @@ class HeatingControlParameters extends IPSModule
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->SendPropertyValuesFromJson($form,self::ControlParameters);
     }
-   
-   }
+}
 
