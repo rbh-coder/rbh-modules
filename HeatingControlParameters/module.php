@@ -317,7 +317,7 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $value=-1.0;
         $id=0;
-        var_dump ($subElement);
+        var_dump ($subElement['items']);
         foreach ($subElement['items'] as &$parElement) 
         {   
             $this->ConfigureInstance ($parElement,$value,$id);
