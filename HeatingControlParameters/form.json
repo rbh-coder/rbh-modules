@@ -144,10 +144,10 @@
         {
           "name": "Id_CommunicationRunning",
           "type": "SelectVariable",
-          "caption": "ID Kommunikationläuft"
+          "caption": "ID Kommunikation läuft"
         },
         {
-          "name": "Id_ControlIsAlive",
+          "name": "Id_ControlHasStarted",
           "type": "SelectVariable",
           "caption": "ID Steuerung gestartet"
         }

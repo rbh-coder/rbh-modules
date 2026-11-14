@@ -27,15 +27,15 @@ class HeatingControlParameters extends IPSModule
     private const MODULE_VERSION = '1.0, 12.11.2026';
     private const MINIMUM_DELAY_MILLISECONDS = 100;
 
-    private const ProfileList =                     'ControlInitialized';
-    private const RegisterVariablesUpdateList =     '';
-    private const RegisterReferenciesUpdateList =   'Id_CommunicationRunning,Id_ControlIsAlive';
-    private const ReferenciesList =                 'Id_CommunicationRunning,Id_ControlIsAlive';
-    private const PropertiesList =                  '';
-    private const ExpertLockList =                  '';
-    private const ExpertHideList =                  '';
-    private const SyncList =                        '';
+    private const REFERENCIESLIST = 'ReferenciesList';
 
+    //Hart codierte Listen für die verschiedenen Registrierungen, die zum Teil auf dynamische Listen umkopiert und ergänzt werden
+    private const ProfileList =                     'ControlInitialized';           //direkt verwendet
+    private const RegisterVariablesUpdateList =     '';                             //direkt verwendet
+    private const RegisterReferenciesUpdateList =   'Id_CommunicationRunning';      //direkt verwendet
+    private const ReferenciesList =                 '';                             //wird als Init für dynamische REFERENCIESLIST verwendet
+    private const PropertiesList =                  '';                             //direkt verwendet
+   
     private const ControlParameters = 'ControlParameters';
     private const ControlMonitoring ='ControlMonitoring';
 
@@ -48,6 +48,8 @@ class HeatingControlParameters extends IPSModule
     private const DarkGreen = 0x24F065;
     private const DarkBlue  = 0x0D0FE4;
 
+
+    # SYMCON METHODS ###################################################################################################
     public function Create()
     {
         //Never delete this line!
@@ -74,14 +76,17 @@ class HeatingControlParameters extends IPSModule
 
 
         //Alle Properties aus form.json registrieren
-        $referenciesList="";
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"P_","float");
         $this->RegisterPropertiesFromJson  ($form,self::ControlMonitoring,"P_","integer");
-        $referenciesList = $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"Id_","integer");
-        $referenciesList =  $referenciesList.','.$this->RegisterPropertiesFromJson ($form,self::ControlMonitoring,"Id_","integer");
-        $referenciesList= trim($referenciesList,",");
-        $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
+        
+        //Alle hart codierten Referenzen aus ReferenciesList übernehmen   
+        $referenciesList= self::ReferenciesList;
+        //dann alle "Id_" Properties aus Json nachladen
+        $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlParameters,"Id_","integer"));
+        $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlMonitoring,"Id_","integer"));
+        //Die Liste als Property speichern
+        $this->RegisterPropertyString(self::REFERENCIESLIST,$referenciesList); 
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
@@ -129,7 +134,7 @@ class HeatingControlParameters extends IPSModule
         //Register references and messages
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);     
       
-        $this->RegisterReferenceVarIdList($this->ReadPropertyString('ReferenciesList'));
+        $this->RegisterReferenceVarIdList($this->ReadPropertyString(self::REFERENCIESLIST));
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
@@ -160,6 +165,9 @@ class HeatingControlParameters extends IPSModule
        IPS_LogMessage( $this->InstanceID,'Destroy Methode ausgeführt.');
     }
 
+    //wird aufgrufen wenn variable mit
+    //void registermessage (integer $senderid, integer $nachrichtid)
+    //registriert wird
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         switch ($Message) {
@@ -179,6 +187,13 @@ class HeatingControlParameters extends IPSModule
                 //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
                 if ($Data[1]==0) return;
                 $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
+
+                //Wenn die Änderung von der Instanz kommt, die die Kommunikation mit der Wago steuert, dann alle Parameter erneut senden
+                if ($this->ReadPropertyInteger('Id_CommunicationRunning') == $SenderID)
+                {
+                    $this->ResendAllControlParameters();
+                }
+
                 break;
 
             case EM_UPDATE:
@@ -196,24 +211,23 @@ class HeatingControlParameters extends IPSModule
                 break;
         }
     }
-
+   
+    //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable
+    //void EnableAction (string $Ident)
+    //regstriert wird
    #################### Request action
    public function RequestAction($Ident, $Value)
    {
           switch($Ident) 
           {
-            case "OpMode":
+            case "ControlInitialized":
                $this->SetValue($Ident, $Value);
                break;
-            case "BoostMode":
-               $this->SetValue($Ident, $Value);
-               break;
-            case "HeatPumpReleasePower":
-               $this->SetValue($Ident, $Value);
-               break;
+          }
        }
    }
 
+   # USER METHODS ###################################################################################################
    private function RegisterPropertiesFromJson(array $form,string $group,string $identifier, string $type) : string
    {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -368,18 +382,46 @@ class HeatingControlParameters extends IPSModule
         }
    }
 
+   //Einen übergebenen Namen modulspezifisch aufbereiten
    private function CreateName (string $name) : string
    {
         return self::MODULE_PREFIX.'_'.$name;
    }
 
+   //durch "," getrennte Listenwerte concatenieren und gesäubert zurückliefern
+   private function AddToStringList (string $list, string $addList) : string
+   {
+        string $newList = $list.','.$addList;
+        return trim($newList,",");
+   }
+
     // Muss 'public' sein, damit der Timer die Funktion aufrufen kann
     public function HeartbeatTimer()
     {
-        // Hier steht die Logik, die zyklisch ausgeführt werden soll
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        
+        $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
+        if (!IPS_InstanceExists($id) return;      
+        $id= IPS_GetParent($id);
+        
+        if (!ModBus_RequestRead($id))
+        {
+            $this->SetValue('ControlInitialized',false);
+            $this->SendDebug(__FUNCTION__,"Wago Verbindung abgebrochen.", 0);
+        }
+        else
+        {
+           if (!GetValue('ControlInitialized'))
+           {
+                ModBus_WriteCoil($id,false); 
+                $this->ResendAllControlParameters();
+		        SetValue('ControlInitialized',true);
+                $this->SendDebug(__FUNCTION__,"Wago Daten erneut übertragen gestartet."), 0);
+           }
+        }
     }
 
+    # EXTERNAL CALLS ###################################################################################################
     // Muss 'public' sein, damit Funktion von ausserhalb aufgerufen werden kann
     public function ResendAllControlParameters()
     {
