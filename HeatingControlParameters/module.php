@@ -142,7 +142,7 @@ class HeatingControlParameters extends IPSModule
         $this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000);
 
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $this->SendPropertyValuesFromJson($form,self::ControlParameters);
+        //$this->SendPropertyValuesFromJson($form,self::ControlParameters);
 
         $this->Test();
         ########## Timer
