@@ -87,7 +87,6 @@ class HeatingControlParameters extends IPSModule
         $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlMonitoring,"Id_","integer"));
         //Die Liste als Property speichern
         $this->RegisterPropertyString(self::REFERENCIESLIST,$referenciesList); 
-        $this->SendDebug(__FUNCTION__, 'ReferenceList: '.$referenciesList, 0);
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
@@ -145,6 +144,7 @@ class HeatingControlParameters extends IPSModule
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->SendPropertyValuesFromJson($form,self::ControlParameters);
 
+        $this->Test();
         ########## Timer
 
         ########## Profile
@@ -373,6 +373,59 @@ class HeatingControlParameters extends IPSModule
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private function Test ()
+    {
+        $configpage = json_decode(GetConfigurationForm());
+        var_dump ($configpage);
+    }
+
+    private function SendListItemsFromJason (array $form,string $group)
+    {
+        foreach ($form['elements'] as &$element) 
+        {
+            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
+            {
+                if ($element['name'] === $group && isset($element['items'])) 
+                {
+                    foreach ($element['items'] as &$subElement) 
+                    {
+                        if ($subElement['type'] === 'List' && isset($subElement['columns'])) 
+                        {
+                            $this->SendListItems ($subElement['columns']);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private function SendListItems (array $item)
+    {
+         // JSON-String aus der Konfiguration laden und in ein Array umwandeln
+        $liste = json_decode($item, true);
+
+        // Prüfen, ob gültige Daten vorhanden sind
+        if (is_array($liste)) 
+        {
+            foreach ($liste as $index => $zeile) 
+            {
+                // Zugriff über die in der form.json definierten Spaltennamen ("name")
+                $sourceId = $zeile['SourdeId'];
+                $targetId = $zeile['TargetId'];
+
+                // Beispiel: Verarbeitung der Zeilenwerte
+                $this->SendDebug('Zeile ' . $index, 'Source: ' . $sourceId . ' | Target: ' . $targetId, 0);
+            
+                if ($sourceId > 0 && IPS_VariableExists($sourceId) && $targetId > 0 && IPS_VariableExists($targetId)) 
+                {
+                    // Hier eigene Logik ausführen, z. B. Wert auslesen oder Event registrieren
+                    $sourceValue = GetValue($sourceId);
+                    RequestAction($targetId,$sourceValue);
                 }
             }
         }

@@ -169,14 +169,14 @@
           "columns": [
             {
               "caption": "Variable",
-              "name": "VariableID",
+              "name": "SourceId",
               "width": "auto",
               "add": 0,
               "edit": { "type": "SelectVariable" }
             },
             {
               "caption": "Sende Instanz",
-              "name": "SendID",
+              "name": "TargetId",
               "width": "auto",
               "add": 0,
               "edit": { "type": "SelectVariable" }
