@@ -380,7 +380,7 @@ class HeatingControlParameters extends IPSModule
 
     private function Test ()
     {
-        $configpage = json_decode(GetConfigurationForm());
+        $configpage = json_decode($this->GetConfigurationForm());
         var_dump ($configpage);
     }
 
