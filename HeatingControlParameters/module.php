@@ -390,7 +390,7 @@ class HeatingControlParameters extends IPSModule
    //durch "," getrennte Listenwerte concatenieren und gesäubert zurückliefern
    private function AddToStringList (string $list, string $addList) : string
    {
-        string $newList = $list.','.$addList;
+        $newList = $list.','.$addList;
         return trim($newList,",");
    }
 
