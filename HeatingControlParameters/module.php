@@ -317,16 +317,18 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $value=-1.0;
         $id=0;
+        var_dump ($subElement);
         foreach ($subElement['items'] as &$parElement) 
         {   
             $this->ConfigureInstance ($parElement,$value,$id);
         }
-        if (($id>1) && ($value> -1)) 
-        {
-            //Ipsymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction!
-            $this->SendDebug(__FUNCTION__, 'Sende '.$value.' an '. $id, 0);
-            RequestAction($id,$value);
-        }
+        if (!IPS_VariableExists($id)) return;
+        if ($value <0) return; 
+        
+        //Ipsymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction!
+        $this->SendDebug(__FUNCTION__, 'Sende '.$value.' an '. $id, 0);
+        RequestAction($id,$value);
+        
     }
 
     private function ConfigureInstance (array $parElement,&$value,&$id)
