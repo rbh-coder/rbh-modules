@@ -84,7 +84,7 @@ class HeatingControlParameters extends IPSModule
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
        //Timer ------------------------------------------------------------------------------------------------------------
-       $this->RegisterTimer(MODULE_PREFIX.'HeartbeatTimer',$this->ReadPropertyFloat('P_MonitoringInterval')*1000, MODULE_PREFIX.'HeartbeatTimer($_IPS[\'TARGET\']);');
+       $this->RegisterTimer($this->CreateName('HeartbeatTimer'),$this->ReadPropertyFloat('P_MonitoringInterval')*1000,$this->CreateName('HeartbeatTimer').'($_IPS[\'TARGET\']);');
        //------------------------------------------------------------------------------------------------------------------
     }
 
@@ -132,7 +132,7 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
         
-        this->SetTimerInterval(MODULE_PREFIX.'HeartbeatTimer',$this->ReadPropertyFloat('P_MonitoringInterval')*1000);
+        this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyFloat('P_MonitoringInterval')*1000);
 
         $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->SendPropertyValuesFromJson($form,self::ControlParameters);
@@ -365,6 +365,12 @@ class HeatingControlParameters extends IPSModule
             }
         }
    }
+
+   private function CreateName (string $name) : string
+   {
+        return self::MODULE_PREFIX.'_'.$name;
+   }
+
     // Muss 'public' sein, damit der Timer die Funktion aufrufen kann
     public function HeartbeatTimer()
     {
