@@ -87,6 +87,7 @@ class HeatingControlParameters extends IPSModule
         $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlMonitoring,"Id_","integer"));
         //Die Liste als Property speichern
         $this->RegisterPropertyString(self::REFERENCIESLIST,$referenciesList); 
+        $this->SendDebug(__FUNCTION__, 'ReferenceList: '.$referenciesList, 0);
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
