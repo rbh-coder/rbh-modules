@@ -138,16 +138,16 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);     
       
         $this->RegisterReferenceVarIdList($this->ReadPropertyString(self::REFERENCIESLIST));
+        $this->RegisterReferencesUpdateList();
         //Alle benötigten aktiven Referenzen für die Messagesink anmelden
         $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
         $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
         
         $this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000);
 
-        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        //$form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         //$this->SendPropertyValuesFromJson($form,self::ControlParameters);
 
-        $this->Test();
         ########## Timer
 
         ########## Profile
@@ -193,6 +193,10 @@ class HeatingControlParameters extends IPSModule
                 if ($this->ReadPropertyInteger('Id_CommunicationRunning') == $SenderID)
                 {
                     $this->ResendAllControlParameters();
+                }
+                else 
+                {
+                    $this->UpdateReferenceTarget($SenderID);
                 }
 
                 break;
@@ -350,6 +354,60 @@ class HeatingControlParameters extends IPSModule
         }
     }
 
+    private function GetReferencesUpdateList() : array
+    {
+        $list = json_decode($this->ReadPropertyString('ReferenciesUpdateList'), true);
+        if (!is_array($list)) return [];
+
+        $result = [];
+        foreach ($list as $item) {
+            if (!is_array($item)) continue;
+
+            $sourceId = $item['SourceId'] ?? 0;
+            $targetId = $item['TargetId'] ?? 0;
+            if (!is_numeric($sourceId) || !is_numeric($targetId)) continue;
+
+            $sourceId = (int) $sourceId;
+            $targetId = (int) $targetId;
+            if ($sourceId <= 0 || $targetId <= 0) continue;
+            if (!IPS_VariableExists($sourceId) || !IPS_VariableExists($targetId)) continue;
+
+            $result[] = [
+                'SourceId' => $sourceId,
+                'TargetId' => $targetId
+            ];
+        }
+
+        var_dump($result);
+        return $result;
+    }
+
+    private function RegisterReferencesUpdateList() : void
+    {
+        $registeredSources = [];
+        foreach ($this->GetReferencesUpdateList() as $item) {
+            $sourceId = $item['SourceId'];
+            $targetId = $item['TargetId'];
+
+            $this->RegisterReference($sourceId);
+            $this->RegisterReference($targetId);
+
+            if (!in_array($sourceId, $registeredSources, true)) {
+                $this->RegisterMessage($sourceId, VM_UPDATE);
+                $registeredSources[] = $sourceId;
+            }
+        }
+    }
+
+    private function UpdateReferenceTarget(int $sourceId) : void
+    {
+        foreach ($this->GetReferencesUpdateList() as $item) {
+            if ($item['SourceId'] !== $sourceId) continue;
+
+            RequestAction($item['TargetId'], GetValue($sourceId));
+        }
+    }
+
     private function RegisterVariablesIdsFromJson(array $form,string $group,string $identifier) 
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -377,72 +435,6 @@ class HeatingControlParameters extends IPSModule
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-
-    private function Test ()
-    {
-        var_dump($this->ReadPropertyString('ReferenciesUpdateList'));
-        var_dump($this->ReadPropertyString('VariablesUpdateList'));
-        var_dump($this->ReadPropertyString('ControlParameters'));
-        var_dump($this->ReadPropertyString('ControlMonitoring'));
-        var_dump($this->ReadPropertyString('ControlVariables'));
-       
-
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $form=IPS_GetConfiguration($this->InstanceID);
-        
-        if (empty($form)) return;
-        var_dump ($form);
-        
-        $configpage = json_decode($form);
-        var_dump ($configpage);
-    }
-
-    private function SendListItemsFromJason (array $form,string $group)
-    {
-        foreach ($form['elements'] as &$element) 
-        {
-            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
-            {
-                if ($element['name'] === $group && isset($element['items'])) 
-                {
-                    foreach ($element['items'] as &$subElement) 
-                    {
-                        if ($subElement['type'] === 'List' && isset($subElement['columns'])) 
-                        {
-                            $this->SendListItems ($subElement['columns']);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private function SendListItems (array $item)
-    {
-         // JSON-String aus der Konfiguration laden und in ein Array umwandeln
-        $liste = json_decode($item, true);
-
-        // Prüfen, ob gültige Daten vorhanden sind
-        if (is_array($liste)) 
-        {
-            foreach ($liste as $index => $zeile) 
-            {
-                // Zugriff über die in der form.json definierten Spaltennamen ("name")
-                $sourceId = $zeile['SourdeId'];
-                $targetId = $zeile['TargetId'];
-
-                // Beispiel: Verarbeitung der Zeilenwerte
-                $this->SendDebug('Zeile ' . $index, 'Source: ' . $sourceId . ' | Target: ' . $targetId, 0);
-            
-                if ($sourceId > 0 && IPS_VariableExists($sourceId) && $targetId > 0 && IPS_VariableExists($targetId)) 
-                {
-                    // Hier eigene Logik ausführen, z. B. Wert auslesen oder Event registrieren
-                    $sourceValue = GetValue($sourceId);
-                    RequestAction($targetId,$sourceValue);
                 }
             }
         }
