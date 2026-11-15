@@ -160,7 +160,7 @@
       "items": [
         {
           "type": "List",
-          "name": "Variables",
+          "name": "ReferenciesUpdateList",
           "caption": "Zu synchronisierende Variablen",
           "rowCount": 2,
           "add": true,

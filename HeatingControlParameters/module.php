@@ -60,6 +60,9 @@ class HeatingControlParameters extends IPSModule
        
         $this->RegisterPropertyString('ReferenciesUpdateList', '[]');
         $this->RegisterPropertyString('VariablesUpdateList', '[]');
+        $this->RegisterPropertyString('ControlParameters', '[]');
+        $this->RegisterPropertyString('ControlMonitoring', '[]');
+        $this->RegisterPropertyString('ControlVariables', '[]');
        
         //Profile erstellen 
         $variable = 'ControlInitialized';
@@ -381,6 +384,13 @@ class HeatingControlParameters extends IPSModule
 
     private function Test ()
     {
+        var_dump($this->ReadPropertyString('ReferenciesUpdateList'));
+        var_dump($this->ReadPropertyString('VariablesUpdateList'));
+        var_dump($this->ReadPropertyString('ControlParameters'));
+        var_dump($this->ReadPropertyString('ControlMonitoring'));
+        var_dump($this->ReadPropertyString('ControlVariables'));
+       
+
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $form=IPS_GetConfiguration($this->InstanceID);
         
