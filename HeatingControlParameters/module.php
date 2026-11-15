@@ -377,8 +377,6 @@ class HeatingControlParameters extends IPSModule
                 'TargetId' => $targetId
             ];
         }
-
-        var_dump($result);
         return $result;
     }
 
