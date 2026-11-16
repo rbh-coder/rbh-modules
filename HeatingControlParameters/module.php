@@ -32,6 +32,7 @@ class HeatingControlParameters extends IPSModule
     private const ReferenciesList =                 '';                             //wird als Init für dynamische 'ReferenciesList' verwendet
   
     //Konstante für verwendete Namen
+    private const StaticControlParameters      = 'StaticControlParameters';
     private const ConfiguredControlParameters   = 'ConfiguredControlParameters';
     private const DynamicControlParameters      = 'DynamicControlParameters';
     private const ControlMonitoring             = 'ControlMonitoring';
@@ -56,7 +57,6 @@ class HeatingControlParameters extends IPSModule
        
         //PropertyStringArrays für die benötigten Listen anlegen
         $this->RegisterPropertyString(self::ReferenciesUpdateList, '[]');
-        $this->RegisterPropertyString(self::VariablesUpdateList, '[]');
         $this->RegisterPropertyString(self::ConfiguredControlParameters, $configuredControlParameters);
         $this->RegisterPropertyString(self::ControlMonitoring, '[]');
         $this->RegisterPropertyString(self::DynamicControlParameters, '[]');
@@ -321,11 +321,8 @@ class HeatingControlParameters extends IPSModule
         return json_encode($controlParameters, JSON_UNESCAPED_UNICODE);
     }
 
-    //KI generiert
     private function GetReferencesUpdateList() : array
     {
-        IPS_LogMessage(__FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ReferenciesUpdateList));
-
         $list = json_decode($this->ReadPropertyString(self::ReferenciesUpdateList), true);
         if (!is_array($list)) return [];
 
@@ -350,7 +347,6 @@ class HeatingControlParameters extends IPSModule
         return $result;
     }
 
-    //KI generiert
     private function RegisterReferencesUpdateList() : void
     {
         $registeredSources = [];
@@ -391,7 +387,7 @@ class HeatingControlParameters extends IPSModule
             $sourceId = $item['SourceId'];
             if (in_array($sourceId, $updatedSources, true)) continue;
 
-            $this->UpdateReferenceTarget($sourceId);
+            $this->SendDynamicControlParameter($sourceId);
             $updatedSources[] = $sourceId;
         }
     }
