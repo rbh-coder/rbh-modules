@@ -259,8 +259,8 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $controlParameters = json_decode($this->ReadPropertyString(self::ConfiguredControlParameters), true);
         
-        //IPS_LogMessage(__FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ConfiguredControlParameters));
-      
+        $this->SendDebug(__FUNCTION__, 'Properties: '.$this->ReadPropertyString(self::ConfiguredControlParameters), 0);
+        
         if (!is_array($controlParameters)) return;
         foreach ($controlParameters as $controlParameter) {
             if (!is_array($controlParameter)) continue;
@@ -287,6 +287,9 @@ class HeatingControlParameters extends IPSModule
 
     private function CreateStaticControlParametersList(array $form) : string
     {
+
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+
         $controlParameters = [];
         if (!isset($form['elements']) || !is_array($form['elements'])) return '[]';
 
@@ -323,7 +326,9 @@ class HeatingControlParameters extends IPSModule
 
     private function GetReferencesUpdateList() : array
     {
-        $list = json_decode($this->ReadPropertyString(self::ReferenciesUpdateList), true);
+
+        $this->SendDebug(__FUNCTION__, 'Properties: '.$this->ReadPropertyString(self::DynamicControlParameters, 0);
+        $list = json_decode($this->ReadPropertyString(self::DynamicControlParameters), true);
         if (!is_array($list)) return [];
 
         $result = [];
