@@ -51,15 +51,15 @@ class HeatingControlParameters extends IPSModule
 
         $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $controlParameters = $this->CreateControlParametersList($form);
-        IPS_LogMessage( $this->InstanceID,'Properties: '.$controlParameters);
        
         //PropertyStringArrays für die benötigten Listen anlegen
         $this->RegisterPropertyString('ReferenciesUpdateList', '[]');
         $this->RegisterPropertyString('VariablesUpdateList', '[]');
-        $this->RegisterPropertyString('ControlParameters', $controlParameters);
-        $this->RegisterPropertyString('ControlMonitoring', '[]');
+        $this->RegisterPropertyString(self::ControlParameters, $controlParameters);
+        $this->RegisterPropertyString(self::ControlMonitoring, '[]');
         $this->RegisterPropertyString('ControlVariables', '[]');
        
+        IPS_LogMessage( $this->InstanceID,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
 
         //Profile erstellen 
         $variable = 'ControlInitialized';
@@ -256,7 +256,9 @@ class HeatingControlParameters extends IPSModule
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $controlParameters = json_decode($this->ReadPropertyString(self::ControlParameters), true);
-        $this->SendDebug(__FUNCTION__, 'Test: '.$this->ReadPropertyString(self::ControlParameters), 0);
+        
+        IPS_LogMessage( $this->InstanceID,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
+      
         if (!is_array($controlParameters)) return;
         foreach ($controlParameters as $controlParameter) {
             if (!is_array($controlParameter)) continue;
