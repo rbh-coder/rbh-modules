@@ -25,28 +25,19 @@ class HeatingControlParameters extends IPSModule
     private const MODULE_NAME = 'HeatingControlParameters';
     private const MODULE_PREFIX = 'HCP';
     private const MODULE_VERSION = '1.0, 12.11.2026';
-    private const MINIMUM_DELAY_MILLISECONDS = 100;
-
-    private const REFERENCIESLIST = 'ReferenciesList';
-
-    //Hart codierte Listen für die verschiedenen Registrierungen, die zum Teil auf dynamische Listen umkopiert und ergänzt werden
+  
+    //Statische Listen für die verschiedenen Registrierungen, die zum Teil auf dynamische Listen umkopiert und ergänzt werden
     private const ProfileList =                     'ControlInitialized';           //direkt verwendet
-    private const RegisterVariablesUpdateList =     '';                             //direkt verwendet
-    private const RegisterReferenciesUpdateList =   'Id_CommunicationRunning';      //direkt verwendet
-    private const ReferenciesList =                 '';                             //wird als Init für dynamische REFERENCIESLIST verwendet
-    private const PropertiesList =                  '';                             //direkt verwendet
-   
+    private const RegisterReferenciesUpdateList =   'Id_ControlHasStarted';         //direkt verwendet
+    private const ReferenciesList =                 '';                             //wird als Init für dynamische 'ReferenciesList' verwendet
+  
+    //Konstante für verwendete Namen
     private const ControlParameters = 'ControlParameters';
-    private const ControlMonitoring ='ControlMonitoring';
+    private const ControlMonitoring = 'ControlMonitoring';
 
-    private const  Transparent = 0xffffff00;
-    private const  Red = 0xFF0000;
-    private const  Yellow = 0xFFFF00;
-    private const  Green=0x00FF00;
-    private const  Blue=0x0000FF;
-
-    private const DarkGreen = 0x24F065;
-    private const DarkBlue  = 0x0D0FE4;
+    //Farbdefinitionen für Profil
+    private const Transparent = 0xffffff00;
+    private const Yellow = 0xFFFF00;
 
 
     # SYMCON METHODS ###################################################################################################
@@ -57,13 +48,18 @@ class HeatingControlParameters extends IPSModule
 
         ########## Properties
         $this->DeleteProfileList (self::ProfileList);
+
+        $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $controlParameters = $this->CreateControlParametersList($form);
        
+        //PropertyStringArrays für die benötigten Listen anlegen
         $this->RegisterPropertyString('ReferenciesUpdateList', '[]');
         $this->RegisterPropertyString('VariablesUpdateList', '[]');
         $this->RegisterPropertyString('ControlParameters', '[]');
         $this->RegisterPropertyString('ControlMonitoring', '[]');
         $this->RegisterPropertyString('ControlVariables', '[]');
        
+
         //Profile erstellen 
         $variable = 'ControlInitialized';
         $profileName = $this->CreateProfileName($variable);
@@ -79,17 +75,16 @@ class HeatingControlParameters extends IPSModule
 
 
         //Alle Properties aus form.json registrieren
-        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"P_","float");
         $this->RegisterPropertiesFromJson  ($form,self::ControlMonitoring,"P_","integer");
         
         //Alle hart codierten Referenzen aus ReferenciesList übernehmen   
         $referenciesList= self::ReferenciesList;
-        //dann alle "Id_" Properties aus Json nachladen
+        //dann alle "Id_" Properties aus statischer Json nachladen
         $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlParameters,"Id_","integer"));
         $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlMonitoring,"Id_","integer"));
         //Die Liste als Property speichern
-        $this->RegisterPropertyString(self::REFERENCIESLIST,$referenciesList); 
+        $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
        
         ########## Timer
        //------------------------------------------------------------------------------------------------------------------
@@ -121,9 +116,6 @@ class HeatingControlParameters extends IPSModule
 
         foreach ($this->GetMessageList() as $senderID => $messages) {
             foreach ($messages as $message) {
-                if ($message == EM_UPDATE) {
-                    $this->UnregisterMessage($senderID, EM_UPDATE);
-                }
                 if ($message == VM_UPDATE) {
                     $this->UnregisterMessage($senderID, VM_UPDATE);
                 }
@@ -137,16 +129,17 @@ class HeatingControlParameters extends IPSModule
         //Register references and messages
         $this->SendDebug(__FUNCTION__, 'Referenzen und Nachrichten werden registriert.', 0);     
       
-        $this->RegisterReferenceVarIdList($this->ReadPropertyString(self::REFERENCIESLIST));
-        $this->RegisterReferencesUpdateList();
-        //Alle benötigten aktiven Referenzen für die Messagesink anmelden
-        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
-        $this->RegisterVariablesUpdateList(self::RegisterVariablesUpdateList);
-        
-        $this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000);
+        //Alle in Create() gesammelten IDs für Referenzen anmelden
+        $this->RegisterReferenceVarIdList($this->ReadPropertyString('ReferenciesList')); //Alle in Create() gesammelten Variablen registrieren
+        $this->RegisterReferencesUpdateList();                                           //Liste mit dynamischen Variablen registrieren und für Messsagesink anmelden
 
-        //$form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        //$this->SendPropertyValuesFromJson($form,self::ControlParameters);
+        //Alle statischen Referenzen für die Messagesink anmelden
+        $this->RegisterPropertiesUpdateList(self::RegisterReferenciesUpdateList);
+       
+        $this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000);
+        $this->ResendAllControlParameters();
+
+        
 
         ########## Timer
 
@@ -234,126 +227,109 @@ class HeatingControlParameters extends IPSModule
     private function RegisterPropertiesFromJson(array $form,string $group,string $identifier, string $type) : string
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        
-        $result="";
-        if ($form == null) return result;  
-        
-        foreach ($form['elements'] as &$element) 
-        {
-            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
-            {
-                if ($element['name'] === $group && isset($element['items'])) 
-                {
-                    foreach ($element['items'] as &$subElement) 
-                    {
-                        if (isset($subElement['items'])) 
-                        {
-                            $this->RegisterItems ($subElement,$identifier,$type,$result);
-                        }
-                        else 
-                        {
-                                $this->RegisterItem ($subElement,$identifier,$type,$result);
-	                    }
+
+        if (!isset($form['elements']) || !is_array($form['elements'])) return '';
+        if (!in_array($type, ['float', 'integer'], true)) return '';
+
+        $registeredProperties = [];
+        foreach ($form['elements'] as $element) {
+            if (($element['type'] ?? '') !== 'ExpansionPanel'
+                || ($element['name'] ?? '') !== $group
+                || !isset($element['items'])
+                || !is_array($element['items'])) {
+                continue;
+            }
+
+            foreach ($element['items'] as $item) {
+                $properties = isset($item['items']) && is_array($item['items'])
+                    ? $item['items']
+                    : [$item];
+
+                foreach ($properties as $property) {
+                    $name = $property['name'] ?? '';
+                    if (!str_starts_with($name, $identifier)) continue;
+
+                    $default = $property['default'] ?? 0;
+                    if ($type === 'float') {
+                        $this->RegisterPropertyFloat($name, (float) $default);
+                    } else {
+                        $this->RegisterPropertyInteger($name, (int) $default);
                     }
+
+                    $registeredProperties[] = $name;
                 }
             }
         }
-        return trim($result,",");
+
+        return implode(',', $registeredProperties);
     }
 
-    private function SendPropertyValuesFromJson(array $form,string $group)
+    private function SendControlParameterValues() : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-       
-        if ($form == null) return;  
-        
-        foreach ($form['elements'] as &$element) 
-        {
-            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
-            {
-                if ($element['name'] === $group && isset($element['items'])) 
-                {
-                    foreach ($element['items'] as &$subElement) 
-                    {
-                        if (isset($subElement['items'])) 
-                        {
-                            $this->SendInstances($subElement);
-                        }
-                    }
+        $controlParameters = json_decode($this->ReadPropertyString(self::ControlParameters), true);
+        if (!is_array($controlParameters)) return;
+
+        foreach ($controlParameters as $controlParameter) {
+            if (!is_array($controlParameter)) continue;
+
+            $propertyName = $controlParameter['PropertyName'] ?? '';
+            $variableIdName = $controlParameter['VariableId'] ?? '';
+            if ($propertyName === '' || $variableIdName === '') continue;
+
+            $variableId = $this->ReadPropertyInteger($variableIdName);
+            if (!IPS_VariableExists($variableId)) continue;
+
+            $variable = IPS_GetVariable($variableId);
+            if (!($variable['VariableAction'] ?? false)) {
+                $this->SendDebug(__FUNCTION__, 'RequestAction ist für Variable ' . $variableId . ' nicht verfügbar.', 0);
+                continue;
+            }
+
+            $value = $this->ReadPropertyFloat($propertyName);
+            $this->SendDebug(__FUNCTION__, 'Sende ' . $value . ' an ' . $variableId, 0);
+            RequestAction($variableId, $value);
+        }
+    }
+
+
+    private function CreateControlParametersList(array $form) : string
+    {
+        $controlParameters = [];
+        if (!isset($form['elements']) || !is_array($form['elements'])) return '[]';
+
+        foreach ($form['elements'] as $element) {
+            if (($element['type'] ?? '') !== 'ExpansionPanel'
+                || ($element['name'] ?? '') !== self::ControlParameters
+                || !isset($element['items'])
+                || !is_array($element['items'])) {
+                continue;
+            }
+
+            foreach ($element['items'] as $row) {
+                if (($row['type'] ?? '') !== 'RowLayout' || !isset($row['items'])) continue;
+
+                $propertyName = null;
+                $variableId = null;
+                foreach ($row['items'] as $item) {
+                    $name = $item['name'] ?? '';
+                    if (str_starts_with($name, 'P_')) $propertyName = $name;
+                    if (str_starts_with($name, 'Id_')) $variableId = $name;
+                }
+
+                if ($propertyName !== null && $variableId !== null) {
+                    $controlParameters[] = [
+                        'PropertyName' => $propertyName,
+                        'VariableId' => $variableId
+                    ];
                 }
             }
         }
+
+        return json_encode($controlParameters, JSON_UNESCAPED_UNICODE);
     }
 
-    private function RegisterItems (array $subElement,string $identifier,string $type, &$result)
-    {
-        foreach ($subElement['items'] as &$parElement) 
-        {   
-            $this->RegisterItem ($parElement,$identifier,$type, $result);
-        }
-    }
-
-    private function RegisterItem (array $parElement,string $identifier,string $type, &$result)
-    {
-        if (isset($parElement['name']))  
-        {
-            if (str_starts_with($parElement['name'],$identifier)) 
-            {
-                $default = 0;
-                if (isset($parElement['default'])) $default = $parElement['default'];
-                $item = $parElement['name'];
-                switch ($type)
-                {
-                    case "float":
-                    $this->RegisterPropertyFloat($item,$default);
-                    $result = $result.$item.',';
-                    break;
-                    case "integer":
-                    $this->RegisterPropertyInteger($item,$default);
-                    $result = $result.$item.',';
-                    break;
-                }                 
-            }
-        }
-    }
-
-    //Die Property-Werte und zu übertragendende VariablenId sind in form.json paarweise angeordnet. So werden sie auch abearbeitet.
-    //Der Wert vom Property geholt und auf die SendeInstanz geschrieben
-    private function SendInstances (array $subElement)
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $value=-1.0;
-        $id=0;
-        foreach ($subElement['items'] as &$parElement) 
-        {   
-            $this->ConfigureInstance ($parElement,$value,$id);
-        }
-        if (!IPS_VariableExists($id)) return;
-        if ($value <0) return; 
-        
-        //Ipsymcon "RequestAction" aufrufen, das ist nicht $this->RequestAction!
-        $this->SendDebug(__FUNCTION__, 'Sende '.$value.' an '. $id, 0);
-        RequestAction($id,$value);
-        
-    }
-
-    private function ConfigureInstance (array $parElement,&$value,&$id)
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        if (isset($parElement['name']))  
-        {  
-            $name = $parElement['name'];    
-            if (str_starts_with($name,'P_')) 
-            {
-                $value = $this->ReadPropertyFloat($name);
-            }
-            else if (str_starts_with($name,'Id_')) 
-            {
-                $id = $this->ReadPropertyInteger($name);
-            }  
-        }
-    }
-
+    //KI generiert
     private function GetReferencesUpdateList() : array
     {
         $list = json_decode($this->ReadPropertyString('ReferenciesUpdateList'), true);
@@ -380,9 +356,10 @@ class HeatingControlParameters extends IPSModule
         return $result;
     }
 
-    private function RegisterReferencesUpdateList() : void
+    //KI generiert
+    private function RegisterReferencesUpdateList() : array
     {
-        $registeredSources = [];
+        $result = [];
         foreach ($this->GetReferencesUpdateList() as $item) {
             $sourceId = $item['SourceId'];
             $targetId = $item['TargetId'];
@@ -390,51 +367,23 @@ class HeatingControlParameters extends IPSModule
             $this->RegisterReference($sourceId);
             $this->RegisterReference($targetId);
 
-            if (!in_array($sourceId, $registeredSources, true)) {
+            if (!in_array($sourceId, $result, true)) {
                 $this->RegisterMessage($sourceId, VM_UPDATE);
-                $registeredSources[] = $sourceId;
+                $result[] = $sourceId;
             }
         }
+        return $result;
     }
 
+
+    //Funktion Sendet Wert von SourceId auf TartetId
+    //Wird hier für die ControlVariables List verwendet
     private function UpdateReferenceTarget(int $sourceId) : void
     {
         foreach ($this->GetReferencesUpdateList() as $item) {
             if ($item['SourceId'] !== $sourceId) continue;
 
             RequestAction($item['TargetId'], GetValue($sourceId));
-        }
-    }
-
-    private function RegisterVariablesIdsFromJson(array $form,string $group,string $identifier) 
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        if ($form == null) return;  
-
-        foreach ($form['elements'] as &$element) 
-        {
-            if ($element['type'] === 'ExpansionPanel' && isset($element['name'])) 
-            {
-                if ($element['name'] === $group && isset($element['items'])) 
-                {
-                    foreach ($element['items'] as &$subElement) 
-                    {
-                        if ($subElement['type'] === 'RowLayout' && isset($subElement['items'])) 
-                        {
-                            foreach ($subElement['items'] as &$parElement) 
-                            {   
-                                if (isset($parElement['name']) && isset($parElement['default']))  
-                                {
-                                    if (str_starts_with($parElement['name'],$identifier) ) 
-                                    {
-                                        $this->RegisterPropertyFloat($parElement['name'],$parElement['default']);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -481,8 +430,10 @@ class HeatingControlParameters extends IPSModule
     // Muss 'public' sein, damit Funktion von ausserhalb aufgerufen werden kann
     public function ResendAllControlParameters()
     {
-        $form=json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $this->SendPropertyValuesFromJson($form,self::ControlParameters);
+        //Parameter Übertragen
+        $this->SendControlParameterValues();
+       
+        //Zusatzariablen Übertragen
     }
 }
 
