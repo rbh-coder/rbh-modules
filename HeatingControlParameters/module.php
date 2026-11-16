@@ -392,7 +392,7 @@ class HeatingControlParameters extends IPSModule
     {
         foreach ($this->GetReferencesUpdateList() as $item) 
         {
-            $this->SendDebug(__FUNCTION__,'Send '.$item['SourceId'].' to .'$item['TargetId'], , 0);
+            $this->SendDebug(__FUNCTION__,'Send '.$item['SourceId'].' to '.$item['TargetId'], , 0);
             if (!IPS_InstanceExists($item['SourceId'])) continue;
             if (!IPS_InstanceExists($item['TargetId'])) continue;
             RequestAction($item['TargetId'], GetValue($sourceId));
