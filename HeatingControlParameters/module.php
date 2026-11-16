@@ -28,7 +28,7 @@ class HeatingControlParameters extends IPSModule
   
     //Statische Listen für die verschiedenen Registrierungen, die zum Teil auf dynamische Listen umkopiert und ergänzt werden
     private const ProfileList =                     'ControlInitialized';           //direkt verwendet
-    private const RegisterReferenciesUpdateList =   'Id_ControlHasStarted';         //direkt verwendet
+    private const RegisterReferenciesUpdateList =   'Id_ControlHasStarted';      //direkt verwendet
     private const ReferenciesList =                 '';                             //wird als Init für dynamische 'ReferenciesList' verwendet
   
     //Konstante für verwendete Namen
@@ -183,9 +183,9 @@ class HeatingControlParameters extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
 
                 //Wenn die Änderung von der Instanz kommt, die die Kommunikation mit der Wago steuert, dann alle Parameter erneut senden
-                if ($this->ReadPropertyInteger('Id_CommunicationRunning') == $SenderID)
+                if ($this->ReadPropertyInteger('Id_ControlHasStarted') == $SenderID)
                 {
-                    $this->ResendAllControlParameters();
+                    if (this->GetValue($SenderID)) $this->ResendAllControlParameters();
                 }
                 else 
                 {
@@ -194,19 +194,6 @@ class HeatingControlParameters extends IPSModule
 
                 break;
 
-            case EM_UPDATE:
-            case EM_CHANGEACTIVE:
-            case EM_CHANGESCHEDULEGROUPPOINT:
-            case EM_CHANGETRIGGER:
-
-                //$Data[0] = last run
-                //$Data[1] = next run
-
-                //Weekly schedule
-                $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
-                $this->SendDebug(__FUNCTION__, 'Data[] = ' . json_encode($Data). ' ID: '. $SenderID, 0);
-               
-                break;
         }
     }
     //Wird aufgerufen bei Änderungen in der GUI, wenn für Variable
@@ -357,9 +344,9 @@ class HeatingControlParameters extends IPSModule
     }
 
     //KI generiert
-    private function RegisterReferencesUpdateList() : array
+    private function RegisterReferencesUpdateList() : void
     {
-        $result = [];
+        $registeredSources = [];
         foreach ($this->GetReferencesUpdateList() as $item) {
             $sourceId = $item['SourceId'];
             $targetId = $item['TargetId'];
@@ -367,12 +354,11 @@ class HeatingControlParameters extends IPSModule
             $this->RegisterReference($sourceId);
             $this->RegisterReference($targetId);
 
-            if (!in_array($sourceId, $result, true)) {
+            if (!in_array($sourceId, $registeredSources, true)) {
                 $this->RegisterMessage($sourceId, VM_UPDATE);
-                $result[] = $sourceId;
+                $registeredSources[] = $sourceId;
             }
         }
-        return $result;
     }
 
 
@@ -381,22 +367,25 @@ class HeatingControlParameters extends IPSModule
     {
         foreach ($this->GetReferencesUpdateList() as $item) {
             if ($item['SourceId'] !== $sourceId) continue;
-            if (!IPS_InstanceExists($item['TargetId'])) continue;
-            this->SendDebug(__FUNCTION__,'Send '.GetValue($sourceId).' to '.$item['TargetId'], 0);
+            if (!IPS_VariableExists($item['TargetId'])) continue;
+
+            $target = IPS_GetVariable($item['TargetId']);
+            if (!($target['VariableAction'] ?? false)) continue;
+
+            $this->SendDebug(__FUNCTION__, 'Sende ' . GetValue($sourceId) . ' an ' . $item['TargetId'], 0);
             RequestAction($item['TargetId'], GetValue($sourceId));
         }
     }
 
-    //Funktion sendet Wert aller SourceIds auf TartetIds
-    //Wird hier für die ControlVariables List verwendet
     private function UpdateAllReferenceTargets() : void
     {
-        foreach ($this->GetReferencesUpdateList() as $item) 
-        {
-            if (!IPS_InstanceExists($item['SourceId'])) continue;
-            if (!IPS_InstanceExists($item['TargetId'])) continue;
-            $this->SendDebug(__FUNCTION__,'Send '.GetValue($sourceId).' to '.$item['TargetId'], 0);
-            RequestAction($item['TargetId'], GetValue($sourceId));
+        $updatedSources = [];
+        foreach ($this->GetReferencesUpdateList() as $item) {
+            $sourceId = $item['SourceId'];
+            if (in_array($sourceId, $updatedSources, true)) continue;
+
+            $this->UpdateReferenceTarget($sourceId);
+            $updatedSources[] = $sourceId;
         }
     }
 
@@ -416,11 +405,11 @@ class HeatingControlParameters extends IPSModule
     // Muss 'public' sein, damit der Timer die Funktion aufrufen kann
     public function HeartbeatTimer()
     {
-        //$this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        
         $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
-        if (!IPS_InstanceExists($id)) return;      
+        if (!IPS_VariableExists($id)) return;
+
         $id= IPS_GetParent($id);
+        if (!IPS_InstanceExists($id)) return;
         
         if (!ModBus_RequestRead($id))
         {
@@ -429,7 +418,7 @@ class HeatingControlParameters extends IPSModule
         }
         else
         {
-            if (!GetValue('ControlInitialized'))
+            if (!$this->GetValue('ControlInitialized'))
             {
                 ModBus_WriteCoil($id,false); 
                 $this->ResendAllControlParameters();
