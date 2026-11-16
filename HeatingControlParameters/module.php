@@ -186,7 +186,7 @@ class HeatingControlParameters extends IPSModule
                 //Wenn die Änderung von der Instanz kommt, die die Kommunikation mit der Wago steuert, dann alle Parameter erneut senden
                 if ($this->ReadPropertyInteger('Id_ControlHasStarted') == $SenderID)
                 {
-                    if (this->GetValue($SenderID)) $this->ResendAllControlParameters();
+                    if ($this->GetValue($SenderID)) $this->ResendAllControlParameters();
                 }
                 else 
                 {
