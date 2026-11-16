@@ -32,8 +32,10 @@ class HeatingControlParameters extends IPSModule
     private const ReferenciesList =                 '';                             //wird als Init für dynamische 'ReferenciesList' verwendet
   
     //Konstante für verwendete Namen
-    private const ControlParameters = 'ControlParameters';
-    private const ControlMonitoring = 'ControlMonitoring';
+    private const ConfiguredControlParameters   = 'ConfiguredControlParameters';
+    private const DynamicControlParameters      = 'DynamicControlParameters';
+    private const ControlMonitoring             = 'ControlMonitoring';
+    private const ReferenciesUpdateList        = 'ReferenciesUpdateList';
 
     //Farbdefinitionen für Profil
     private const Transparent = 0xffffff00;
@@ -50,16 +52,16 @@ class HeatingControlParameters extends IPSModule
         $this->DeleteProfileList (self::ProfileList);
 
         $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        $controlParameters = $this->CreateControlParametersList($form);
+        $configuredControlParameters = $this->CreateStaticControlParametersList($form);
        
         //PropertyStringArrays für die benötigten Listen anlegen
-        $this->RegisterPropertyString('ReferenciesUpdateList', '[]');
-        $this->RegisterPropertyString('VariablesUpdateList', '[]');
-        $this->RegisterPropertyString(self::ControlParameters, $controlParameters);
+        $this->RegisterPropertyString(self::ReferenciesUpdateList, '[]');
+        $this->RegisterPropertyString(self::VariablesUpdateList, '[]');
+        $this->RegisterPropertyString(self::ConfiguredControlParameters, $configuredControlParameters);
         $this->RegisterPropertyString(self::ControlMonitoring, '[]');
-        $this->RegisterPropertyString('ControlVariables', '[]');
+        $this->RegisterPropertyString(self::DynamicControlParameters, '[]');
        
-        //IPS_LogMessage( __FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
+        //IPS_LogMessage( __FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ConfiguredControlParameters));
 
         //Profile erstellen 
         $variable = 'ControlInitialized';
@@ -76,13 +78,13 @@ class HeatingControlParameters extends IPSModule
 
 
         //Alle Properties aus form.json registrieren
-        $this->RegisterPropertiesFromJson  ($form,self::ControlParameters,"P_","float");
+        $this->RegisterPropertiesFromJson  ($form,self::StaticControlParameters,"P_","float");
         $this->RegisterPropertiesFromJson  ($form,self::ControlMonitoring,"P_","integer");
         
         //Alle hart codierten Referenzen aus ReferenciesList übernehmen   
         $referenciesList= self::ReferenciesList;
         //dann alle "Id_" Properties aus statischer Json nachladen
-        $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlParameters,"Id_","integer"));
+        $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::StaticControlParameters,"Id_","integer"));
         $referenciesList = $this->AddToStringList($referenciesList,$this->RegisterPropertiesFromJson ($form,self::ControlMonitoring,"Id_","integer"));
         //Die Liste als Property speichern
         $this->RegisterPropertyString('ReferenciesList',$referenciesList); 
@@ -190,7 +192,7 @@ class HeatingControlParameters extends IPSModule
                 }
                 else 
                 {
-                    $this->UpdateReferenceTarget($SenderID);
+                    $this->SendDynamicControlParameter($SenderID);
                 }
 
                 break;
@@ -252,16 +254,16 @@ class HeatingControlParameters extends IPSModule
         return implode(',', $registeredProperties);
     }
 
-    private function SendControlParameterValues() : void
+    private function SendConfiguredControlParameters() : void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        $controlParameters = json_decode($this->ReadPropertyString(self::ControlParameters), true);
+        $controlParameters = json_decode($this->ReadPropertyString(self::ConfiguredControlParameters), true);
         
-        //IPS_LogMessage(__FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
+        //IPS_LogMessage(__FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ConfiguredControlParameters));
       
         if (!is_array($controlParameters)) return;
         foreach ($controlParameters as $controlParameter) {
-            //if (!is_array($controlParameter)) continue;
+            if (!is_array($controlParameter)) continue;
 
             $propertyName = $controlParameter['PropertyName'] ?? '';
             $variableIdName = $controlParameter['VariableId'] ?? '';
@@ -283,14 +285,14 @@ class HeatingControlParameters extends IPSModule
     }
 
 
-    private function CreateControlParametersList(array $form) : string
+    private function CreateStaticControlParametersList(array $form) : string
     {
         $controlParameters = [];
         if (!isset($form['elements']) || !is_array($form['elements'])) return '[]';
 
         foreach ($form['elements'] as $element) {
             if (($element['type'] ?? '') !== 'ExpansionPanel'
-                || ($element['name'] ?? '') !== self::ControlParameters
+                || ($element['name'] ?? '') !== self::StaticControlParameters
                 || !isset($element['items'])
                 || !is_array($element['items'])) {
                 continue;
@@ -322,7 +324,9 @@ class HeatingControlParameters extends IPSModule
     //KI generiert
     private function GetReferencesUpdateList() : array
     {
-        $list = json_decode($this->ReadPropertyString('ReferenciesUpdateList'), true);
+        IPS_LogMessage(__FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ReferenciesUpdateList));
+
+        $list = json_decode($this->ReadPropertyString(self::ReferenciesUpdateList), true);
         if (!is_array($list)) return [];
 
         $result = [];
@@ -366,7 +370,7 @@ class HeatingControlParameters extends IPSModule
 
 
     //Funktion sendet Wert von SourceId auf TartetId
-    private function UpdateReferenceTarget(int $sourceId) : void
+    private function SendDynamicControlParameter(int $sourceId) : void
     {
         foreach ($this->GetReferencesUpdateList() as $item) {
             if ($item['SourceId'] !== $sourceId) continue;
@@ -380,7 +384,7 @@ class HeatingControlParameters extends IPSModule
         }
     }
 
-    private function UpdateAllReferenceTargets() : void
+    private function SendAllDynamicControlParameters() : void
     {
         $updatedSources = [];
         foreach ($this->GetReferencesUpdateList() as $item) {
@@ -438,8 +442,8 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
         //Parameter Übertragen
-        $this->SendControlParameterValues();
-        $this->UpdateAllReferenceTargets();
+        $this->SendConfiguredControlParameters();
+        $this->SendAllDynamicControlParameters ();
     }
 }
 

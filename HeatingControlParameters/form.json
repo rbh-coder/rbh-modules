@@ -3,7 +3,7 @@
     {
       "type": "ExpansionPanel",
       "caption": "Regler Parameter",
-      "name": "ControlParameters",
+      "name": "StaticControlParameters",
       "items": [
         {
           "type": "RowLayout",
@@ -156,7 +156,7 @@
     {
       "type": "ExpansionPanel",
       "caption": "Steuerungs Variablen",
-      "name": "ControlVariables",
+      "name": "DynamicControlParameters",
       "items": [
         {
           "type": "List",
