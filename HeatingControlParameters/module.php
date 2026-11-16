@@ -442,7 +442,8 @@ class HeatingControlParameters extends IPSModule
     // Muss 'public' sein, damit Funktion von ausserhalb aufgerufen werden kann
     public function ResendAllControlParameters()
     {
-        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+
         //Parameter Übertragen
         $this->SendControlParameterValues();
         $this->UpdateAllReferenceTargets();
