@@ -270,9 +270,6 @@ class HeatingControlParameters extends IPSModule
         $controlParameters = json_decode($this->ReadPropertyString(self::ControlParameters), true);
        
         if (!is_array($controlParameters)) return;
-
-        var_dump($controlParameters);
-
         foreach ($controlParameters as $controlParameter) {
             if (!is_array($controlParameter)) continue;
 
