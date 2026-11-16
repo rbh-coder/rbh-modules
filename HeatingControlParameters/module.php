@@ -258,9 +258,7 @@ class HeatingControlParameters extends IPSModule
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $controlParameters = json_decode($this->ReadPropertyString(self::ConfiguredControlParameters), true);
-        
-        $this->SendDebug(__FUNCTION__, 'Properties: '.$this->ReadPropertyString(self::ConfiguredControlParameters), 0);
-        
+       
         if (!is_array($controlParameters)) return;
         foreach ($controlParameters as $controlParameter) 
         {

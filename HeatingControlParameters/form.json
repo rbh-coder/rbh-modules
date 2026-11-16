@@ -162,7 +162,7 @@
           "type": "List",
           "name": "ReferenciesUpdateList",
           "caption": "Zu synchronisierende Variablen",
-          "rowCount": 2,
+          "rowCount": 6,
           "add": true,
           "delete": true,
           "multiAdd": true,
