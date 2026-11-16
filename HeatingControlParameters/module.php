@@ -51,7 +51,7 @@ class HeatingControlParameters extends IPSModule
 
         $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $controlParameters = $this->CreateControlParametersList($form);
-        $this->SendDebug( __FUNCTION__,'Generierte ControlParameters: ' . $controlParameters,0);
+        IPS_LogMessage( $this->InstanceID,'Properties: '.$controlParameters);
        
         //PropertyStringArrays für die benötigten Listen anlegen
         $this->RegisterPropertyString('ReferenciesUpdateList', '[]');
