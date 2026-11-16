@@ -262,15 +262,28 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Properties: '.$this->ReadPropertyString(self::ConfiguredControlParameters), 0);
         
         if (!is_array($controlParameters)) return;
-        foreach ($controlParameters as $controlParameter) {
-            //if (!is_array($controlParameter)) continue;
+        foreach ($controlParameters as $controlParameter) 
+        {
+            if (!is_array($controlParameter))
+            {
+                $this->SendDebug(__FUNCTION__, 'controlParameter ist kein array', 0);
+                continue;
+            }
 
             $propertyName = $controlParameter['PropertyName'] ?? '';
             $variableIdName = $controlParameter['VariableId'] ?? '';
-            if ($propertyName === '' || $variableIdName === '') continue;
+            if ($propertyName === '' || $variableIdName === '')
+            {
+                $this->SendDebug(__FUNCTION__, 'propertyName oder variableIdName ist leer', 0);
+                continue;
+            }
 
             $variableId = $this->ReadPropertyInteger($variableIdName);
-            if (!IPS_VariableExists($variableId)) continue;
+            if (!IPS_VariableExists($variableId))
+            {
+                $this->SendDebug(__FUNCTION__, 'Variable ' . $variableId . ' existiert nicht.', 0);
+                continue;
+            }
 
             $variable = IPS_GetVariable($variableId);
             if (!($variable['VariableAction'] ?? false)) {
