@@ -32,11 +32,11 @@ class HeatingControlParameters extends IPSModule
     private const ReferenciesList =                 '';                             //wird als Init für dynamische 'ReferenciesList' verwendet
   
     //Konstante für verwendete Namen
-    private const StaticControlParameters      = 'StaticControlParameters';
+    private const StaticControlParameters       = 'StaticControlParameters';
     private const ConfiguredControlParameters   = 'ConfiguredControlParameters';
     private const DynamicControlParameters      = 'DynamicControlParameters';
     private const ControlMonitoring             = 'ControlMonitoring';
-    private const ReferenciesUpdateList        = 'ReferenciesUpdateList';
+    private const ReferenciesUpdateList         = 'ReferenciesUpdateList';
 
     //Farbdefinitionen für Profil
     private const Transparent = 0xffffff00;
@@ -59,10 +59,8 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertyString(self::ReferenciesUpdateList, '[]');
         $this->RegisterPropertyString(self::ConfiguredControlParameters, $configuredControlParameters);
         $this->RegisterPropertyString(self::ControlMonitoring, '[]');
-        $this->RegisterPropertyString(self::DynamicControlParameters, '[]');
-       
-        //IPS_LogMessage( __FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ConfiguredControlParameters));
-
+        $this->RegisterPropertyString(self::DynamicControlParameters, '[]'); //aktuell nicht verwendet
+     
         //Profile erstellen 
         $variable = 'ControlInitialized';
         $profileName = $this->CreateProfileName($variable);
@@ -290,7 +288,7 @@ class HeatingControlParameters extends IPSModule
             }
 
             $value = $this->ReadPropertyFloat($propertyName);
-            $this->SendDebug(__FUNCTION__, 'Sende ' . $value . ' an ' . $variableId, 0);
+            $this->SendDebug(__FUNCTION__, 'Sende Wert ' . $value . ' an Instanz ' . $variableId, 0);
             RequestAction($variableId, $value);
         }
     }
@@ -422,6 +420,8 @@ class HeatingControlParameters extends IPSModule
     // Muss 'public' sein, damit der Timer die Funktion aufrufen kann
     public function HeartbeatTimer()
     {
+         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+
         $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
         if (!IPS_VariableExists($id)) return;
 
@@ -437,6 +437,7 @@ class HeatingControlParameters extends IPSModule
         {
             if (!$this->GetValue('ControlInitialized'))
             {
+                $this->SendDebug(__FUNCTION__,"Setze Instanz ".$id." auf false", 0);
                 ModBus_WriteCoil($id,false); 
                 $this->ResendAllControlParameters();
 		        $this->SetValue('ControlInitialized',true);
