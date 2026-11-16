@@ -327,7 +327,7 @@ class HeatingControlParameters extends IPSModule
     private function GetReferencesUpdateList() : array
     {
 
-        $this->SendDebug(__FUNCTION__, 'Properties: '.$this->ReadPropertyString(self::DynamicControlParameters, 0);
+        $this->SendDebug(__FUNCTION__, 'Properties: '.$this->ReadPropertyString(self::DynamicControlParameters), 0);
         $list = json_decode($this->ReadPropertyString(self::DynamicControlParameters), true);
         if (!is_array($list)) return [];
 
