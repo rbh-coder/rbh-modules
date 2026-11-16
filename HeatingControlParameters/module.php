@@ -376,13 +376,25 @@ class HeatingControlParameters extends IPSModule
     }
 
 
-    //Funktion Sendet Wert von SourceId auf TartetId
-    //Wird hier für die ControlVariables List verwendet
+    //Funktion sendet Wert von SourceId auf TartetId
     private function UpdateReferenceTarget(int $sourceId) : void
     {
         foreach ($this->GetReferencesUpdateList() as $item) {
             if ($item['SourceId'] !== $sourceId) continue;
+            if (!IPS_InstanceExists($item['TargetId'])) continue;
+            RequestAction($item['TargetId'], GetValue($sourceId));
+        }
+    }
 
+    //Funktion sendet Wert aller SourceIds auf TartetIds
+    //Wird hier für die ControlVariables List verwendet
+    private function UpdateAllReferenceTargets() : void
+    {
+        foreach ($this->GetReferencesUpdateList() as $item) 
+        {
+            $this->SendDebug(__FUNCTION__,'Send '.$item['SourceId'].' to .'$item['TargetId'], , 0);
+            if (!IPS_InstanceExists($item['SourceId'])) continue;
+            if (!IPS_InstanceExists($item['TargetId'])) continue;
             RequestAction($item['TargetId'], GetValue($sourceId));
         }
     }
@@ -403,7 +415,7 @@ class HeatingControlParameters extends IPSModule
     // Muss 'public' sein, damit der Timer die Funktion aufrufen kann
     public function HeartbeatTimer()
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        //$this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         
         $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
         if (!IPS_InstanceExists($id)) return;      
@@ -430,10 +442,10 @@ class HeatingControlParameters extends IPSModule
     // Muss 'public' sein, damit Funktion von ausserhalb aufgerufen werden kann
     public function ResendAllControlParameters()
     {
+        $this->SendDebug(__FUNCTION__, 'Trigger durch'.$Message.'.', 0);
         //Parameter Übertragen
         $this->SendControlParameterValues();
-       
-        //Zusatzariablen Übertragen
+        $this->UpdateAllReferenceTargets();
     }
 }
 
