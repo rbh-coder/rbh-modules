@@ -59,7 +59,7 @@ class HeatingControlParameters extends IPSModule
         $this->RegisterPropertyString(self::ControlMonitoring, '[]');
         $this->RegisterPropertyString('ControlVariables', '[]');
        
-        IPS_LogMessage( __FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
+        //IPS_LogMessage( __FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
 
         //Profile erstellen 
         $variable = 'ControlInitialized';
@@ -257,11 +257,11 @@ class HeatingControlParameters extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $controlParameters = json_decode($this->ReadPropertyString(self::ControlParameters), true);
         
-        IPS_LogMessage(__FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
+        //IPS_LogMessage(__FUNCTION__,'Properties: '.$this->ReadPropertyString(self::ControlParameters));
       
         if (!is_array($controlParameters)) return;
         foreach ($controlParameters as $controlParameter) {
-            if (!is_array($controlParameter)) continue;
+            //if (!is_array($controlParameter)) continue;
 
             $propertyName = $controlParameter['PropertyName'] ?? '';
             $variableIdName = $controlParameter['VariableId'] ?? '';
