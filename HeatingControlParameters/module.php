@@ -263,7 +263,7 @@ class HeatingControlParameters extends IPSModule
         
         if (!is_array($controlParameters)) return;
         foreach ($controlParameters as $controlParameter) {
-            if (!is_array($controlParameter)) continue;
+            //if (!is_array($controlParameter)) continue;
 
             $propertyName = $controlParameter['PropertyName'] ?? '';
             $variableIdName = $controlParameter['VariableId'] ?? '';
@@ -326,8 +326,6 @@ class HeatingControlParameters extends IPSModule
 
     private function GetReferencesUpdateList() : array
     {
-
-        $this->SendDebug(__FUNCTION__, 'Properties: '.$this->ReadPropertyString(self::ReferenciesUpdateList), 0);
         $list = json_decode($this->ReadPropertyString(self::ReferenciesUpdateList), true);
         if (!is_array($list)) return [];
 
