@@ -55,7 +55,7 @@ class HeatingControlParameters extends IPSModule
         //PropertyStringArrays für die benötigten Listen anlegen
         $this->RegisterPropertyString('ReferenciesUpdateList', '[]');
         $this->RegisterPropertyString('VariablesUpdateList', '[]');
-        $this->RegisterPropertyString('ControlParameters', '[]');
+        $this->RegisterPropertyString('ControlParameters', $controlParameters);
         $this->RegisterPropertyString('ControlMonitoring', '[]');
         $this->RegisterPropertyString('ControlVariables', '[]');
        
