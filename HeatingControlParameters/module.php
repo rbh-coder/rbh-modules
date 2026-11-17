@@ -423,21 +423,11 @@ class HeatingControlParameters extends IPSModule
          $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
         $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
-        if (!IPS_VariableExists($id))
+        if (!this->GetModBusInstanzID ($id))
         {
-            $this->SendDebug(__FUNCTION__,"Variable ".$id." existiert nicht", 0);
             $this->SetValue('ControlInitialized',false);
             return;
         }
-
-        $id= IPS_GetParent($id);
-        if (!IPS_InstanceExists($id))
-        {
-            $this->SendDebug(__FUNCTION__,"Instanz ".$id." existiert nicht", 0);
-            $this->SetValue('ControlInitialized',false);
-            return;
-        }
-        
         if (!ModBus_RequestRead($id))
         {
             $this->SetValue('ControlInitialized',false);
@@ -456,6 +446,24 @@ class HeatingControlParameters extends IPSModule
         }
     }
 
+    private function GetModBusInstanzID (&$id) :boolean
+    {
+        if (!IPS_VariableExists($id))
+        {
+            $this->SendDebug(__FUNCTION__,"Variable ".$id." existiert nicht", 0);
+            $this->SetValue('ControlInitialized',false);
+            return false;
+        }
+
+        $id= IPS_GetParent($id);
+        if (!IPS_InstanceExists($id))
+        {
+            $this->SendDebug(__FUNCTION__,"Instanz ".$id." existiert nicht", 0);
+            return false;
+        }
+       return true;
+    }
+
     # EXTERNAL CALLS ###################################################################################################
     // Muss 'public' sein, damit Funktion von ausserhalb aufgerufen werden kann
     public function ResendAllControlParameters()
@@ -465,6 +473,11 @@ class HeatingControlParameters extends IPSModule
         //Parameter Übertragen
         $this->SendConfiguredControlParameters();
         $this->SendAllDynamicControlParameters ();
+        $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
+        if ($this->GetModBusInstanzID ($id))
+        {
+            ModBus_WriteCoil($id,true);
+        }
     }
 }
 
