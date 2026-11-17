@@ -393,7 +393,7 @@ class HeatingZoneController extends IPSModule
 
                 //Hier ist "OnChange" ausprogrammiert, d.h. wenn es keine Differenz zm alten Wert gibt, dann Abflug
                 if ($Data[1]==0) return;
-                $this->SendDebug(__FUNCTION__, 'Wert hat sich auf ' . $Data[0] . ' geändert.', 0);
+                $this->SendDebug(__FUNCTION__, 'Wert von ' . $SenderID . ' hat sich auf ' . $Data[0] . ' geändert.', 0);
                
                 if ($this->SelectWeekTimerStatus($SenderID))
                 {
@@ -611,18 +611,20 @@ class HeatingZoneController extends IPSModule
    private function OperateHeatingStatus (int $mode) : void
    {
        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-       $this->SendDebug(__FUNCTION__, 'Modus:'.$mode, 0);
        switch ($mode)
        {
            case self::HeatModeNormal:
+                $this->SendDebug($this->InstanceID, 'Betriebsmodus: Normal', 0);
                 $this->SetTimerInterval('HZCTRL_BoostTimer',0);
                 $this->SetBackSignal(false);
                 break;
            case self::HeatModeBoost:
+                $this->SendDebug($this->InstanceID, 'Betriebsmodus: Boost', 0);
                 $this->SetTimerInterval('HZCTRL_BoostTimer', $this->ReadPropertyInteger("BoostTime") * 1000 *60);
                 $this->SetBackSignal(false);
                 break;
            case self::HeatModeSetBack:
+                $this->SendDebug($this->InstanceID, 'Betriebsmodus: Absenken', 0);
                 $this->SetTimerInterval('HZCTRL_BoostTimer',0);
                 $this->SetBackSignal(true);
                 break;
@@ -645,7 +647,7 @@ class HeatingZoneController extends IPSModule
        if ($this->IsValidId($id))
        {
             $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-            $this->SendDebug(__FUNCTION__, 'Send:'.$value. ' to '.$id , 0);
+            $this->SendDebug(__FUNCTION__, 'Sende Wert: '.$value. ' an Variable '.$id , 0);
             RequestAction($id,$value);
        }
    }
