@@ -65,8 +65,6 @@ class HeatingZoneController extends IPSModule
         ########## Properties
         $this->DeleteProfileList (self::ProfileList);
        
-        //$this->RegisterPropertyInteger('ExpertModeID', 0);
-        //$this->RegisterPropertyInteger('IdControlAlive',0);
         $this->RegisterPropertyInteger('WeekTimerGroups',0);
         $this->RegisterPropertyBoolean('UseWeekTimer',0);
         $this->RegisterPropertyFloat('SetBackTemperature',0);

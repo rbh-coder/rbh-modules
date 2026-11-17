@@ -423,10 +423,20 @@ class HeatingControlParameters extends IPSModule
          $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
         $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
-        if (!IPS_VariableExists($id)) return;
+        if (!IPS_VariableExists($id))
+        {
+            $this->SendDebug(__FUNCTION__,"Variable ".$id." existiert nicht", 0);
+            $this->SetValue('ControlInitialized',false);
+            return;
+        }
 
         $id= IPS_GetParent($id);
-        if (!IPS_InstanceExists($id)) return;
+        if (!IPS_InstanceExists($id))
+        {
+            $this->SendDebug(__FUNCTION__,"Instanz ".$id." existiert nicht", 0);
+            $this->SetValue('ControlInitialized',false);
+            return;
+        }
         
         if (!ModBus_RequestRead($id))
         {
@@ -438,10 +448,10 @@ class HeatingControlParameters extends IPSModule
             if (!$this->GetValue('ControlInitialized'))
             {
                 $this->SendDebug(__FUNCTION__,"Setze Instanz ".$id." auf false", 0);
-                ModBus_WriteCoil($id,false); 
+                ModBus_WriteCoil($id,false);
+                $this->SendDebug(__FUNCTION__,"Wago Daten erneut übertragen gestartet.", 0);
                 $this->ResendAllControlParameters();
 		        $this->SetValue('ControlInitialized',true);
-                $this->SendDebug(__FUNCTION__,"Wago Daten erneut übertragen gestartet.", 0);
             }
         }
     }
