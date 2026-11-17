@@ -446,7 +446,7 @@ class HeatingControlParameters extends IPSModule
         }
     }
 
-    private function GetModBusInstanzID (&$id) :boolean
+    private function GetModBusInstanzID (&$id) :bool
     {
         if (!IPS_VariableExists($id))
         {
