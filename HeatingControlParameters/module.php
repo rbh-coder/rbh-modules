@@ -423,7 +423,7 @@ class HeatingControlParameters extends IPSModule
          $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
 
         $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
-        if (!this->GetModBusInstanzID ($id))
+        if (!$this->GetModBusInstanzID ($id))
         {
             $this->SetValue('ControlInitialized',false);
             return;
