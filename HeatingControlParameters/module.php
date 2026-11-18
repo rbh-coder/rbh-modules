@@ -252,12 +252,13 @@ class HeatingControlParameters extends IPSModule
         return implode(',', $registeredProperties);
     }
 
-    private function SendConfiguredControlParameters() : void
+    private function SendConfiguredControlParameters() : bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $status = true;
         $controlParameters = json_decode($this->ReadPropertyString(self::ConfiguredControlParameters), true);
        
-        if (!is_array($controlParameters)) return;
+        if (!is_array($controlParameters)) return $status; //Wenn keine Parameter konfiguriert sind, dann ist das kein Fehler, sondern nur eine Info    
         foreach ($controlParameters as $controlParameter) 
         {
             if (!is_array($controlParameter))
@@ -289,8 +290,12 @@ class HeatingControlParameters extends IPSModule
 
             $value = $this->ReadPropertyFloat($propertyName);
             $this->SendDebug(__FUNCTION__, 'Sende Wert ' . $value . ' an Instanz ' . $variableId, 0);
-            RequestAction($variableId, $value);
+            if (!RequestAction($variableId, $value)) {
+                $this->SendDebug(__FUNCTION__, 'Fehler beim Senden des Werts. ' . $value . ' an Instanz ' . $variableId, 0);
+                $status = false;    
+            } 
         }
+        return $status; //$status ist true, wenn alle Parameter erfolgreich gesendet wurden, sonst false    
     }
 
 
@@ -378,8 +383,9 @@ class HeatingControlParameters extends IPSModule
 
 
     //Funktion sendet Wert von SourceId auf TartetId
-    private function SendDynamicControlParameter(int $sourceId) : void
+    private function SendDynamicControlParameter(int $sourceId) : bool
     {
+        $status = true;   
         foreach ($this->GetReferencesUpdateList() as $item) {
             if ($item['SourceId'] !== $sourceId) continue;
             if (!IPS_VariableExists($item['TargetId'])) continue;
@@ -388,20 +394,28 @@ class HeatingControlParameters extends IPSModule
             if (!($target['VariableAction'] ?? false)) continue;
 
             $this->SendDebug(__FUNCTION__, 'Sende ' . GetValue($sourceId) . ' an ' . $item['TargetId'], 0);
-            RequestAction($item['TargetId'], GetValue($sourceId));
+            if (!RequestAction($item['TargetId'], GetValue($sourceId))) {
+                $this->SendDebug(__FUNCTION__, 'Fehler beim Senden des Werts an Instanz ' . $item['TargetId'], 0);
+                $status = false;
+            } 
         }
+        return $status; //$status ist true, wenn alle Parameter erfolgreich gesendet wurden, sonst false    
     }
 
-    private function SendAllDynamicControlParameters() : void
+    private function SendAllDynamicControlParameters() : bool
     {
+        $status = true;
         $updatedSources = [];
         foreach ($this->GetReferencesUpdateList() as $item) {
             $sourceId = $item['SourceId'];
             if (in_array($sourceId, $updatedSources, true)) continue;
 
-            $this->SendDynamicControlParameter($sourceId);
+            if (!$this->SendDynamicControlParameter($sourceId)) {
+                $status = false;
+            }   
             $updatedSources[] = $sourceId;
         }
+        return $status;
     }
 
     //Einen übergebenen Namen modulspezifisch aufbereiten
@@ -428,10 +442,13 @@ class HeatingControlParameters extends IPSModule
             $this->SetValue('ControlInitialized',false);
             return;
         }
-        if (!ModBus_RequestRead($id))
+        //Falls die Verbindung zur Wago unterbrochen ist, dann Merker auf false setzen und Debugmeldung ausgeben    
+        if (!ModBus_RequestRead($id)) 
         {
-            $this->SetValue('ControlInitialized',false);
             $this->SendDebug(__FUNCTION__,"Wago Verbindung abgebrochen.", 0);
+            $this->SetValue('ControlInitialized',false);
+            //Den Timer auf zehnfaches Intervall setzen, damit die Wago nicht zu oft angefragt wird, wenn sie nicht erreichbar ist  
+            $this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000*10);
         }
         else
         {
@@ -440,8 +457,13 @@ class HeatingControlParameters extends IPSModule
                 $this->SendDebug(__FUNCTION__,"Setze Instanz ".$id." auf false", 0);
                 ModBus_WriteCoil($id,false);
                 $this->SendDebug(__FUNCTION__,"Wago Daten erneut übertragen gestartet.", 0);
-                $this->ResendAllControlParameters();
-		        $this->SetValue('ControlInitialized',true);
+                //Alle Parameter erneut senden und Merker je nach Ergebnis setzen  
+                if ($this->ResendAllControlParameters())
+                {
+                    $this->SetValue('ControlInitialized',true);
+                    //Den Timer auf wieder parametriertes Intervall setzen 
+                    $this->SetTimerInterval($this->CreateName('HeartbeatTimer'),$this->ReadPropertyInteger('P_MonitoringInterval')*1000);
+                }
             }
         }
     }
@@ -466,18 +488,31 @@ class HeatingControlParameters extends IPSModule
 
     # EXTERNAL CALLS ###################################################################################################
     // Muss 'public' sein, damit Funktion von ausserhalb aufgerufen werden kann
-    public function ResendAllControlParameters()
+    public function ResendAllControlParameters() :bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-
+        $status = true;
         //Parameter Übertragen
-        $this->SendConfiguredControlParameters();
-        $this->SendAllDynamicControlParameters ();
-        $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
-        if ($this->GetModBusInstanzID ($id))
+        if (!$this->SendConfiguredControlParameters())
         {
-            ModBus_WriteCoil($id,true);
+            $status = false;
+        }   
+        if (!$this->SendAllDynamicControlParameters ())
+        {
+            $status = false;
+        } 
+        if ($status)
+        {
+            $id = $this->ReadPropertyInteger('Id_CommunicationRunning');
+            if ($this->GetModBusInstanzID ($id) )
+            {
+                if (!ModBus_WriteCoil($id,true))
+                {
+                    $status = false;
+                }
+            }
         }
+        return $status; 
     }
 }
 
